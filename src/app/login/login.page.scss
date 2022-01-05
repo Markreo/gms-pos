@@ -1,0 +1,83 @@
+$border-radius: 40px;
+$color: white;
+ion-content {
+  --padding-end: 0;
+  --padding-start: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.background {
+  height: 100%;
+  background: url("/assets/images/background-login.png") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.logo-row {
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+
+
+.login-box {
+}
+
+input {
+  width: 100%;
+  padding: 1.2rem 2rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $border-radius;
+  border: none;
+  overflow: hidden;
+  color: $color;
+  padding-left: 5rem;
+
+  &:focus {
+    outline: none;
+    border: none;
+  }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: $color;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input::placeholder {
+  color: $color;
+  opacity: 1; /* Firefox */
+}
+
+button {
+  background: #ffcb2a;
+  display: block;
+  width: 100%;
+  padding: 1.25rem 2rem;
+  border-radius: $border-radius;
+  text-transform: uppercase;
+  font-weight: bolder;
+  font-size: 1.2rem;
+}
+
+
+@media (max-height: 500px) {
+  .logo {
+    visibility: hidden;
+  }
+}
+
+
+.input-icon {
+  position: absolute;
+  height: 1.75rem;
+  width: 1.75rem;
+  left: 1.75rem;
+  top: 0.75rem;
+}
