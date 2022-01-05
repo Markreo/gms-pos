@@ -1,0 +1,8 @@
+{
+  "name": "gms-pos",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "b880933b"
+}

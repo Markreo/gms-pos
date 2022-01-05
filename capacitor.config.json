@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "gms-pos",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
