@@ -1,10 +1,10 @@
 import {environment} from '../../environments/environment';
 
-export function buildUrl(endpoint, id?: string) {
+export function buildUrl(endpoint) {
   return environment.gms_api_server + '/' + environment.api_version + '/' + endpoint;
 }
 
-export function buildInventoryUrl(endpoint, id?: string) {
+export function buildInventoryUrl(endpoint) {
   return environment.gms_api_inventory + '/' + environment.api_version + '/' + endpoint;
 }
 

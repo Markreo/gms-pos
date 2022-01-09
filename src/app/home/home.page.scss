@@ -1,0 +1,90 @@
+.header-form {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+
+  > div {
+    background: white;
+    display: flex;
+    align-items: center;
+    border-radius: 50px;
+    padding: 0 22.5px;
+    min-width: 300px;
+    margin-right: 22.5px;
+
+    .label {
+      white-space: nowrap;
+      font-size: 110%;
+      border-right: 2px solid black;
+      padding-right: 11.125px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .header-form > div {
+    min-width: 150px;
+  }
+}
+
+:host {
+  background: #eeedf3;
+
+  ::ng-deep {
+    .select-text {
+      font-weight: bolder;
+      color: red;
+    }
+  }
+}
+
+ion-select {
+  font-weight: bolder;
+}
+
+
+ion-content {
+  --background: #eeedf3
+
+}
+
+
+ion-searchbar {
+  --background: transparent;
+  --box-shadow: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px 10px 0;
+  min-height: 40px;
+
+  --background: white;
+  --border-radius: 15px;
+  --box-shadow: none;
+  --padding-top: 5px;
+  --padding-bottom: 5px;
+
+  &.BOOKED {
+    --background: var(--ion-color-primary);
+    font-weight: bold;
+  }
+}
+
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-items: flex-start;
+}
+
+
+img.icon {
+  max-height: 58px;
+}
+
+img.icon + img.icon {
+  margin-left: 22.5px;
+}

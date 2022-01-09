@@ -10,6 +10,7 @@ export interface AuthState {
   refreshToken: string;
   roles: string[];
   tokenType: string;
+  status: 'logged' | 'logout' | 'verifying';
 }
 
 export const initialState: AuthState = {
@@ -18,13 +19,14 @@ export const initialState: AuthState = {
   accessToken: null,
   refreshToken: null,
   roles: [],
-  tokenType: null
+  tokenType: null,
+  status: 'logout',
 };
 
 export const authReducer = createReducer(
   initialState,
-
-  on(AuthActions.login, state => state),
-  on(AuthActions.loginSuccess, (state, action) => state),
-  on(AuthActions.loginFailure, (state, action) => state),
+  on(AuthActions.login, state => ({...state, status: 'verifying'})),
+  on(AuthActions.loginSuccess, (state, action) => ({...state, accessToken: action.data.accessToken, status: 'logged'})),
+  on(AuthActions.loginFailure, state => ({...state, status: 'logout'})),
+  on(AuthActions.logout, () => initialState),
 );

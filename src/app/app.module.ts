@@ -10,9 +10,20 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../environments/environment';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {IonicStorageModule} from './ionic-storage/ionic-storage.module';
+import {TokenInterceptor} from "./_interceptors/token.interceptor";
+
+
+const interceptors = [
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true
+  }
+];
 
 
 export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -25,6 +36,7 @@ export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoad
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    IonicStorageModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({
@@ -40,7 +52,7 @@ export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoad
         deps: [HttpClient]
       }
     })],
-  providers: [{provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
+  providers: [interceptors, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
   bootstrap: [AppComponent],
 })
 export class AppModule {

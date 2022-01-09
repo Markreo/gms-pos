@@ -1,30 +1,81 @@
-import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap } from 'rxjs/operators';
-import { Observable, EMPTY, of } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Actions, createEffect, ofType, OnInitEffects} from '@ngrx/effects';
+import {catchError, delay, exhaustMap, finalize, map, switchMap, tap} from 'rxjs/operators';
 
 import * as AuthActions from './auth.actions';
+import {AuthService} from '../services/auth.service';
+import {from, of} from 'rxjs';
+import {AlertController, LoadingController} from '@ionic/angular';
+import {StorageService} from '../../ionic-storage/storage.service';
+import {Action} from '@ngrx/store';
 
+export const TOKEN = 'token';
 
 
 @Injectable()
-export class AuthEffects {
+export class AuthEffects implements OnInitEffects {
 
-  loadAuths$ = createEffect(() => {
-    return this.actions$.pipe( 
+  loadAuth$ = createEffect(() => this.actions$.pipe(
+    ofType(AuthActions.loadAuth),
+    delay(10),
+    exhaustMap(action => from(this.storageService.get(TOKEN)).pipe(
+      map(token => {
+        if (token) {
+          return AuthActions.loginSuccess({data: {accessToken: token}});
+        } else {
+          return AuthActions.loginFailure({error: null});
+        }
+      })
+    ))),
+  );
 
-      ofType(AuthActions.loadAuths),
-      concatMap(() =>
-        /** An EMPTY observable only emits completion. Replace with your own observable API request */
-        EMPTY.pipe(
-          map(data => AuthActions.loadAuthsSuccess({ data })),
-          catchError(error => of(AuthActions.loadAuthsFailure({ error }))))
-      )
-    );
-  });
+  login$ = createEffect(() => this.actions$.pipe(
+    ofType(AuthActions.login),
+
+    exhaustMap(action => from(this.loadingController.create({
+      message: 'Login...'
+    })).pipe(
+      switchMap(ionLoading => from(ionLoading.present()).pipe(
+        switchMap(() => this.authService.login(action.credentials).pipe(
+          map(data => AuthActions.loginSuccess({data: {accessToken: data.access_token}})),
+          catchError(error => of(AuthActions.loginFailure({error}))),
+          finalize(() => ionLoading.dismiss())
+        ))
+      ))
+    ))
+  ));
 
 
+  loginSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(AuthActions.loginSuccess),
+    tap(action => {
+      console.log('hrere');
+      this.storageService.set(TOKEN, action.data.accessToken);
 
-  constructor(private actions$: Actions) {}
+    })
+  ), {dispatch: false});
+
+  loginFailure$ = createEffect(() => this.actions$.pipe(
+    ofType(AuthActions.loginFailure),
+    exhaustMap(action => from(this.alertController.create({
+      header: 'Login Failure',
+      message: 'Incorrect username or password.',
+      buttons: ['OK']
+    })).pipe(
+      switchMap(ionAlert => from(ionAlert.present()))
+    ))
+  ), {dispatch: false});
+
+  constructor(private actions$: Actions,
+              private loadingController: LoadingController,
+              private alertController: AlertController,
+              private storageService: StorageService,
+              private authService: AuthService) {
+    console.log('constructor AuthEffects');
+  }
+
+  ngrxOnInitEffects(): Action {
+    return AuthActions.loadAuth();
+  }
 
 }
