@@ -8,7 +8,7 @@
         <div class="menu">
           <ng-container>
             <div *ngFor="let cate of parentCategories$ | async"
-                 class="menu-item" [class.active]="currentMenu?.id === cate.id"
+                 class="menu-item"
                  (click)="selectParentCategory(cate)">
               <img src="/assets/icon/drink.png"/>
               <div> {{cate.name}}</div>
@@ -47,10 +47,12 @@
              style=" flex: 1; display: flex; align-items: stretch; padding: 10px; overflow: hidden; min-width: 0">
           <div class="order" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0">
             <div class="categories">
-              <div class="category-item" [class.active]="!currentSubCate" (click)="selectSubCategory(null)">All</div>
-              <div class="category-item" *ngFor="let subCate of subCategories"
-                   (click)="selectSubCategory(subCate)"
-                   [class.active]="currentSubCate && currentSubCate.id === subCate.id">
+              <div class="category-item" [class.active]="(activeSubCategory$ | async) === false"
+                   (click)="selectSubCategory(null)">All
+              </div>
+              <div class="category-item" *ngFor="let subCate of subCategories$ | async"
+                   [class.active]="(activeSubCategory$ | async)?.id === subCate.id"
+                   (click)="selectSubCategory(subCate)">
                 <img [src]="'/assets/icon/buger.png'" alt="" style="height: 1rem; width: 1rem; margin-right: 0.5rem">
                 {{subCate.name}}
               </div>

@@ -5,4 +5,6 @@ export const selectCategoryState = createFeatureSelector<fromCategory.CategoryRe
   fromCategory.categoryFeatureKey
 );
 
+export const selectCategories = createSelector(selectCategoryState, state => state.categories);
 export const selectParentCategories = createSelector(selectCategoryState, state => state.parentCategories);
+export const selectActiveCategory = createSelector(selectCategoryState, state => state.activeCategory);

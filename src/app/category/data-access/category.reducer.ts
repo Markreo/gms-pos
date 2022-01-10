@@ -8,14 +8,14 @@ export interface CategoryReducer {
   categories: Category[];
   status: 'idle' | 'loading' | 'loaded' | 'error';
   parentCategories: Category[];
-  subCategories: Category[];
+  activeCategory: Category;
 }
 
 export const initialState: CategoryReducer = {
   status: 'idle',
   categories: [],
   parentCategories: [],
-  subCategories: []
+  activeCategory: null
 };
 
 export const categoryReducer = createReducer(
@@ -28,6 +28,10 @@ export const categoryReducer = createReducer(
     parentCategories: action.categories.filter(cate => !cate.parent)
   })),
   on(CategoryActions.loadCategoriesFailure, (state, action) => ({...state, status: 'error'})),
+  on(CategoryActions.selectParentCategory, (state, action) => ({
+    ...state,
+    activeCategory: action.category,
+  }))
 );
 
 

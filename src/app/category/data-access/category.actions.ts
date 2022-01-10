@@ -15,3 +15,8 @@ export const loadCategoriesFailure = createAction(
   '[Category] loadCategoriesFailure',
   props<{ error: any }>()
 );
+
+export const selectParentCategory = createAction(
+  '[Category] select parent category',
+  props<{ category: Category }>()
+);

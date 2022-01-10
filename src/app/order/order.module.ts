@@ -17,6 +17,7 @@ import {orderFeatureKey, orderReducer} from './data-access/order.reducer';
 import {OrderService} from './services/order.service';
 import {CategoryModule} from '../category/category.module';
 import {MenuModule} from '../menu/menu.module';
+import {SubCategoryModule} from '../sub-category/sub-category.module';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import {MenuModule} from '../menu/menu.module';
     GolfClubModule,
     LocationModule,
     CategoryModule,
+    SubCategoryModule,
     MenuModule,
     StoreModule.forFeature(orderFeatureKey, orderReducer),
     EffectsModule.forFeature([OrderEffects])
