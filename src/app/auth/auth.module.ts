@@ -10,8 +10,6 @@ import {authFeatureKey, authReducer} from './data-access/auth.reducer';
   declarations: [],
   imports: [
     CommonModule,
-    StoreModule.forFeature(authFeatureKey, authReducer),
-    EffectsModule.forFeature([AuthEffects])
   ]
 })
 export class AuthModule {

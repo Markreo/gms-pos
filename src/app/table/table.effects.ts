@@ -31,7 +31,6 @@ export class TableEffects {
         this.store.select(selectCurrentLocation)
       ]
     ),
-    tap(console.log),
     switchMap(([action, currentGolfClub, currentLocation]) => this.tableService.getAll(currentGolfClub.id, currentLocation.id, '').pipe(
       map(data => TableActions.loadTablesSuccess({data})),
       catchError(error => of(TableActions.loadTablesFailure({error})))

@@ -1,0 +1,85 @@
+
+ion-content {
+  --background: #eeedf3
+
+}
+
+.categories {
+  height: 3rem;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+
+  .category-item {
+    margin-right: 1rem;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #184c7c;
+    font-size: 90%;
+    white-space: nowrap;
+    padding: 0.25rem 1rem;
+
+    &.active {
+      background: white;
+      border: 0;
+    }
+  }
+}
+
+.menu {
+  flex: 1;
+  overflow: auto;
+  padding-top: 25px;
+
+  .menu-item {
+    margin: 15px 15px 25px 15px;
+    border-radius: 17.5px;
+    padding: 7.5px 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 9px;
+    color: #184c7c;
+    font-weight: bold;
+    text-align: center;
+    min-height: 70px;
+
+    &.active {
+      background: #ffcb2a;
+    }
+
+    img {
+      width: 40px;
+    }
+  }
+}
+
+
+ion-searchbar {
+  --background: transparent;
+  --box-shadow: none;
+}
+
+
+.items-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+
+  .item-pagination {
+    &.active {
+      width: 50px;
+    }
+
+    transition: width 200ms ease-out;
+    height: 10px;
+    width: 10px;
+    background: #ffcb2a;
+    border-radius: 10px;
+    margin: 7.5px 0 7.5px 7.5px;
+  }
+}

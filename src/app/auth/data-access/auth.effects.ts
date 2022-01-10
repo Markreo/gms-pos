@@ -23,7 +23,7 @@ export class AuthEffects implements OnInitEffects {
         if (token) {
           return AuthActions.loginSuccess({data: {accessToken: token}});
         } else {
-          return AuthActions.loginFailure({error: null});
+          return AuthActions.logout();
         }
       })
     ))),

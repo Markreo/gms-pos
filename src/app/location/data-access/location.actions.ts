@@ -12,3 +12,5 @@ export const loadLocationsFailure = createAction(
 );
 
 export const setCurrentLocation = createAction('[Location] set current Location', props<{ location: Location }>());
+
+export const findSavedLocation = createAction('[Location] find saved Location');

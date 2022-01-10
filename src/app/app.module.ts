@@ -15,6 +15,8 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {IonicStorageModule} from './ionic-storage/ionic-storage.module';
 import {TokenInterceptor} from "./_interceptors/token.interceptor";
+import {authFeatureKey, authReducer} from "./auth/data-access/auth.reducer";
+import {AuthEffects} from "./auth/data-access/auth.effects";
 
 
 const interceptors = [
@@ -37,8 +39,10 @@ export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoad
     AppRoutingModule,
     HttpClientModule,
     IonicStorageModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
+    StoreModule.forRoot({
+      [authFeatureKey]: authReducer
+    }),
+    EffectsModule.forRoot([AuthEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production, // Restrict extension to log-only mode

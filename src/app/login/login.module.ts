@@ -8,7 +8,6 @@ import {LoginPageRoutingModule} from './login-routing.module';
 
 import {LoginPage} from './login.page';
 import {TranslateModule} from '@ngx-translate/core';
-import {AuthModule} from '../auth/auth.module';
 
 @NgModule({
   imports: [
@@ -17,9 +16,7 @@ import {AuthModule} from '../auth/auth.module';
     IonicModule,
     LoginPageRoutingModule,
     TranslateModule,
-    ReactiveFormsModule,
-    AuthModule
-  ],
+    ReactiveFormsModule],
   declarations: [LoginPage]
 })
 export class LoginPageModule {

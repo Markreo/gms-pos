@@ -8,3 +8,5 @@ export const loadGolfClubsSuccess = createAction('[GolfClub] Load GolfClubs Succ
 export const loadGolfClubsFailure = createAction('[GolfClub] Load GolfClubs Failure', props<{ error: any }>());
 
 export const setCurrentGolfClub = createAction('[GolfClub] Set current Golf Club', props<{ golfClub: GolfClub }>());
+
+export const findSavedGolfClub = createAction('[GolfClub] find saved Golf Club');

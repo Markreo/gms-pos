@@ -32,6 +32,7 @@ export class HomePage implements OnInit {
   }
 
   setCurrentGolfClub(event) {
+    console.log('dispatch setCurrentGolfClub')
     this.store.dispatch(GolfClubActions.setCurrentGolfClub({golfClub: event.detail.value}));
   }
 

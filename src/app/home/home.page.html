@@ -9,6 +9,7 @@
           <div class="label ion-hide-xl-down">
             <ion-label>Golf Club</ion-label>
           </div>
+
           <ion-select [compareWith]="compareWithId" interface="action-sheet"
                       name="golfClub"
                       [ngModel]="currentGolfClub$ | async"
@@ -53,12 +54,12 @@
         </div>
 
         <div class="items">
-            <ion-button *ngFor="let table of tables$ | async"
-                        size="small"
-                        class="item {{table.status}}"
-                        [routerLink]="['/order', table.id]">
-              <span style="padding: 10px 20px">{{table.name}}</span>
-            </ion-button>
+          <ion-button *ngFor="let table of tables$ | async"
+                      size="small"
+                      class="item {{table.status}}"
+                      [routerLink]="['/order', table.id]">
+            <span style="padding: 10px 20px">{{table.name}}</span>
+          </ion-button>
         </div>
       </div>
 
