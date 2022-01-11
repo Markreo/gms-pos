@@ -6,22 +6,25 @@
         <img class="logo" style="height: 100px; width: 100px; background:#184a7b" src="/assets/icon/menu.png" alt=""
              [routerLink]="['/home']">
         <div class="menu">
+          <ng-container *ngIf="(statusCategory$ | async) === 'loading'">
+            <div *ngFor="let i of [1, 2, 3, 4, 5, 6]" class="skeleton-menu-item">
+              <ion-thumbnail slot="start">
+                <ion-skeleton-text animated></ion-skeleton-text>
+              </ion-thumbnail>
+              <!--              <div class="ion-text-center" style="padding-top: 5px">-->
+              <!--                <ion-skeleton-text animated style="width: 80%; margin: auto"></ion-skeleton-text>-->
+              <!--              </div>-->
+            </div>
+          </ng-container>
           <ng-container>
             <div *ngFor="let cate of parentCategories$ | async"
+                 [class.active]="(activeParentCategory$ | async)?.id === cate.id"
                  class="menu-item"
                  (click)="selectParentCategory(cate)">
               <img src="/assets/icon/drink.png"/>
               <div> {{cate.name}}</div>
             </div>
           </ng-container>
-          <!--                    <ng-container *ngIf="location.enable_menu">-->
-          <!--                      <div class="menu-item" [class.active]="currentMenu?.id === menu.id"-->
-          <!--                           (click)="selectMenu(menu)"-->
-          <!--                           *ngFor="let menu of menus; let i = index">-->
-          <!--                        <img src="/assets/icon/drink.png"/>-->
-          <!--                        <div> {{menu.name}}</div>-->
-          <!--                      </div>-->
-          <!--                    </ng-container>-->
         </div>
       </div>
       <div style="flex: 1; display: flex; flex-direction: column; min-width: 0; background: #eeedf3">
@@ -47,7 +50,7 @@
              style=" flex: 1; display: flex; align-items: stretch; padding: 10px; overflow: hidden; min-width: 0">
           <div class="order" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0">
             <div class="categories">
-              <div class="category-item" [class.active]="(activeSubCategory$ | async) === false"
+              <div class="category-item" [class.active]="(activeSubCategory$ | async) === null"
                    (click)="selectSubCategory(null)">All
               </div>
               <div class="category-item" *ngFor="let subCate of subCategories$ | async"
@@ -56,6 +59,30 @@
                 <img [src]="'/assets/icon/buger.png'" alt="" style="height: 1rem; width: 1rem; margin-right: 0.5rem">
                 {{subCate.name}}
               </div>
+            </div>
+
+            <div style="width: 100%; height: 100%">
+              <ion-slides pager="true" (ionSlideWillChange)="triggerSlideTo($event)">
+                <ion-slide *ngFor="let slide of slides$ | async">
+                  <ng-container *ngIf="slide.status === 'loading'">
+                    <div style=" display: flex; flex-wrap: wrap">
+                      <ion-thumbnail class="product-item" *ngFor="let product of listFakeProduct" slot="start">
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                      </ion-thumbnail>
+                    </div>
+                  </ng-container>
+                  <div style=" display: flex; flex-wrap: wrap">
+                    <div class="product-item" *ngFor="let product of slide.products">
+                      <ion-img [src]="product.image ? product.image : 'http://placehold.it/380'"></ion-img>
+                      <div
+                        style="position: absolute; bottom: 0; padding: 0.5rem; width: 100%; background: white; font-size: 70%">
+                        <strong>{{currentLang === 'en' ? product.name : product.other_name}}</strong>
+                        <div>{{product.sale_price | formatCurrency}}</div>
+                      </div>
+                    </div>
+                  </div>
+                </ion-slide>
+              </ion-slides>
             </div>
             <!--            <app-list-products [location]="location" (slidesLength)="updatePagination($event)"-->
             <!--                               (slidesIndex)="currentIndex=$event"></app-list-products>-->

@@ -23,8 +23,20 @@ export const subCategoryReducer = createReducer(
   on(SubCategoryActions.loadSubCategoriesSuccess, (state, action) => ({
     ...state,
     status: 'loaded',
-    subCategories: action.subCategories
+    subCategories: action.subCategories,
+    activeSubCategory: isActiveCategoryExistingInList(state.activeSubCategory, action.subCategories) ? state.activeSubCategory : null
   })),
   on(SubCategoryActions.loadSubCategoriesFailure, (state, action) => state),
-  on(SubCategoryActions.activeSubCategory, (state, action) => ({...state, activeSubCategory: action.subCategory})),
+  on(SubCategoryActions.activeSubCategory, (state, action) => ({
+    ...state,
+    activeSubCategory: action.subCategory
+  })),
 );
+
+
+export const isActiveCategoryExistingInList = (category: Category, list: Category[]) => {
+  if (!category) {
+    return false;
+  }
+  return list.some(item => item.id === category.id);
+};

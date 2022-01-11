@@ -18,6 +18,8 @@ import {OrderService} from './services/order.service';
 import {CategoryModule} from '../category/category.module';
 import {MenuModule} from '../menu/menu.module';
 import {SubCategoryModule} from '../sub-category/sub-category.module';
+import {SharedModule} from '../_helpers/shared/shared.module';
+import {ProductModule} from '../product/product.module';
 
 @NgModule({
   imports: [
@@ -31,8 +33,10 @@ import {SubCategoryModule} from '../sub-category/sub-category.module';
     CategoryModule,
     SubCategoryModule,
     MenuModule,
+    ProductModule,
     StoreModule.forFeature(orderFeatureKey, orderReducer),
-    EffectsModule.forFeature([OrderEffects])
+    EffectsModule.forFeature([OrderEffects]),
+    SharedModule
   ],
   declarations: [OrderPage],
   providers: [OrderService]

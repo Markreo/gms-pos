@@ -24,6 +24,7 @@ export const categoryReducer = createReducer(
   on(CategoryActions.loadCategories, state => ({...state, status: 'loading'})),
   on(CategoryActions.loadCategoriesSuccess, (state, action) => ({
     ...state,
+    status: 'loaded',
     categories: action.categories,
     parentCategories: action.categories.filter(cate => !cate.parent)
   })),
