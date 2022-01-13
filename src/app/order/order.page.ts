@@ -54,7 +54,9 @@ export class OrderPage implements OnInit, OnDestroy {
       delay(10)
     ).subscribe(() => {
       this.ionSlidesRef.update().then(() => {
-        console.log('slide updated');
+        this.ionSlidesRef.slideTo(0).then(() => {
+          console.log('update slide to 0');
+        });
       });
     });
   }

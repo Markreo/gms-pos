@@ -31,10 +31,10 @@ export const productReducer = createReducer(
   initialState,
   on(ProductActions.loadProducts, (state, action) => ({
     ...state,
-    status: 'loading',
+    status: action.newSlide ? 'loaded' : 'loading',
     slides: state.slides.map((slide, index) => {
       if (index === action.newSlide ?? 0) {
-        return {...slide, status: 'loading'};
+        return {...slide, status: slide.status !== 'loaded' ? 'loading' : 'loaded'};
       } else {
         return slide;
       }
@@ -69,7 +69,7 @@ export const buildNewSlide = (state: ProductState, action: { products: Product[]
 export const updateSlide = (newSlideIndex, currentSlides, newProducts) => currentSlides.map((slide, index) => {
   if (index === newSlideIndex) {
     return {...slide, status: 'loaded', products: newProducts};
-  } else  if (index === newSlideIndex +1 && slide.status === 'idle') {
+  } else if (index === newSlideIndex + 1 && slide.status === 'idle') {
     return {...slide, status: 'loading'};
   } else {
     return slide;
