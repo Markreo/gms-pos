@@ -5,11 +5,11 @@ import {Product} from '../models/product';
 export const productFeatureKey = 'product';
 
 export interface ProductState {
+  status: 'idle' | 'loading' | 'loaded' | 'error';
   slides: {
     status: 'idle' | 'loading' | 'loaded' | 'error';
     products: Product[];
   }[];
-  currentSlide: number;
   filter: {
     search: string;
     start: number;
@@ -19,7 +19,7 @@ export interface ProductState {
 
 export const initialState: ProductState = {
   slides: [],
-  currentSlide: 0,
+  status: 'idle',
   filter: {
     search: '',
     start: 0,
@@ -29,35 +29,48 @@ export const initialState: ProductState = {
 
 export const productReducer = createReducer(
   initialState,
-
   on(ProductActions.loadProducts, (state, action) => ({
     ...state,
-    filter: {
-      ...state.filter,
-      start: action.slide * state.filter.max
-    }
+    status: 'loading',
+    slides: state.slides.map((slide, index) => {
+      if (index === action.newSlide ?? 0) {
+        return {...slide, status: 'loading'};
+      } else {
+        return slide;
+      }
+    })
   })),
-  on(ProductActions.loadProductsSuccess, (state, action) => {
-
-    return {
-      ...state,
-      slides: state.slides.length === 0 || action.slide > state.slides.length - 1 ? buildNewSlide(state, action) : updateSlide(state, action)
-    };
-  }),
-  on(ProductActions.loadProductsFailure, (state, action) => ({...state, status: 'error'})),
+  on(ProductActions.loadProductsSuccessAndReset, (state, action) => ({
+    ...state,
+    status: 'loaded',
+    slides: buildNewSlide(state, action),
+    currentSlide: 0
+  })),
+  on(ProductActions.loadProductsSuccessAndUpdate, (state, action) => ({
+    ...state,
+    status: 'loaded',
+    slides: updateSlide(action.newSlide, state.slides, action.products),
+    currentSlide: action.newSlide
+  })),
+  on(ProductActions.loadProductsFailure, (state) => ({...state, status: 'error'})),
 );
 
 
-export const buildNewSlide = (state: ProductState, action) => {
+export const buildNewSlide = (state: ProductState, action: { products: Product[]; total: number }) => {
   const page = Math.ceil(action.total / state.filter.max);
-  const slide = Array(page).fill({status: 'loading', products: []});
-  slide[action.slide] = {status: 'loaded', products: action.products};
+  const slide = Array(page).fill({status: 'idle', products: []});
+  slide[0] = {status: 'loaded', products: action.products};
+  if (page > 1) {
+    slide[1] = {status: 'loading', products: action.products};
+  }
   return slide;
 };
 
-export const updateSlide = (state: ProductState, action) => state.slides.map((slide, index) => {
-  if (index === action.slide) {
-    return {...slide, status: 'loaded', products: action.products};
+export const updateSlide = (newSlideIndex, currentSlides, newProducts) => currentSlides.map((slide, index) => {
+  if (index === newSlideIndex) {
+    return {...slide, status: 'loaded', products: newProducts};
+  } else  if (index === newSlideIndex +1 && slide.status === 'idle') {
+    return {...slide, status: 'loading'};
   } else {
     return slide;
   }

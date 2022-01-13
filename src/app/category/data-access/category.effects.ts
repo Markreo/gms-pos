@@ -12,7 +12,7 @@ import {CategoryService} from '../services/category.service';
 export class CategoryEffects {
 
 
-  setCurrentLocation = createEffect(() => this.actions$.pipe(
+  setCurrentLocation$ = createEffect(() => this.actions$.pipe(
     ofType(LocationActions.setCurrentLocation),
     map(action => CategoryActions.loadCategories({location: action.location}))
   ));

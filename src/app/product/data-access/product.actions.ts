@@ -3,26 +3,31 @@ import {Product} from '../models/product';
 
 
 export const loadProducts = createAction(
-  '[Product] Load Products', props<{ slide: number; }>()
+  '[Product] Load Products',
+  props<{ newSlide?: number }>()
 );
 
-export const loadProductsSuccess = createAction(
-  '[Product] Load Products Success',
-  props<{ slide: number; products: Product[]; total: number }>()
+export const loadProductsSuccessAndReset = createAction(
+  '[Product] Load Products success then build new slide',
+  props<{ products: Product[]; total: number }>()
+);
+
+export const loadProductsSuccessAndUpdate = createAction(
+  '[Product] Load Products success then update slide',
+  props<{ products: Product[]; newSlide }>()
 );
 
 export const loadProductsFailure = createAction(
   '[Product] Load Products Failure',
-  props<{ slide: number; error: any }>()
+  props<{  error: any }>()
 );
 
-export const buildSlides = createAction(
-  '[Product] build Slides'
+export const updateSearch = createAction(
+  '[Product] update search',
+  props<{ search: string }>()
 );
 
-
-export const slideChange = createAction(
-  '[Product] Load Products Failure',
-  props<{ slideTo: number }>()
+export const updateCurrentSide = createAction(
+  '[Product] update current slide',
+  props<{ slide: number }>()
 );
-

@@ -17,7 +17,8 @@ import * as ProductActions from '../product/data-access/product.actions';
 import {Actions, ofType} from '@ngrx/effects';
 import {Subject} from 'rxjs';
 import {IonSlides} from '@ionic/angular';
-import {selectSlide} from '../product/data-access/product.selectors';
+import {selectProductFilter, selectSlide} from '../product/data-access/product.selectors';
+import {delay} from "rxjs/operators";
 
 @Component({
   selector: 'app-order',
@@ -38,6 +39,7 @@ export class OrderPage implements OnInit, OnDestroy {
   activeSubCategory$ = this.store.select(selectActiveSubCategory);
 
   slides$ = this.store.select(selectSlide);
+  productFilter$ = this.store.select(selectProductFilter);
 
   currentLang = {};
   filter = {};
@@ -48,7 +50,8 @@ export class OrderPage implements OnInit, OnDestroy {
 
   constructor(private store: Store, private actions$: Actions) {
     this.actions$.pipe(
-      ofType(ProductActions.loadProductsSuccess)
+      ofType(ProductActions.loadProductsSuccessAndReset),
+      delay(10)
     ).subscribe(() => {
       this.ionSlidesRef.update().then(() => {
         console.log('slide updated');
@@ -80,16 +83,16 @@ export class OrderPage implements OnInit, OnDestroy {
 
   }
 
-  updateSearch() {
-
+  updateSearch(event) {
+    this.store.dispatch(ProductActions.updateSearch({search: event.target.value}));
   }
 
   triggerSlideTo(e) {
     console.log(e);
     this.ionSlidesRef.getActiveIndex().then(index => {
       console.log('triggerSlideTo', index);
-      this.store.dispatch(ProductActions.loadProducts({slide: index}));
-    })
+      this.store.dispatch(ProductActions.updateCurrentSide({slide: index}));
+    });
   }
 
   ngOnDestroy() {
