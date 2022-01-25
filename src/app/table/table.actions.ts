@@ -1,4 +1,5 @@
 import {createAction, props} from '@ngrx/store';
+import {Table} from './table';
 
 export const loadTables = createAction(
   '[Table] Load Tables'
@@ -6,7 +7,7 @@ export const loadTables = createAction(
 
 export const loadTablesSuccess = createAction(
   '[Table] Load Tables Success',
-  props<{ data: any }>()
+  props<{ data: Table[] }>()
 );
 
 export const loadTablesFailure = createAction(
@@ -18,4 +19,15 @@ export const searchTable = createAction(
   '[Table] Search Table',
   props<{ search: string }>()
 );
+
+export const selectTable = createAction(
+  '[Table] select table',
+  props<{id: string}>()
+);
+
+export const cloneTableSuccess = createAction(
+  '[Table] clone table success',
+  props<{table: Table}>()
+);
+
 

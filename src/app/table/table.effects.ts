@@ -37,6 +37,15 @@ export class TableEffects {
     ))
   ));
 
+  selectTable$ = createEffect(() => this.actions$.pipe(
+    ofType(TableActions.selectTable),
+    concatLatestFrom(() => this.store.select(selectCurrentGolfClub)),
+    switchMap(([action, golfC]) => this.tableService.get(golfC.id, action.id).pipe(
+      map(table => TableActions.cloneTableSuccess({table}))
+    )),
+    catchError((error) => of(TableActions.loadTablesFailure({error})))
+  ));
+
 
   constructor(private actions$: Actions, private store: Store, private tableService: TableService) {
   }

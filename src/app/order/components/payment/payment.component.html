@@ -1,0 +1,123 @@
+<div class="payment-content">
+  <ng-container *ngIf="(status$ | async) === 'loaded'">
+    <ng-container *ngIf="order">
+      <div>
+        <!--    <app-payment-guest [guest]="order.guest" (guestChange)="setGuest($event)" [golfClub]="golfClub"-->
+        <!--                       [disabled]="someItemHasGuest"></app-payment-guest>-->
+        <div
+          style="border-bottom: 1px; display: flex; padding-bottom: 5px ; border-bottom: 1px solid #518ac6; margin: 10px">
+          <div class="item-bagtag"></div>
+          <div class="item-name">
+            {{'items' | translate}}
+            <ng-container *ngIf="order.items.length">[{{order.items.length}}]</ng-container>
+          </div>
+          <div class="item-qty">{{'qty' | translate}}</div>
+          <div class="item-price">{{'price' | translate}}</div>
+          <div></div>
+        </div>
+      </div>
+      <div style="flex: 1; padding: 10px; overflow: auto">
+        <div *ngFor="let item of order.items; let i = index"
+             class="order-item"
+             [ngClass]="getOrderItemClass(item)">
+          <div class="item-bagtag">
+            <img *ngIf="item.guest" src="/assets/icon/guest.png" alt="" style="width: 1.5rem; height: 1rem">
+          </div>
+          <div class="item-name">
+            <strong>{{item.variant.name}}</strong>
+          </div>
+          <div class="item-qty">
+            {{item.quantity}}
+          </div>
+          <div class="item-price">
+            {{item.price | formatCurrency}}
+          </div>
+        </div>
+      </div>
+      <div style="padding: 1rem">
+        <div style="display: flex; justify-content: space-between">
+          <div>{{'total_payment' | translate}}:</div>
+          <div>
+            <strong>{{getTotal() - getOrderDiscount()| formatCurrency}}</strong>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+          <div style="white-space: nowrap">
+            {{'payment_method' | translate}}:
+          </div>
+          <div style="display: flex; flex-wrap: wrap; justify-content: flex-end">
+            <button class="btn btn-sm btn-method" [class.active]="order.payment_method === 'CASH'"
+                    (click)="order.payment_method = 'CASH'" [disabled]="!!order.guest || someItemHasGuest">
+              <!--          <img src="/assets/images/icon/cash.svg" alt="">-->
+              {{'cash' | translate}}
+            </button>
+            <button class="btn btn-sm btn-method" [class.active]="order.payment_method === 'VOUCHER'"
+                    (click)="order.payment_method = 'VOUCHER'">
+              <!--          <img src="/assets/images/icon/voucher-white.svg" alt="">-->
+              {{'voucher' | translate}}
+            </button>
+            <button class="btn btn-sm btn-method" [class.active]="order.payment_method === 'WITH_GOLF'"
+                    (click)="order.payment_method = 'WITH_GOLF'">
+              <!--          <img src="/assets/images/icon/paywithgolf.svg" alt="">-->
+              {{'pay_with_golf' | translate}}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div style="padding: 1.5rem; padding-top: 0">
+        <ion-button (click)="presentActionSheet()"
+                    class="submit-btn"
+                    [disabled]="loading">
+          {{'submit_order' | translate }}
+        </ion-button>
+      </div>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="(status$ | async) === 'loading'">
+    <div>
+      <!--    <app-payment-guest [guest]="order.guest" (guestChange)="setGuest($event)" [golfClub]="golfClub"-->
+      <!--                       [disabled]="someItemHasGuest"></app-payment-guest>-->
+      <div
+        style="border-bottom: 1px; display: flex; padding-bottom: 5px ; border-bottom: 1px solid #518ac6; margin: 10px">
+        <div class="item-bagtag"></div>
+        <div class="item-name ion-margin-end">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </div>
+        <div class="item-qty ion-margin-end">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </div>
+        <div class="item-price ion-margin-end">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </div>
+      </div>
+    </div>
+    <div style="flex: 1; padding-left: 1rem; padding-right: 1rem">
+
+
+      <ion-list>
+        <ion-list-header>
+          <ion-label>
+            <ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+          </ion-label>
+        </ion-list-header>
+        <ion-item *ngFor="let i of [1, 2, 3, 4, 5]">
+          <ion-skeleton-text animated style="width: 27px; height: 27px" slot="start"></ion-skeleton-text>
+          <ion-label>
+            <h3>
+              <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+            </h3>
+            <p>
+              <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+            </p>
+            <p>
+              <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+    <div style="padding: 1.5rem; padding-top: 0">
+      <ion-skeleton-text animated style="height: 50px"></ion-skeleton-text>
+    </div>
+  </ng-container>
+</div>

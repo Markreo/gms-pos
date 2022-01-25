@@ -12,7 +12,7 @@ import {productFeatureKey, productReducer} from './data-access/product.reducer';
   imports: [
     CommonModule,
     StoreModule.forFeature(productFeatureKey, productReducer),
-    EffectsModule.forFeature([ProductEffects])
+    EffectsModule.forFeature([ProductEffects]),
   ]
 })
 export class ProductModule { }

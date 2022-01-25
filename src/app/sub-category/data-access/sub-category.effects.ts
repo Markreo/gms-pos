@@ -11,12 +11,17 @@ import * as SubCategoryActions from './sub-category.actions';
 export class SubCategoryEffects {
 
 
-  loadCategoriesSuccess$ = createEffect(() => this.actions$.pipe(
+  selectParentCategory$ = createEffect(() => this.actions$.pipe(
     ofType(CategoryActions.selectParentCategory),
     concatLatestFrom(() => this.store.select(selectCategories)),
     map(([action, categories]) => SubCategoryActions.loadSubCategoriesSuccess({
       subCategories: categories.filter(cate => cate.parent_id === action.category.id)
     }))
+  ));
+
+  loadParentCategoriesSuccess = createEffect(() => this.actions$.pipe(
+    ofType(CategoryActions.loadCategoriesSuccess),
+    map((action) => SubCategoryActions.loadSubCategoriesSuccess({subCategories: action.categories.filter(cate => !!cate.parent_id)}))
   ));
 
 

@@ -10,6 +10,7 @@ export interface TableState {
   filterObject: {
     search: string;
   };
+  currentTable: Table;
 }
 
 export const initialState: TableState = {
@@ -17,7 +18,8 @@ export const initialState: TableState = {
   status: 'idle',
   filterObject: {
     search: ''
-  }
+  },
+  currentTable: null
 };
 
 export const tableReducer = createReducer(
@@ -26,5 +28,11 @@ export const tableReducer = createReducer(
   on(TableActions.loadTables, state => ({...state, status: 'loading'})),
   on(TableActions.loadTablesSuccess, (state, action) => ({...state, status: 'loaded', tables: action.data})),
   on(TableActions.loadTablesFailure, (state, action) => ({...state, status: 'error'})),
-  on(TableActions.searchTable, (state, action) => ({...state, status: 'loading', tables: [], filterObject: {search: action.search}})),
+  on(TableActions.searchTable, (state, action) => ({
+    ...state,
+    status: 'loading',
+    tables: [],
+    filterObject: {search: action.search}
+  })),
+  on(TableActions.cloneTableSuccess, (state, action) => ({...state, status: 'loaded', currentTable: action.table}))
 );

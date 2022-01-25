@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {selectCurrentLocation} from '../location/data-access/location.selectors';
-import {Action, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {selectCurrentGolfClub} from '../golf-club/data-access/selectors/golf-club.selectors';
 import {
   selectActiveCategory,
@@ -15,10 +15,12 @@ import {
 import * as SubCategoryActions from '../sub-category/data-access/sub-category.actions';
 import * as ProductActions from '../product/data-access/product.actions';
 import {Actions, ofType} from '@ngrx/effects';
-import {Subject} from 'rxjs';
-import {IonSlides} from '@ionic/angular';
+import {combineLatest, Subject} from 'rxjs';
+import {AnimationController, IonSlides} from '@ionic/angular';
 import {selectProductFilter, selectSlide} from '../product/data-access/product.selectors';
-import {delay} from "rxjs/operators";
+import {delay, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
+import {selectTable} from '../table/table.actions';
 
 @Component({
   selector: 'app-order',
@@ -26,6 +28,7 @@ import {delay} from "rxjs/operators";
   styleUrls: ['./order.page.scss'],
 })
 export class OrderPage implements OnInit, OnDestroy {
+
   @ViewChild(IonSlides, {static: true}) ionSlidesRef: IonSlides;
 
   currentLocation$ = this.store.select(selectCurrentLocation);
@@ -48,10 +51,14 @@ export class OrderPage implements OnInit, OnDestroy {
 
   readonly listFakeProduct = Array(20).fill(0).map((_, i) => i);
 
-  constructor(private store: Store, private actions$: Actions) {
+  constructor(private store: Store,
+              private actions$: Actions,
+              private activatedRoute: ActivatedRoute,
+              private animationCtrl: AnimationController) {
     this.actions$.pipe(
       ofType(ProductActions.loadProductsSuccessAndReset),
-      delay(10)
+      delay(10),
+      takeUntil(this.destroy$)
     ).subscribe(() => {
       this.ionSlidesRef.update().then(() => {
         this.ionSlidesRef.slideTo(0).then(() => {
@@ -59,6 +66,14 @@ export class OrderPage implements OnInit, OnDestroy {
         });
       });
     });
+    combineLatest(this.store.select(selectCurrentGolfClub), this.activatedRoute.params).pipe(
+      takeUntil(this.destroy$),
+      filter(([golfClub, params]) => !!golfClub),
+      map(([golfClub, params]) => params.id)
+    ).subscribe(id => {
+        this.store.dispatch(selectTable({id}));
+      }, console.log
+      , () => console.log('complete'));
   }
 
   ngOnInit() {
@@ -80,11 +95,6 @@ export class OrderPage implements OnInit, OnDestroy {
 
   }
 
-
-  updatePagination() {
-
-  }
-
   updateSearch(event) {
     this.store.dispatch(ProductActions.updateSearch({search: event.target.value}));
   }
@@ -95,6 +105,15 @@ export class OrderPage implements OnInit, OnDestroy {
       console.log('triggerSlideTo', index);
       this.store.dispatch(ProductActions.updateCurrentSide({slide: index}));
     });
+  }
+
+  present() {
+    console.log('document.querySelector(\'.product-item\')', document.querySelector('.product-item'))
+    const animation = this.animationCtrl.create()
+      .addElement(document.querySelectorAll('.product-item'))
+      .duration(300)
+      .fromTo('opacity', '0.5', '1');
+    animation.play().then(() => console.log('play done'));
   }
 
   ngOnDestroy() {

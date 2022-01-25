@@ -1,17 +1,17 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { OrderPageRoutingModule } from './order-routing.module';
+import {OrderPageRoutingModule} from './order-routing.module';
 
-import { OrderPage } from './order.page';
+import {OrderPage} from './order.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {GolfClubModule} from '../golf-club/golf-club.module';
 import {LocationModule} from '../location/location.module';
-import { EffectsModule } from '@ngrx/effects';
-import { OrderEffects } from './data-access/order.effects';
+import {EffectsModule} from '@ngrx/effects';
+import {OrderEffects} from './data-access/order.effects';
 import {StoreModule} from '@ngrx/store';
 import {orderFeatureKey, orderReducer} from './data-access/order.reducer';
 import {OrderService} from './services/order.service';
@@ -20,6 +20,9 @@ import {MenuModule} from '../menu/menu.module';
 import {SubCategoryModule} from '../sub-category/sub-category.module';
 import {SharedModule} from '../_helpers/shared/shared.module';
 import {ProductModule} from '../product/product.module';
+import {PaymentComponent} from "./components/payment/payment.component";
+import {TableModule} from "../table/table.module";
+import { ProductItemComponent } from './components/product-item/product-item.component';
 
 @NgModule({
   imports: [
@@ -36,9 +39,11 @@ import {ProductModule} from '../product/product.module';
     ProductModule,
     StoreModule.forFeature(orderFeatureKey, orderReducer),
     EffectsModule.forFeature([OrderEffects]),
-    SharedModule
+    SharedModule,
+    TableModule
   ],
-  declarations: [OrderPage],
+  declarations: [OrderPage, PaymentComponent, ProductItemComponent],
   providers: [OrderService]
 })
-export class OrderPageModule {}
+export class OrderPageModule {
+}
