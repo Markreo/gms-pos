@@ -21,6 +21,7 @@ import {selectProductFilter, selectSlide} from '../product/data-access/product.s
 import {delay, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {selectTable} from '../table/table.actions';
+import {selectCurrentTable} from "../table/table.selectors";
 
 @Component({
   selector: 'app-order',
@@ -40,6 +41,8 @@ export class OrderPage implements OnInit, OnDestroy {
 
   subCategories$ = this.store.select(selectSubCategories);
   activeSubCategory$ = this.store.select(selectActiveSubCategory);
+
+  currentTable$ = this.store.select(selectCurrentTable);
 
   slides$ = this.store.select(selectSlide);
   productFilter$ = this.store.select(selectProductFilter);

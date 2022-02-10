@@ -85,10 +85,10 @@
           <div class="payment"
                style="width: 24rem; display: flex; flex-direction: column; padding: 0 1rem;">
             <div class="payment-header"
-                 style="height: 3rem; color: #184c7c; display: flex; justify-content: space-between; align-items: center"
+                 style="height: 3rem; color: #184c7c; display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem"
                  *ngIf="currentLocation$ | async">
               <div>
-                <!--                {{location.name}} | <strong>Table {{table?.code}}</strong>-->
+                {{(currentLocation$ | async)?.name}} <ng-container *ngIf="currentTable$">| <strong>Table {{(currentTable$ | async)?.code}}</strong></ng-container>
               </div>
               <button>
                 <img src="/assets/icon/bell.png" alt="" style="height: 2.5rem; width: 2.5rem">

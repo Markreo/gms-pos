@@ -25,4 +25,5 @@ export const checkoutOrder = createAction('[Order] checkout Order');
 export const actionOrderSuccess = createAction('[Order] Action update success', props<{ order: Order }>());
 export const actionOrderFailure = createAction('[Order] Action update failure', props<{ error: any }>());
 
+export const setPaymentType = createAction('[Order] set Payment type', props<{paymentType: 'WITH_GOLF' | 'CITY_LEDGER' | 'CASH' | 'VOUCHER'}>());
 

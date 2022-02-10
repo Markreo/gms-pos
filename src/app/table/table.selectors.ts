@@ -7,3 +7,4 @@ export const selectTableState = createFeatureSelector<fromTable.TableState>(
 
 export const selectTables = createSelector(selectTableState, state => state?.tables);
 export const selectTableStatus = createSelector(selectTableState, state => state?.status);
+export const selectCurrentTable = createSelector(selectTableState, state => state?.currentTable);

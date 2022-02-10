@@ -4,7 +4,7 @@ import {selectOrder, selectOrderAction, selectOrderStatus} from '../../data-acce
 import {Order} from '../../models/order';
 import {TranslateService} from '@ngx-translate/core';
 import {ActionSheetController} from '@ionic/angular';
-import {checkoutOrder, submitOrder} from '../../data-access/order.actions';
+import {checkoutOrder, setPaymentType, submitOrder} from '../../data-access/order.actions';
 
 @Component({
   selector: 'app-payment',
@@ -23,7 +23,10 @@ export class PaymentComponent implements OnInit {
   constructor(private store: Store,
               private translateService: TranslateService,
               private actionSheetController: ActionSheetController) {
-    this.order$.subscribe(order => this.order = order);
+    this.order$.subscribe(order => {
+      console.log('update order', order)
+      this.order = order;
+    });
   }
 
   ngOnInit(): void {
@@ -78,6 +81,10 @@ export class PaymentComponent implements OnInit {
 
   updateItem(i) {
 
+  }
+
+  setPaymentType(type: 'WITH_GOLF' | 'CITY_LEDGER' | 'CASH' | 'VOUCHER') {
+    this.store.dispatch(setPaymentType({paymentType: type}));
   }
 
 

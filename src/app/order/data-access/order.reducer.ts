@@ -41,5 +41,6 @@ export const orderReducer = createReducer(
     }
   })),
   on(OrderActions.submitOrder, (state) => ({...state, action: 'submit'})),
-  on(OrderActions.submitOrder, (state) => ({...state, action: 'checkout'}))
+  on(OrderActions.submitOrder, (state) => ({...state, action: 'checkout'})),
+  on(OrderActions.setPaymentType, (state, action) =>({...state, order: {...state.order, payment_type: action.paymentType}}))
 );
