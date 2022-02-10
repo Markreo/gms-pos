@@ -17,22 +17,8 @@
         </div>
       </div>
       <div style="flex: 1; padding: 10px; overflow: auto">
-        <div *ngFor="let item of order.items; let i = index"
-             class="order-item"
-             [ngClass]="getOrderItemClass(item)">
-          <div class="item-bagtag">
-            <img *ngIf="item.guest" src="/assets/icon/guest.png" alt="" style="width: 1.5rem; height: 1rem">
-          </div>
-          <div class="item-name">
-            <strong>{{item.variant.name}}</strong>
-          </div>
-          <div class="item-qty">
-            {{item.quantity}}
-          </div>
-          <div class="item-price">
-            {{item.price | formatCurrency}}
-          </div>
-        </div>
+        <app-order-item *ngFor="let item of order.items; let i = index" [item]="item"></app-order-item>
+
       </div>
       <div style="padding: 1rem">
         <div style="display: flex; justify-content: space-between">

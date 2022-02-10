@@ -80,11 +80,5 @@ export class PaymentComponent implements OnInit {
 
   }
 
-  getOrderItemClass(item) {
-    return {
-      submitted: item.id && !item.waiting_qty && item.cooking_qty,
-      'wait-supply': item.id && item.waiting_qty,
-      done: item.id && !item.waiting_qty && !item.cooking_qty
-    };
-  }
+
 }

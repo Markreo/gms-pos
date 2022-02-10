@@ -1,0 +1,16 @@
+<div #divElement
+  class="order-item"
+  [ngClass]="getOrderItemClass(item)">
+  <div class="item-bagtag">
+    <img *ngIf="item.guest" src="/assets/icon/guest.png" alt="" style="width: 1.5rem; height: 1rem">
+  </div>
+  <div class="item-name">
+    <strong>{{item.variant.name}}</strong>
+  </div>
+  <div class="item-qty">
+    {{item.quantity}}
+  </div>
+  <div class="item-price">
+    {{item.price | formatCurrency}}
+  </div>
+</div>

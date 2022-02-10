@@ -23,6 +23,7 @@ import {ProductModule} from '../product/product.module';
 import {PaymentComponent} from "./components/payment/payment.component";
 import {TableModule} from "../table/table.module";
 import { ProductItemComponent } from './components/product-item/product-item.component';
+import { OrderItemComponent } from './components/payment/order-item/order-item.component';
 
 @NgModule({
   imports: [
@@ -42,7 +43,7 @@ import { ProductItemComponent } from './components/product-item/product-item.com
     SharedModule,
     TableModule
   ],
-  declarations: [OrderPage, PaymentComponent, ProductItemComponent],
+  declarations: [OrderPage, PaymentComponent, ProductItemComponent, OrderItemComponent],
   providers: [OrderService]
 })
 export class OrderPageModule {
