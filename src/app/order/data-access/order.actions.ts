@@ -17,13 +17,11 @@ export const addNewOrderItem = createAction('[Order] add Item', props<{ item: Or
 export const updateOrderItem = createAction('[Order] update Item', props<{ index: number; item: OrderItem }>());
 export const deleteOrderItem = createAction('[Order] delete Item', props<{ item: OrderItem }>());
 
-export const addGuest = createAction('[Order] Add guest', props<{ guest: Guest }>());
-export const addGuestSuccess = createAction('[Order] add Guest success', props<{ order: Order }>());
-
 export const submitOrder = createAction('[Order] submit Order');
 export const checkoutOrder = createAction('[Order] checkout Order');
 export const actionOrderSuccess = createAction('[Order] Action update success', props<{ order: Order }>());
 export const actionOrderFailure = createAction('[Order] Action update failure', props<{ error: any }>());
 
 export const setPaymentType = createAction('[Order] set Payment type', props<{paymentType: 'WITH_GOLF' | 'CITY_LEDGER' | 'CASH' | 'VOUCHER'}>());
+export const setGuestOfOrder = createAction('[Order] set guest', props<{guest: Guest}>());
 

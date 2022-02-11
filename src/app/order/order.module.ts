@@ -20,10 +20,12 @@ import {MenuModule} from '../menu/menu.module';
 import {SubCategoryModule} from '../sub-category/sub-category.module';
 import {SharedModule} from '../_helpers/shared/shared.module';
 import {ProductModule} from '../product/product.module';
-import {PaymentComponent} from "./components/payment/payment.component";
-import {TableModule} from "../table/table.module";
+import {PaymentComponent} from './components/payment/payment.component';
+import {TableModule} from '../table/table.module';
 import { ProductItemComponent } from './components/product-item/product-item.component';
 import { OrderItemComponent } from './components/payment/order-item/order-item.component';
+import { PaymentGuestComponent } from './components/payment/payment-guest/payment-guest.component';
+import {GuestModule} from "../guest/guest.module";
 
 @NgModule({
   imports: [
@@ -41,9 +43,10 @@ import { OrderItemComponent } from './components/payment/order-item/order-item.c
     StoreModule.forFeature(orderFeatureKey, orderReducer),
     EffectsModule.forFeature([OrderEffects]),
     SharedModule,
-    TableModule
+    TableModule,
+    GuestModule
   ],
-  declarations: [OrderPage, PaymentComponent, ProductItemComponent, OrderItemComponent],
+  declarations: [OrderPage, PaymentComponent, ProductItemComponent, OrderItemComponent, PaymentGuestComponent],
   providers: [OrderService]
 })
 export class OrderPageModule {

@@ -1,0 +1,53 @@
+<div *ngIf="(currentGuest$ | async) !== null" class="bound bg-gray">
+  <div>{{(currentGuest$ | async).fullname}}<span class="ion-color-danger">#{{(currentGuest$ | async).bagtag}}</span></div>
+  <ion-icon class="scan" name="close-outline" (click)="onClickGuest(null)"></ion-icon>
+</div>
+<ng-container *ngIf="(currentGuest$ | async) === null">
+  <div class="bound">
+    <ion-icon *ngIf="(search$ | async).length " class="scan" name="close-circle-outline"
+              (click)="clearSearch()"></ion-icon>
+    <ion-icon *ngIf="(search$ | async).length === 0" class="scan" name="camera"
+              (click)="scanBarcode()"></ion-icon>
+    <ion-input [placeholder]="'bagtag' | translate"
+               (ionInput)="setInputSearch($event)"></ion-input>
+  </div>
+</ng-container>
+<div *ngIf="(focus$ | async) === true"
+     style="position: absolute; width: 100%; height: calc(100% - 87px); background: white; z-index: 9; overflow: auto">
+  <div *ngIf="(status$ | async) === 'loading'">
+    <ion-list>
+      <ion-list-header>
+        <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+      </ion-list-header>
+      <ion-item>
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-item>
+      <ion-item>
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-item>
+      <ion-item>
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-item>
+      <ion-item>
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-item>
+      <ion-item>
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-item>
+
+    </ion-list>
+  </div>
+  <div *ngIf="(status$ | async) === 'loaded'" style="flex: 1; overflow: auto">
+    <ion-list style="padding-top: 0" *ngIf="(guests$| async).length">
+      <ion-list-header style="min-height: 0">
+        <ion-label style="color: grey">{{'list_guest' | translate}}:</ion-label>
+      </ion-list-header>
+      <ion-item [button]="true" [lines]="'full'" *ngFor="let guest of guests$ | async" (click)="onClickGuest(guest)" [disabled]="guest.status === 'CHECKOUT'">
+        <ion-label><span [class]="guest.status">#{{guest.bagtag}}</span> {{guest.fullname}}</ion-label>
+      </ion-item>
+    </ion-list>
+    <div class="ion-padding" *ngIf="(guests$| async).length === 0">
+      <i>{{'guest_not_found' | translate}}!</i>
+    </div>
+  </div>
+</div>

@@ -2,8 +2,7 @@
   <ng-container *ngIf="(status$ | async) === 'loaded'">
     <ng-container *ngIf="order">
       <div>
-        <!--    <app-payment-guest [guest]="order.guest" (guestChange)="setGuest($event)" [golfClub]="golfClub"-->
-        <!--                       [disabled]="someItemHasGuest"></app-payment-guest>-->
+        <app-payment-guest></app-payment-guest>
         <div
           style="border-bottom: 1px; display: flex; padding-bottom: 5px ; border-bottom: 1px solid #518ac6; margin: 10px">
           <div class="item-bagtag"></div>
@@ -32,7 +31,7 @@
             {{'payment_type' | translate}}:
           </div>
           <div style="display: flex; flex-wrap: wrap; justify-content: flex-end">
-            <button class="btn btn-sm btn-method" [class.active]="order.payment_type == 'CASH'"
+            <button class="btn btn-sm btn-method" [class.active]="order.payment_type === 'CASH'"
                     (click)="setPaymentType('CASH')" [disabled]="!!order.guest || someItemHasGuest">
               {{'cash' | translate}}
             </button>
@@ -58,8 +57,7 @@
   </ng-container>
   <ng-container *ngIf="(status$ | async) === 'loading'">
     <div>
-      <!--    <app-payment-guest [guest]="order.guest" (guestChange)="setGuest($event)" [golfClub]="golfClub"-->
-      <!--                       [disabled]="someItemHasGuest"></app-payment-guest>-->
+      <app-payment-guest></app-payment-guest>
       <div
         style="border-bottom: 1px; display: flex; padding-bottom: 5px ; border-bottom: 1px solid #518ac6; margin: 10px">
         <div class="item-bagtag"></div>

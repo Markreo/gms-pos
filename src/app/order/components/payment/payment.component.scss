@@ -15,37 +15,37 @@
 }
 
 :host {
-::ng-deep {
+  ::ng-deep {
 
-.item-bagtag {
-  width: 10px;
-  margin-right: 4px;
-}
+    .item-bagtag {
+      width: 10px;
+      margin-right: 4px;
+    }
 
-.order-item {
-  display: flex;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  padding-right: 5px;
-  align-items: center;
-  border-radius: 4px;
-  overflow: hidden;
-}
+    .order-item {
+      display: flex;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      align-items: center;
+      border-radius: 4px;
+      overflow: hidden;
+    }
 
-.item-name {
-  flex: 1;
-}
+    .item-name {
+      flex: 1;
+    }
 
-.item-qty {
-  width: 50px;
-  text-align: center;
-}
+    .item-qty {
+      width: 50px;
+      text-align: center;
+    }
 
-.item-price {
-  width: 100px;
-  text-align: right;
-}
-}
+    .item-price {
+      width: 100px;
+      text-align: right;
+      padding-right: 10px;
+    }
+  }
 }
 
 ion-button.submit-btn {
@@ -70,17 +70,17 @@ ion-button.submit-btn {
   border-radius: 4px;
   padding: 0.25rem;
 
-img {
-  width: 17px;
-}
+  img {
+    width: 17px;
+  }
 
-&:hover {
-   color: white !important;
- }
+  &:hover {
+    color: white !important;
+  }
 
-&.active {
-   background: #56BFD0;
- }
+  &.active {
+    background: #56BFD0;
+  }
 }
 
 .custom-select {
@@ -88,4 +88,8 @@ img {
   background-color: #fff;
   margin: 2px;
   border-radius: 4px;
+}
+
+button[disabled] {
+  opacity: 0.56;
 }

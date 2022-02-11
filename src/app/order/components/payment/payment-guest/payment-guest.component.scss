@@ -1,0 +1,58 @@
+.bound {
+  margin: 22.5px 10px 10px;
+  border-radius: 22.5px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 1px solid #cbcbcb;
+  position: relative;
+
+&.bg-gray {
+   background: #e6e6e6;
+ }
+
+&.disabled {
+   background: #f3f3f3;
+
+ }
+}
+
+ion-input {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --background: white;
+
+&.disabled {
+   --background: #e6e6e6;
+ }
+}
+
+ion-icon.search {
+  font-size: 16px;
+}
+
+ion-icon.close-result {
+  position: absolute;
+  right: 25px;
+  font-size: 16px;
+  z-index: 5;
+}
+
+ion-icon.scan {
+  top: 2px;
+  position: absolute;
+  right: 15px;
+  font-size: 16px;
+  z-index: 5;
+  padding: 10px;
+}
+
+
+.CHECKOUT {
+  color: #2ecdee;
+}
+
+.CHECKIN {
+  color: #ff5a5a;
+}

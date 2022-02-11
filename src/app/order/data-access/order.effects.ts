@@ -15,6 +15,7 @@ import {OrderItem} from '../models/order-item';
 import {LoadingController, ToastController} from '@ionic/angular';
 import {initOrderFunction} from './init-order.function';
 import {toSubmitOrderFunction} from './to-submit-order.function';
+import {setGuest} from "../../guest/data-access/guest.actions";
 
 
 @Injectable()
@@ -51,7 +52,7 @@ export class OrderEffects {
         return OrderActions.updateOrderItem({index, item: {...orderItem, quantity: orderItem.quantity + 1}});
       } else {
         return OrderActions.addNewOrderItem({
-          item: new OrderItem( {
+          item: new OrderItem({
             id: null,
             quantity: 1,
             price: action.variant.sale_price,
@@ -80,7 +81,8 @@ export class OrderEffects {
               }).then(toast => toast.present());
             }),
             finalize(() => {
-              ionLoading.dismiss().then(() => {});
+              ionLoading.dismiss().then(() => {
+              });
             })
           ))
         )),
@@ -102,21 +104,23 @@ export class OrderEffects {
           if (order.id) {
             return this.orderService.updateOrder(golfClub.id, order.id, order).pipe(
               finalize(() => {
-                ionLoading.dismiss().then(r => {});
+                ionLoading.dismiss().then(r => {
+                });
               })
             );
           } else {
             return this.orderService.createOrder(golfClub.id, order).pipe(
               finalize(() => {
-                ionLoading.dismiss().then(r => {});
+                ionLoading.dismiss().then(r => {
+                });
               })
             );
           }
         }),
         tap(() => {
           this.toastController.create({
-            message: (order.id ? 'Update...' : 'Submit...' ) + ' success!',
-            duration: 1000,
+            message: (order.id ? 'Update' : 'Submit') + ' success!',
+            duration: 1500,
             color: 'primary'
           }).then(toast => toast.present());
         }),
@@ -128,16 +132,23 @@ export class OrderEffects {
 
   actionError = createEffect(() => this.actions$.pipe(
     ofType(OrderActions.actionOrderFailure),
-    exhaustMap(() => this.toastController.create({
-        message: 'Error!',
-        duration: 1000,
-        color: 'danger'
-      })),
+    exhaustMap((action) => this.toastController.create({
+      header: 'Error!',
+      message: action.error.error.message,
+      duration: 2500,
+      color: 'danger'
+    })),
     tap(toast => {
-      toast.present().then(a => {});
+      toast.present().then(a => {
+      });
     })
   ), {dispatch: false});
 
+
+  selectGuest = createEffect(() => this.actions$.pipe(
+    ofType(setGuest),
+    map(action => OrderActions.setGuestOfOrder({guest: action.guest}))
+  ));
 
   constructor(private actions$: Actions,
               private orderService: OrderService,

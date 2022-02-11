@@ -21,6 +21,7 @@ export class OrderService {
   }
 
   checkoutOrder(orderId: string, data) {
+    console.log('data', data);
     return this.http.put<any>(buildInventoryUrl('orders/' + orderId + '/checkout'), data);
   }
 
