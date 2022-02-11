@@ -19,7 +19,7 @@
   "login_fail": "Username or password is incorrect!",
   "logout": "Logout",
   "password": "Password",
-  "payment_method": "Payment method",
+  "payment_type": "Payment method",
   "price": "Price",
   "qty": "Qty",
   "quantity": "Quantity",

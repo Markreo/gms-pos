@@ -19,7 +19,7 @@
   "login_fail": "Tên đăng nhập hoặc mật khẩu không đúng!",
   "logout": "Đăng xuất",
   "password": "Mật khẩu",
-  "payment_method": "Phương thức thanh toán",
+  "payment_type": "Phương thức thanh toán",
   "price": "Giá",
   "qty": "S.lg",
   "quantity": "Số lượng",

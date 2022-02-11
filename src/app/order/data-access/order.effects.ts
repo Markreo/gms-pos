@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, concatLatestFrom, createEffect, ofType} from '@ngrx/effects';
-import {catchError, concatMap, exhaustMap, map, mergeMap, switchMap} from 'rxjs/operators';
-import {of} from 'rxjs';
+import {catchError, concatMap, exhaustMap, finalize, map, mergeMap, switchMap} from 'rxjs/operators';
+import {from, of} from 'rxjs';
 
 import * as OrderActions from './order.actions';
 import {cloneTableSuccess, selectTable} from '../../table/table.actions';
@@ -13,6 +13,7 @@ import {ProductService} from '../../product/services/product.service';
 import {selectOrder} from './order.selectors';
 import {OrderItem} from '../models/order-item';
 import {Order} from '../models/order';
+import {LoadingController, ToastController} from '@ionic/angular';
 
 
 @Injectable()
@@ -68,21 +69,51 @@ export class OrderEffects {
 
   $submit = createEffect(() => this.actions$.pipe(
     ofType(OrderActions.submitOrder),
-    concatLatestFrom(action => [this.store.select(selectCurrentGolfClub), this.store.select(selectOrder)]),
-    exhaustMap(([action, golfClub, order]) => {
-      if (order.id) {
-        return this.orderService.updateOrder(golfClub.id, order.id, order);
-      } else {
-        return this.orderService.createOrder(golfClub.id, order);
-      }
-    }),
-    map(order => OrderActions.actionOrderSuccess({order}))
-  ), {dispatch: false});
+    concatLatestFrom(() => this.store.select(selectOrder)),
+    exhaustMap(([action, order]) => from(this.loadingController.create({
+      message: order.id ? 'Update...' : 'Submit...'
+    })).pipe(
+      switchMap(ionLoading => from(ionLoading.present()).pipe(
+        concatLatestFrom(() => this.store.select(selectCurrentGolfClub)),
+        exhaustMap(([, golfClub]) => {
+          if (order.id) {
+            return this.orderService.updateOrder(golfClub.id, order.id, order).pipe(
+              finalize(() => {
+                ionLoading.dismiss().then(r => {
+                  this.toastController.create({
+                    message: 'Update success!',
+                    duration: 1000,
+                    color: 'primary'
+                  }).then(toast => toast.present());
+                });
+              })
+            );
+          } else {
+            return this.orderService.createOrder(golfClub.id, order).pipe(
+              finalize(() => {
+                ionLoading.dismiss().then(r => {
+                  this.toastController.create({
+                    message: 'Update success!',
+                    duration: 1000,
+                    color: 'primary'
+                  }).then(toast => toast.present());
+                });
+              })
+            );
+          }
+        }),
+        map(updatedOrder => OrderActions.actionOrderSuccess({order: updatedOrder}))
+      )),
+    )),
+  ));
+
 
   constructor(private actions$: Actions,
               private orderService: OrderService,
               private productService: ProductService,
               private tableService: TableService,
+              private loadingController: LoadingController,
+              private toastController: ToastController,
               private store: Store) {
   }
 
