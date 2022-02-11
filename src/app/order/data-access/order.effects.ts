@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Actions, concatLatestFrom, createEffect, ofType} from '@ngrx/effects';
-import {catchError, concatMap, exhaustMap, filter, finalize, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, finalize, map, switchMap, tap} from 'rxjs/operators';
 import {from, of} from 'rxjs';
 
 import * as OrderActions from './order.actions';
@@ -12,9 +12,9 @@ import {OrderService} from '../services/order.service';
 import {ProductService} from '../../product/services/product.service';
 import {selectOrder} from './order.selectors';
 import {OrderItem} from '../models/order-item';
-import {Order} from '../models/order';
 import {LoadingController, ToastController} from '@ionic/angular';
 import {initOrderFunction} from './init-order.function';
+import {toSubmitOrderFunction} from './to-submit-order.function';
 
 
 @Injectable()
@@ -51,14 +51,14 @@ export class OrderEffects {
         return OrderActions.updateOrderItem({index, item: {...orderItem, quantity: orderItem.quantity + 1}});
       } else {
         return OrderActions.addNewOrderItem({
-          item: {
+          item: new OrderItem( {
             id: null,
             quantity: 1,
             price: action.variant.sale_price,
             variant: action.variant,
             discount: action.variant.discount ?? 0,
             discount_type: 'PERCENTAGE'
-          }
+          })
         });
       }
     })
@@ -66,7 +66,7 @@ export class OrderEffects {
 
   $checkout = createEffect(() => this.actions$.pipe(
     ofType(OrderActions.checkoutOrder),
-    concatLatestFrom(() => this.store.select(selectOrder)),
+    concatLatestFrom(() => this.store.select(selectOrder).pipe(map(order => toSubmitOrderFunction(order)))),
     exhaustMap(([action, order]) => from(this.loadingController.create({
         message: 'Please wait...'
       })).pipe(
@@ -80,12 +80,11 @@ export class OrderEffects {
               }).then(toast => toast.present());
             }),
             finalize(() => {
-              ionLoading.dismiss().then(() => {
-              });
+              ionLoading.dismiss().then(() => {});
             })
           ))
         )),
-        map(updatedOrder => OrderActions.loadOrderSuccess({order: initOrderFunction(order.table_map)})),
+        map(updatedOrder => OrderActions.loadOrderSuccess({order: initOrderFunction({id: order.table_map})})),
         catchError(error => of(OrderActions.actionOrderFailure({error}))),
       ),
     ),
@@ -93,7 +92,7 @@ export class OrderEffects {
 
   $submit = createEffect(() => this.actions$.pipe(
     ofType(OrderActions.submitOrder),
-    concatLatestFrom(() => this.store.select(selectOrder)),
+    concatLatestFrom(() => this.store.select(selectOrder).pipe(map(order => toSubmitOrderFunction(order)))),
     exhaustMap(([action, order]) => from(this.loadingController.create({
       message: order.id ? 'Update...' : 'Submit...'
     })).pipe(
