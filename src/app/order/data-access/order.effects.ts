@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Actions, concatLatestFrom, createEffect, ofType} from '@ngrx/effects';
-import {catchError, concatMap, exhaustMap, finalize, map, mergeMap, switchMap} from 'rxjs/operators';
+import {catchError, concatMap, exhaustMap, filter, finalize, map, mergeMap, switchMap} from 'rxjs/operators';
 import {from, of} from 'rxjs';
 
 import * as OrderActions from './order.actions';
@@ -14,6 +14,7 @@ import {selectOrder} from './order.selectors';
 import {OrderItem} from '../models/order-item';
 import {Order} from '../models/order';
 import {LoadingController, ToastController} from '@ionic/angular';
+import {initOrderFunction} from './init-order.function';
 
 
 @Injectable()
@@ -34,11 +35,7 @@ export class OrderEffects {
     concatLatestFrom(() => this.store.select(selectCurrentGolfClub)),
     switchMap(([action, golfClub]) => this.orderService.getOrder(golfClub.id, action.id).pipe(
       map(order => OrderActions.loadOrderSuccess({
-        order: order.id ? order : new Order({
-          items: [],
-          table_map: {id: action.id},
-          type: 'FB'
-        })
+        order: order.id ? order : initOrderFunction(action)
       }))
     )),
     catchError(error => of(OrderActions.loadOrderFailure({error})))
@@ -65,6 +62,31 @@ export class OrderEffects {
         });
       }
     })
+  ));
+
+  $checkout = createEffect(() => this.actions$.pipe(
+    ofType(OrderActions.checkoutOrder),
+    concatLatestFrom(() => this.store.select(selectOrder)),
+    exhaustMap(([action, order]) => from(this.loadingController.create({
+      message: 'Please wait...'
+    })).pipe(
+      switchMap(ionLoading => from(ionLoading.present()).pipe(
+          switchMap(() => this.orderService.checkoutOrder(order.id, order).pipe(
+              finalize(() => {
+                ionLoading.dismiss().then(() => {
+                  this.toastController.create({
+                    message: 'Checkout success!',
+                    duration: 1000,
+                    color: 'primary'
+                  }).then(toast => toast.present());
+                });
+              })
+            ))
+        )),
+        map(updatedOrder => OrderActions.loadOrderSuccess({order: initOrderFunction(order.table_map)}))
+      ),
+    ),
+
   ));
 
   $submit = createEffect(() => this.actions$.pipe(

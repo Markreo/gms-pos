@@ -20,4 +20,8 @@ export class OrderService {
     return this.http.put<Order>(buildInventoryUrl('/golf/clubs/' + golfClubId) + '/orders/' + orderId, convertDataToServer(data));
   }
 
+  checkoutOrder(orderId: string, data) {
+    return this.http.put<any>(buildInventoryUrl('orders/' + orderId + '/checkout'), data);
+  }
+
 }

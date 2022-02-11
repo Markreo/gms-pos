@@ -5,7 +5,7 @@ import {Guest} from './guest';
 export class Order {
   id: string;
   items: OrderItem[];
-  table_map: Partial<Table>;
+  table_map: Partial<Table> & Pick<Table, 'id'>;
   type: 'FB';
   payment_type: 'WITH_GOLF' | 'CITY_LEDGER' | 'CASH' | 'VOUCHER'; // chỉ dùng khi checkout
   guest: Guest;
