@@ -14,6 +14,7 @@ import {of, pipe} from 'rxjs';
 import {TypedAction} from '@ngrx/store/src/models';
 import {updateForSlideSuccess, updateListProductSuccess} from './product.actions';
 import {selectActiveSubCategory} from "../../sub-category/data-access/sub-category.selectors";
+import {activeSubCategory} from "../../sub-category/data-access/sub-category.actions";
 
 
 @Injectable()
@@ -25,6 +26,11 @@ export class ProductEffects {
 
   setParentCategory$ = createEffect(() => this.actions$.pipe(
     ofType(CategoryActions.selectParentCategory),
+    map(action => ProductActions.updateListProduct())
+  ));
+
+  setSubCategory = createEffect(() => this.actions$.pipe(
+    ofType(activeSubCategory),
     map(action => ProductActions.updateListProduct())
   ));
 
