@@ -4,57 +4,45 @@ import {catchError, debounceTime, delay, map, mergeMap, switchMap, tap} from 'rx
 
 import * as ProductActions from './product.actions';
 import * as LocationActions from '../../location/data-access/location.actions';
-import {Store} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import {selectProductFilter} from './product.selectors';
 import {ProductService} from '../services/product.service';
 import {selectCurrentLocation} from '../../location/data-access/location.selectors';
 import {selectActiveCategory} from '../../category/data-access/category.selectors';
 import * as CategoryActions from '../../category/data-access/category.actions';
-import {of} from 'rxjs';
+import {of, pipe} from 'rxjs';
+import {TypedAction} from "@ngrx/store/src/models";
+import {updateForSlideSuccess, updateListProductSuccess} from "./product.actions";
 
 
 @Injectable()
 export class ProductEffects {
   setCurrentLocation$ = createEffect(() => this.actions$.pipe(
     ofType(LocationActions.setCurrentLocation),
-    map(action => ProductActions.loadProducts({}))
+    map(action => ProductActions.updateListProduct())
   ));
 
   setParentCategory$ = createEffect(() => this.actions$.pipe(
     ofType(CategoryActions.selectParentCategory),
-    map(action => ProductActions.loadProducts({}))
+    map(action => ProductActions.updateListProduct())
   ));
 
   updateSearch$ = createEffect(() => this.actions$.pipe(
-    ofType(ProductActions.updateSearch),
-    map(action => ProductActions.loadProducts({}))
-  ));
-
-  updateCurrentSide$ = createEffect(() => this.actions$.pipe(
-    ofType(ProductActions.updateCurrentSide),
-    map(action => ProductActions.loadProducts({newSlide: action.slide}))
+    ofType(ProductActions.triggerUpdateSearch),
+    delay(10),
+    map(action => ProductActions.updateListProduct())
   ));
 
 
-  loadProducts$ = createEffect(() => this.actions$.pipe(
-    ofType(ProductActions.loadProducts),
-    concatLatestFrom(() => [
-      this.store.select(selectCurrentLocation),
-      this.store.select(selectProductFilter),
-      this.store.select(selectActiveCategory)]), //select menu, select sub-category
-    debounceTime(300),
-    tap(a => console.log('loadProducts', a)),
-    switchMap(([action, location, filter, category]) =>
-      this.productService.getAllWithFilter(location.id, filter).pipe(
-        map(resp => action.newSlide ? ProductActions.loadProductsSuccessAndUpdate({
-          products: resp.data,
-          newSlide: action.newSlide
-        }) : ProductActions.loadProductsSuccessAndReset({
-          products: resp.data,
-          total: resp.total
-        }))
-      )),
-    catchError(error => of(ProductActions.loadProductsFailure({error})))
+  updateListProduct$ = createEffect(() => this.actions$.pipe(
+    ofType(ProductActions.updateListProduct),
+    this.updateProductPipe(updateListProductSuccess)
+  ));
+
+
+  updateForSlideSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(ProductActions.updateForSlideSuccess),
+    this.updateProductPipe(updateForSlideSuccess)
   ));
 
   constructor(private actions$: Actions,
@@ -62,4 +50,24 @@ export class ProductEffects {
               private productService: ProductService) {
   }
 
+  updateProductPipe(returnAction)  {
+    return pipe(
+      concatLatestFrom(() => [
+        this.store.select(selectCurrentLocation),
+        this.store.select(selectProductFilter),
+        this.store.select(selectActiveCategory)]), //select menu, select sub-category
+      debounceTime(300),
+      switchMap(([action, location, filter, category]) =>
+        // if  menu
+        // if category -> menu by category
+        // menu only
+        // if sub-category -> filter sub-category
+        // if category -> filter category
+        // get all
+        this.productService.getAllWithFilter(location.id, {...filter, category: category?.id}).pipe(
+          map(resp => returnAction({...resp, slide: (action as any)?.slide})))
+      ),
+      catchError(error => of(ProductActions.loadProductsFailure({error}))),
+    );
+  }
 }

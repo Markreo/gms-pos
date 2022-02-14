@@ -19,19 +19,7 @@ export class ProductService {
       }
       return qry;
     }, '');
-    if (menu) {
-      // eslint-disable-next-line max-len
-      return this.http.get<Product[]>(buildInventoryUrl('/store-locations/' + locationId + '/menus/' + menu + '/products?category=' + menu + '?' + query))
-        .pipe(
-          map(products => ({
-            total: products.length,
-            data: products.map(product => ({...product, sale_price: product.price, menu}))
-          }))
-        );
-    } else {
-
-      return this.http.get<{ total: number; data: Product[] }>(buildInventoryUrl('stores/' + locationId + '/products') + `?` + query);
-    }
+    return this.http.get<{ total: number; data: Product[] }>(buildInventoryUrl('stores/' + locationId + '/products') + `?` + query);
   }
 
   getVariants(productId): Observable<Variant[]> {

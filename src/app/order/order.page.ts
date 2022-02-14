@@ -21,7 +21,7 @@ import {selectProductFilter, selectSlide} from '../product/data-access/product.s
 import {delay, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {selectTable} from '../table/table.actions';
-import {selectCurrentTable} from "../table/table.selectors";
+import {selectCurrentTable} from '../table/table.selectors';
 
 @Component({
   selector: 'app-order',
@@ -58,7 +58,7 @@ export class OrderPage implements OnInit, OnDestroy {
               private actions$: Actions,
               private activatedRoute: ActivatedRoute,
               private animationCtrl: AnimationController) {
-    this.actions$.pipe(
+    /*this.actions$.pipe(
       ofType(ProductActions.loadProductsSuccessAndReset),
       delay(10),
       takeUntil(this.destroy$)
@@ -68,7 +68,7 @@ export class OrderPage implements OnInit, OnDestroy {
           console.log('update slide to 0');
         });
       });
-    });
+    });*/
     combineLatest(this.store.select(selectCurrentGolfClub), this.activatedRoute.params).pipe(
       takeUntil(this.destroy$),
       filter(([golfClub, params]) => !!golfClub),
@@ -99,19 +99,19 @@ export class OrderPage implements OnInit, OnDestroy {
   }
 
   updateSearch(event) {
-    this.store.dispatch(ProductActions.updateSearch({search: event.target.value}));
+    this.store.dispatch(ProductActions.triggerUpdateSearch({search: event.target.value}));
   }
 
   triggerSlideTo(e) {
     console.log(e);
     this.ionSlidesRef.getActiveIndex().then(index => {
       console.log('triggerSlideTo', index);
-      this.store.dispatch(ProductActions.updateCurrentSide({slide: index}));
+      this.store.dispatch(ProductActions.updateForSlide({slide: index}));
     });
   }
 
   present() {
-    console.log('document.querySelector(\'.product-item\')', document.querySelector('.product-item'))
+    console.log('document.querySelector(\'.product-item\')', document.querySelector('.product-item'));
     const animation = this.animationCtrl.create()
       .addElement(document.querySelectorAll('.product-item'))
       .duration(300)

@@ -1,11 +1,12 @@
 import {createReducer, on} from '@ngrx/store';
 import * as ProductActions from './product.actions';
 import {Product} from '../models/product';
+import {updateListProduct} from './product.actions';
 
 export const productFeatureKey = 'product';
 
 export interface ProductState {
-  status: 'idle' | 'loading' | 'loaded' | 'error';
+  status: 'idle' | 'loading' | 'loading-slide' | 'loaded' | 'error';
   slides: {
     status: 'idle' | 'loading' | 'loaded' | 'error';
     products: Product[];
@@ -29,49 +30,51 @@ export const initialState: ProductState = {
 
 export const productReducer = createReducer(
   initialState,
-  on(ProductActions.loadProducts, (state, action) => ({
+  on(ProductActions.updateListProduct, (state) => ({
     ...state,
-    status: action.newSlide ? 'loaded' : 'loading',
-    slides: state.slides.map((slide, index) => {
-      if (index === action.newSlide ?? 0) {
-        return {...slide, status: slide.status !== 'loaded' ? 'loading' : 'loaded'};
-      } else {
-        return slide;
-      }
-    })
+    status: 'loading',
+    slides: []
   })),
-  on(ProductActions.loadProductsSuccessAndReset, (state, action) => ({
+  on(ProductActions.updateListProductSuccess, (state, action) => ({
     ...state,
     status: 'loaded',
     slides: buildNewSlide(state, action),
     currentSlide: 0
   })),
-  on(ProductActions.loadProductsSuccessAndUpdate, (state, action) => ({
+  on(ProductActions.updateForSlide, (state, action) => ({
     ...state,
-    status: 'loaded',
-    slides: updateSlide(action.newSlide, state.slides, action.products),
-    currentSlide: action.newSlide
+    status: 'loading-slide',
+    slides: state.slides.map((slide, index) => {
+      if (index === action.slide) {
+        return {...slide, status: 'loading'};
+      }
+      return slide;
+    })
+  })),
+  on(ProductActions.updateForSlideSuccess, (state, action) => ({
+    ...state,
+    status: 'loading-slide',
+    slides: state.slides.map((slide, index) => {
+      if (index === action.slide -1 || index === action.slide + 1) {
+        return {...slide, status: 'loading', products: []};
+      }
+      if (index === action.slide) {
+        return {...slide, status: 'loaded', products: action.data};
+      }
+      return slide;
+    })
   })),
   on(ProductActions.loadProductsFailure, (state) => ({...state, status: 'error'})),
+  on(ProductActions.triggerUpdateSearch, (state, action) => ({...state, filter: {...state.filter, search: action.search}}))
 );
 
 
-export const buildNewSlide = (state: ProductState, action: { products: Product[]; total: number }) => {
+export const buildNewSlide = (state: ProductState, action: { data: Product[]; total: number }) => {
   const page = Math.ceil(action.total / state.filter.max);
   const slide = Array(page).fill({status: 'idle', products: []});
-  slide[0] = {status: 'loaded', products: action.products};
+  slide[0] = {status: 'loaded', products: action.data};
   if (page > 1) {
-    slide[1] = {status: 'loading', products: action.products};
+    slide[1] = {status: 'loading', products: action.data};
   }
   return slide;
 };
-
-export const updateSlide = (newSlideIndex, currentSlides, newProducts) => currentSlides.map((slide, index) => {
-  if (index === newSlideIndex) {
-    return {...slide, status: 'loaded', products: newProducts};
-  } else if (index === newSlideIndex + 1 && slide.status === 'idle') {
-    return {...slide, status: 'loading'};
-  } else {
-    return slide;
-  }
-});
