@@ -17,7 +17,7 @@ import * as ProductActions from '../product/data-access/product.actions';
 import {Actions, ofType} from '@ngrx/effects';
 import {combineLatest, Subject} from 'rxjs';
 import {AnimationController, IonSlides} from '@ionic/angular';
-import {selectProductFilter, selectSlide} from '../product/data-access/product.selectors';
+import {selectProductFilter, selectProductStateStatus, selectSlide} from '../product/data-access/product.selectors';
 import {delay, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {selectTable} from '../table/table.actions';
@@ -30,7 +30,7 @@ import {selectCurrentTable} from '../table/table.selectors';
 })
 export class OrderPage implements OnInit, OnDestroy {
 
-  @ViewChild(IonSlides, {static: true}) ionSlidesRef: IonSlides;
+  @ViewChild(IonSlides, {static: false}) ionSlidesRef: IonSlides;
 
   currentLocation$ = this.store.select(selectCurrentLocation);
   currentGolfClub$ = this.store.select(selectCurrentGolfClub);
@@ -46,6 +46,7 @@ export class OrderPage implements OnInit, OnDestroy {
 
   slides$ = this.store.select(selectSlide);
   productFilter$ = this.store.select(selectProductFilter);
+  productStatus$ = this.store.select(selectProductStateStatus);
 
   currentLang = {};
   filter = {};

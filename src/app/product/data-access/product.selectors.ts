@@ -8,3 +8,4 @@ export const selectProductState = createFeatureSelector<fromProduct.ProductState
 
 export const selectSlide = createSelector(selectProductState, state => state?.slides);
 export const selectProductFilter = createSelector(selectProductState, state => state.filter);
+export const selectProductStateStatus = createSelector(selectProductState, state => state.status);

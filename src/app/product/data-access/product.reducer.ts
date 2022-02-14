@@ -13,7 +13,6 @@ export interface ProductState {
   }[];
   filter: {
     search: string;
-    start: number;
     max: number;
   };
 }
@@ -23,7 +22,6 @@ export const initialState: ProductState = {
   status: 'idle',
   filter: {
     search: '',
-    start: 0,
     max: 20
   }
 };

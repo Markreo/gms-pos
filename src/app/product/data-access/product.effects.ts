@@ -11,8 +11,9 @@ import {selectCurrentLocation} from '../../location/data-access/location.selecto
 import {selectActiveCategory} from '../../category/data-access/category.selectors';
 import * as CategoryActions from '../../category/data-access/category.actions';
 import {of, pipe} from 'rxjs';
-import {TypedAction} from "@ngrx/store/src/models";
-import {updateForSlideSuccess, updateListProductSuccess} from "./product.actions";
+import {TypedAction} from '@ngrx/store/src/models';
+import {updateForSlideSuccess, updateListProductSuccess} from './product.actions';
+import {selectActiveSubCategory} from "../../sub-category/data-access/sub-category.selectors";
 
 
 @Injectable()
@@ -29,6 +30,7 @@ export class ProductEffects {
 
   updateSearch$ = createEffect(() => this.actions$.pipe(
     ofType(ProductActions.triggerUpdateSearch),
+    debounceTime(300),
     delay(10),
     map(action => ProductActions.updateListProduct())
   ));
@@ -40,8 +42,8 @@ export class ProductEffects {
   ));
 
 
-  updateForSlideSuccess$ = createEffect(() => this.actions$.pipe(
-    ofType(ProductActions.updateForSlideSuccess),
+  updateForSlide$ = createEffect(() => this.actions$.pipe(
+    ofType(ProductActions.updateForSlide),
     this.updateProductPipe(updateForSlideSuccess)
   ));
 
@@ -50,22 +52,30 @@ export class ProductEffects {
               private productService: ProductService) {
   }
 
-  updateProductPipe(returnAction)  {
+  updateProductPipe(returnAction) {
     return pipe(
       concatLatestFrom(() => [
         this.store.select(selectCurrentLocation),
         this.store.select(selectProductFilter),
-        this.store.select(selectActiveCategory)]), //select menu, select sub-category
+        this.store.select(selectActiveCategory),
+        this.store.select(selectActiveSubCategory)
+      ]), //select menu, select sub-category
       debounceTime(300),
-      switchMap(([action, location, filter, category]) =>
-        // if  menu
-        // if category -> menu by category
-        // menu only
-        // if sub-category -> filter sub-category
-        // if category -> filter category
-        // get all
-        this.productService.getAllWithFilter(location.id, {...filter, category: category?.id}).pipe(
-          map(resp => returnAction({...resp, slide: (action as any)?.slide})))
+      switchMap(([action, location, filter, category, subCategory]) => {
+          // if  menu
+          // if category -> menu by category
+          // menu only
+          // if sub-category -> filter sub-category
+          // if category -> filter category
+          // get all
+          const slide = (action as any)?.slide;
+          const start = slide ? slide * filter.max : 0;
+          return this.productService.getAllWithFilter(location.id, {
+            ...filter,
+            start,
+            category: subCategory ? subCategory.id : category?.id
+          }).pipe(map(resp => returnAction({...resp, slide: (action as any)?.slide})));
+        }
       ),
       catchError(error => of(ProductActions.loadProductsFailure({error}))),
     );

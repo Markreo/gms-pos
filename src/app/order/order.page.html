@@ -62,7 +62,12 @@
             </div>
 
             <div style="flex: 1; width: 100%">
-              <ion-slides pager="true" (ionSlideWillChange)="triggerSlideTo($event)">
+              <div *ngIf="(productStatus$ | async) === 'loading'" style=" display: flex; flex-wrap: wrap">
+                <ion-thumbnail class="product-item" *ngFor="let product of listFakeProduct" slot="start">
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-thumbnail>
+              </div>
+              <ion-slides *ngIf="(productStatus$ | async) === 'loaded' || (productStatus$ | async) === 'loading-slide'" pager="false" (ionSlideWillChange)="triggerSlideTo($event)">
                 <ion-slide *ngFor="let slide of slides$ | async">
                   <ng-container *ngIf="slide.status === 'loading'">
                     <div style=" display: flex; flex-wrap: wrap">
