@@ -42,6 +42,16 @@ export const orderReducer = createReducer(
   })),
   on(OrderActions.submitOrder, (state) => ({...state, action: 'submit'})),
   on(OrderActions.submitOrder, (state) => ({...state, action: 'checkout'})),
-  on(OrderActions.setPaymentType, (state, action) =>({...state, order: {...state.order, payment_type: action.paymentType}})),
-  on(OrderActions.setGuestOfOrder, (state, action) =>({...state, order: {...state.order, guest: action.guest}}))
+  on(OrderActions.setPaymentType, (state, action) => ({
+    ...state,
+    order: {...state.order, payment_type: action.paymentType}
+  })),
+  on(OrderActions.setGuestOfOrder, (state, action) => ({
+    ...state,
+    order: {
+      ...state.order,
+      guest: action.guest,
+      payment_type: state.order.payment_type === 'CASH' ? 'WITH_GOLF' : state.order.payment_type
+    }
+  }))
 );
