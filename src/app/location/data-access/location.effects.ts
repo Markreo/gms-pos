@@ -25,6 +25,7 @@ export class LocationEffects  {
 
   golfClubChange$ = createEffect(() => this.actions$.pipe(
     ofType(GolfClubActions.setCurrentGolfClub),
+    filter(action => !!action.golfClub),
     map(action => LocationActions.loadLocations({golfClub: action.golfClub}))
   ));
 

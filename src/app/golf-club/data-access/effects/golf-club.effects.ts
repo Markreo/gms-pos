@@ -9,6 +9,7 @@ import * as GolfClubActions from '../actions/golf-club.actions';
 import * as AuthActions from '../../../auth/data-access/auth.actions';
 import {StorageService} from '../../../ionic-storage/storage.service';
 import {selectCurrentGolfClub} from '../selectors/golf-club.selectors';
+import {initGolfClubState} from '../actions/golf-club.actions';
 
 
 @Injectable()
@@ -53,6 +54,12 @@ export class GolfClubEffects {
     filter(([golfCub, currentGolfClub]) => !!golfCub && (!currentGolfClub || golfCub.id === currentGolfClub.id)),
     map(([golfClub,]) => GolfClubActions.setCurrentGolfClub({golfClub}))
   ));
+
+  logout$ = createEffect(() => this.actions$.pipe(
+    ofType(AuthActions.logout),
+    map(action => GolfClubActions.initGolfClubState())
+  ));
+
 
   constructor(private actions$: Actions,
               private golfClubService: GolfClubService,

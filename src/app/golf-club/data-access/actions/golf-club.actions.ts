@@ -1,6 +1,8 @@
 import {createAction, props} from '@ngrx/store';
 import {GolfClub} from '../../models/golf-club.model';
 
+export const initGolfClubState = createAction('[GOlfClub] init');
+
 export const loadGolfClubs = createAction('[GolfClub] Load GolfClubs');
 
 export const loadGolfClubsSuccess = createAction('[GolfClub] Load GolfClubs Success', props<{ data: any }>());

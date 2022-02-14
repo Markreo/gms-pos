@@ -7,7 +7,8 @@ import {AuthService} from '../services/auth.service';
 import {from, of} from 'rxjs';
 import {AlertController, LoadingController} from '@ionic/angular';
 import {StorageService} from '../../ionic-storage/storage.service';
-import {Action} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
+import {Router} from "@angular/router";
 
 export const TOKEN = 'token';
 
@@ -49,7 +50,6 @@ export class AuthEffects implements OnInitEffects {
   loginSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(AuthActions.loginSuccess),
     tap(action => {
-      console.log('hrere');
       this.storageService.set(TOKEN, action.data.accessToken);
 
     })
@@ -66,7 +66,18 @@ export class AuthEffects implements OnInitEffects {
     ))
   ), {dispatch: false});
 
+  logout$ = createEffect(() => this.actions$.pipe(
+    ofType(AuthActions.logout),
+    tap(() => {
+      this.storageService.clear().then(() => {
+        this.router.navigate(['/login']);
+      });
+    })
+  ), {dispatch: false});
+
   constructor(private actions$: Actions,
+              private store: Store,
+              private router: Router,
               private loadingController: LoadingController,
               private alertController: AlertController,
               private storageService: StorageService,

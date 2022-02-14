@@ -28,4 +28,9 @@ export class StorageService {
     // eslint-disable-next-line no-underscore-dangle
     return this._storage.get(key);
   }
+
+  public clear() {
+    // eslint-disable-next-line no-underscore-dangle
+    return this._storage.clear();
+  }
 }

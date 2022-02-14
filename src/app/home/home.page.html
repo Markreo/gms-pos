@@ -38,7 +38,7 @@
       </form>
       <div style="display: flex; align-items: center">
         <img class="icon" [src]="'/assets/icon/' + currentLang.toUpperCase() + '.png'" alt="" (click)="toggleLang()">
-        <img class="icon" [src]="'/assets/icon/logout.png'" [alt]="'logout' | translate" [routerLink]="['/logout']">
+        <img class="icon" [src]="'/assets/icon/logout.png'" [alt]="'logout' | translate" (click)="logout()">
       </div>
     </div>
     <div style="flex: 1; min-height: 0; padding: 22.5px">

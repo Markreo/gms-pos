@@ -15,7 +15,7 @@ import {OrderItem} from '../models/order-item';
 import {LoadingController, ToastController} from '@ionic/angular';
 import {initOrderFunction} from './init-order.function';
 import {toSubmitOrderFunction} from './to-submit-order.function';
-import {setGuest} from "../../guest/data-access/guest.actions";
+import {setGuest} from '../../guest/data-access/guest.actions';
 
 
 @Injectable()

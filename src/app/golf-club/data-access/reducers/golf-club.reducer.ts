@@ -20,7 +20,7 @@ export const initialState: GolfClubState = {
 
 export const golfClubReducer = createReducer(
   initialState,
-
+  on(GolfClubActions.initGolfClubState, () => initialState),
   on(GolfClubActions.loadGolfClubs, state => ({...state, status: 'loading'})),
   on(GolfClubActions.loadGolfClubsSuccess, (state, action) => ({...state, status: 'loaded', golfClubs: action.data})),
   on(GolfClubActions.loadGolfClubsFailure, (state, action) => ({...state, status: 'error'})),
