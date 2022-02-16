@@ -3,7 +3,7 @@ import {Order} from '../models/order';
 import {OrderItem} from '../models/order-item';
 import {Guest} from '../models/guest';
 import {Variant} from '../../product/models/variant';
-import {Table} from "../../table/table";
+import {Table} from '../../table/table';
 
 export const loadOrder = createAction('[Order] Load Order', props<{ id?: string }>());
 export const setTable = createAction('[Order] Set table', props<{ table: Table }>());
@@ -16,12 +16,15 @@ export const addVariant = createAction('[Order] add variant', props<{ variant: V
 export const addNewOrderItem = createAction('[Order] add Item', props<{ item: OrderItem }>());
 export const updateOrderItem = createAction('[Order] update Item', props<{ index: number; item: OrderItem }>());
 export const deleteOrderItem = createAction('[Order] delete Item', props<{ item: OrderItem }>());
+export const applyVoucherOrderItem = createAction('[Order] applyVoucherOrderItem', props<{ item: OrderItem }>());
+export const updateOrderItemSuccess = createAction('[Order] update Item Success', props<{ index: number; item: OrderItem }>());
+export const applyDiscountOrderItem = createAction('[Order] applyDiscountOrderItem', props<{ index: number; item: OrderItem; discount: number; discount_type: 'PERCENTAGE' | 'FIXED' }>());
 
 export const submitOrder = createAction('[Order] submit Order');
 export const checkoutOrder = createAction('[Order] checkout Order');
 export const actionOrderSuccess = createAction('[Order] Action update success', props<{ order: Order }>());
 export const actionOrderFailure = createAction('[Order] Action update failure', props<{ error: any }>());
 
-export const setPaymentType = createAction('[Order] set Payment type', props<{paymentType: 'WITH_GOLF' | 'CITY_LEDGER' | 'CASH' | 'VOUCHER'}>());
-export const setGuestOfOrder = createAction('[Order] set guest', props<{guest: Guest}>());
+export const setPaymentType = createAction('[Order] set Payment type', props<{ paymentType: 'WITH_GOLF' | 'CITY_LEDGER' | 'CASH' | 'VOUCHER' }>());
+export const setGuestOfOrder = createAction('[Order] set guest', props<{ guest: Guest }>());
 

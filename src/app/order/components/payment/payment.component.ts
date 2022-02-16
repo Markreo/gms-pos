@@ -5,9 +5,8 @@ import {Order} from '../../models/order';
 import {TranslateService} from '@ngx-translate/core';
 import {ActionSheetController, ModalController} from '@ionic/angular';
 import {checkoutOrder, setPaymentType, submitOrder} from '../../data-access/order.actions';
-import {DetailOrderItemStore} from './detail-order-item/detail-order-item.store';
-import {OrderItem} from '../../models/order-item';
-import {DetailOrderItemComponent} from "./detail-order-item/detail-order-item.component";
+
+import {DetailOrderItemComponent} from './detail-order-item/detail-order-item.component';
 
 @Component({
   selector: 'app-payment',
@@ -28,7 +27,7 @@ export class PaymentComponent implements OnInit {
               private modalController: ModalController,
               private actionSheetController: ActionSheetController) {
     this.order$.subscribe(order => {
-      console.log('update order', order)
+      console.log('update order', order);
       this.order = order;
     });
   }
@@ -91,12 +90,13 @@ export class PaymentComponent implements OnInit {
     this.store.dispatch(setPaymentType({paymentType: type}));
   }
 
-  showDetailOrderItem(item: OrderItem) {
+  showDetailOrderItem(index) {
     this.modalController.create({
       component: DetailOrderItemComponent,
-      componentProps: {},
+      cssClass: 'my-custom-modal-css',
+      componentProps: {index},
       initialBreakpoint: 0.5,
-      breakpoints: [0, 0.5, 1]
+      breakpoints: [0, 0.5]
     }).then(modal => modal.present());
   }
 

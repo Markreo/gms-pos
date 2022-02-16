@@ -16,6 +16,7 @@ import {LoadingController, ToastController} from '@ionic/angular';
 import {initOrderFunction} from './init-order.function';
 import {toSubmitOrderFunction} from './to-submit-order.function';
 import {setGuest} from '../../guest/data-access/guest.actions';
+import {applyDiscountOrderItem} from "./order.actions";
 
 
 @Injectable()
@@ -149,6 +150,16 @@ export class OrderEffects {
     ofType(setGuest),
     map(action => OrderActions.setGuestOfOrder({guest: action.guest}))
   ));
+
+  updateOrderItem$ = createEffect(() => this.actions$.pipe(
+    ofType(OrderActions.updateOrderItem),
+    map(action => OrderActions.updateOrderItemSuccess({index: action.index, item: action.item}))
+  ));
+
+  applyDiscountOrderItem$ = createEffect(() => this.actions$.pipe(
+    ofType(OrderActions.applyDiscountOrderItem),
+    map(action => OrderActions.updateOrderItemSuccess({index: action.index, item: {...action.item, discount: action.discount, discount_type: action.discount_type}}))
+  ))
 
   constructor(private actions$: Actions,
               private orderService: OrderService,

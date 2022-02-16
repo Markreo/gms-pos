@@ -1,0 +1,30 @@
+:host {
+   height: 50%;
+}
+.my-label {
+  width: 7rem;
+}
+
+
+input, textarea {
+  /* Remove First */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  box-shadow: none !important;
+  border-radius: 22.5px;
+  padding-left: 17px;
+  padding-right: 17px;
+}
+
+.voucher {
+  font-weight: bold;
+  border-radius: 22.5px;
+  text-align: center;
+  --background: #ffcb2a;
+  --background-activated: #fcd66a;
+  --background-focused: #ffd148;
+  --background-hover: #ffd148;
+  --color: #262626;
+  overflow: hidden
+}

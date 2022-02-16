@@ -28,7 +28,7 @@ export const orderReducer = createReducer(
     ...state,
     order: {...state.order, items: [action.item, ...(state.order.items || [])]}
   })),
-  on(OrderActions.updateOrderItem, (state, action) => ({
+  on(OrderActions.updateOrderItemSuccess, (state, action) => ({
     ...state,
     order: {
       ...state.order, items: state.order.items.map((item, idx) => {
