@@ -16,7 +16,7 @@
         </div>
       </div>
       <div style="flex: 1; padding: 10px; overflow: auto">
-        <app-order-item *ngFor="let item of order.items; let i = index" [item]="item"></app-order-item>
+        <app-order-item *ngFor="let item of order.items; let i = index" [item]="item" (click)="showDetailOrderItem(item)"></app-order-item>
 
       </div>
       <div style="padding: 1rem">
@@ -102,3 +102,4 @@
     </div>
   </ng-container>
 </div>
+<app-detail-order-item></app-detail-order-item>

@@ -3,8 +3,11 @@ import {Store} from '@ngrx/store';
 import {selectOrder, selectOrderAction, selectOrderStatus} from '../../data-access/order.selectors';
 import {Order} from '../../models/order';
 import {TranslateService} from '@ngx-translate/core';
-import {ActionSheetController} from '@ionic/angular';
+import {ActionSheetController, ModalController} from '@ionic/angular';
 import {checkoutOrder, setPaymentType, submitOrder} from '../../data-access/order.actions';
+import {DetailOrderItemStore} from './detail-order-item/detail-order-item.store';
+import {OrderItem} from '../../models/order-item';
+import {DetailOrderItemComponent} from "./detail-order-item/detail-order-item.component";
 
 @Component({
   selector: 'app-payment',
@@ -22,6 +25,7 @@ export class PaymentComponent implements OnInit {
 
   constructor(private store: Store,
               private translateService: TranslateService,
+              private modalController: ModalController,
               private actionSheetController: ActionSheetController) {
     this.order$.subscribe(order => {
       console.log('update order', order)
@@ -87,5 +91,13 @@ export class PaymentComponent implements OnInit {
     this.store.dispatch(setPaymentType({paymentType: type}));
   }
 
+  showDetailOrderItem(item: OrderItem) {
+    this.modalController.create({
+      component: DetailOrderItemComponent,
+      componentProps: {},
+      initialBreakpoint: 0.5,
+      breakpoints: [0, 0.5, 1]
+    }).then(modal => modal.present());
+  }
 
 }

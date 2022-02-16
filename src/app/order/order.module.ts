@@ -26,6 +26,7 @@ import { ProductItemComponent } from './components/product-item/product-item.com
 import { OrderItemComponent } from './components/payment/order-item/order-item.component';
 import { PaymentGuestComponent } from './components/payment/payment-guest/payment-guest.component';
 import {GuestModule} from "../guest/guest.module";
+import { DetailOrderItemComponent } from './components/payment/detail-order-item/detail-order-item.component';
 
 @NgModule({
   imports: [
@@ -46,7 +47,7 @@ import {GuestModule} from "../guest/guest.module";
     TableModule,
     GuestModule
   ],
-  declarations: [OrderPage, PaymentComponent, ProductItemComponent, OrderItemComponent, PaymentGuestComponent],
+  declarations: [OrderPage, PaymentComponent, ProductItemComponent, OrderItemComponent, PaymentGuestComponent, DetailOrderItemComponent],
   providers: [OrderService]
 })
 export class OrderPageModule {

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {AnimationController} from "@ionic/angular";
+import {AnimationController} from '@ionic/angular';
 
 @Component({
   selector: 'app-order-item',
@@ -11,7 +11,7 @@ export class OrderItemComponent implements OnInit {
   @Input() item;
   @ViewChild('divElement', {static: true}) divRef: ElementRef;
 
-  constructor(private animationCtrl: AnimationController, private elRef: ElementRef) {
+  constructor(private animationCtrl: AnimationController) {
   }
 
   ngOnInit(): void {

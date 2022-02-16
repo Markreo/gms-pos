@@ -29,6 +29,13 @@
       align-items: center;
       border-radius: 4px;
       overflow: hidden;
+      > div {
+        background: transparent;
+        transition: background 200ms ease-out;
+      }
+      &:active > div {
+        background: rgba(255, 196, 9, 0.8);
+      }
     }
 
     .item-name {
