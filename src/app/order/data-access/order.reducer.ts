@@ -32,13 +32,26 @@ export const orderReducer = createReducer(
     ...state,
     order: {
       ...state.order, items: state.order.items.map((item, idx) => {
-        if (idx === action.index) {
-          return action.item;
+        if (action.item.id) {
+          if (item.id === action.item.id) {
+            return action.item;
+          } else {
+            return item;
+          }
         } else {
-          return item;
+          if (idx === action.index) {
+            return action.item;
+          } else {
+            return item;
+          }
         }
+
       })
     }
+  })),
+  on(OrderActions.deleteOrderItem, (state, action) => ({
+    ...state,
+    order: {...state.order, items: state.order.items.filter((item, index) => index !== action.index)}
   })),
   on(OrderActions.submitOrder, (state) => ({...state, action: 'submit'})),
   on(OrderActions.submitOrder, (state) => ({...state, action: 'checkout'})),

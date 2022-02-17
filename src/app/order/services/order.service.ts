@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Order} from '../models/order';
 import {buildInventoryUrl, convertDataToServer} from '../../_helpers/functions';
+import {OrderItem} from "../models/order-item";
 
 @Injectable()
 export class OrderService {
@@ -25,4 +26,15 @@ export class OrderService {
     return this.http.put<any>(buildInventoryUrl('orders/' + orderId + '/checkout'), data);
   }
 
+  applyDiscountOrderItem(orderItemId, data: { discount; discount_type }) {
+    return this.http.patch<OrderItem>(buildInventoryUrl('order-products/') + orderItemId, data);
+  }
+
+  updateDescription(orderItemId, data: { description }) {
+    return this.http.patch<OrderItem>(buildInventoryUrl('order-products/') + orderItemId, data);
+  }
+
+  applyVoucherOrderItem(orderItemId: string) {
+    return this.http.put<Order>(buildInventoryUrl('order-products/') + orderItemId + '/voucher', {});
+  }
 }

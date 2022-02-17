@@ -15,10 +15,9 @@ export const addVariant = createAction('[Order] add variant', props<{ variant: V
 
 export const addNewOrderItem = createAction('[Order] add Item', props<{ item: OrderItem }>());
 export const updateOrderItem = createAction('[Order] update Item', props<{ index: number; item: OrderItem }>());
-export const deleteOrderItem = createAction('[Order] delete Item', props<{ item: OrderItem }>());
+export const deleteOrderItem = createAction('[Order] delete Item', props<{ index: number; item: OrderItem }>());
 export const applyVoucherOrderItem = createAction('[Order] applyVoucherOrderItem', props<{ item: OrderItem }>());
 export const updateOrderItemSuccess = createAction('[Order] update Item Success', props<{ index: number; item: OrderItem }>());
-export const applyDiscountOrderItem = createAction('[Order] applyDiscountOrderItem', props<{ index: number; item: OrderItem; discount: number; discount_type: 'PERCENTAGE' | 'FIXED' }>());
 
 export const submitOrder = createAction('[Order] submit Order');
 export const checkoutOrder = createAction('[Order] checkout Order');
