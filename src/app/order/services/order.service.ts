@@ -14,11 +14,11 @@ export class OrderService {
   }
 
   createOrder(golfClubId, data) {
-    return this.http.post<Order>(buildInventoryUrl('/golf/clubs/' + golfClubId) + '/orders', convertDataToServer(data));
+    return this.http.post<Order>(buildInventoryUrl('/golf/clubs/' + golfClubId) + '/orders', data);
   }
 
   updateOrder(golfClubId, orderId, data) {
-    return this.http.put<Order>(buildInventoryUrl('/golf/clubs/' + golfClubId) + '/orders/' + orderId, convertDataToServer(data));
+    return this.http.put<Order>(buildInventoryUrl('/golf/clubs/' + golfClubId) + '/orders/' + orderId, data);
   }
 
   checkoutOrder(orderId: string, data) {

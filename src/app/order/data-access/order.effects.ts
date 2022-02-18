@@ -94,7 +94,7 @@ export class OrderEffects {
 
   $submit = createEffect(() => this.actions$.pipe(
     ofType(OrderActions.submitOrder),
-    concatLatestFrom(() => this.store.select(selectOrder).pipe(map(order => toSubmitOrderFunction(order)))),
+    concatLatestFrom(() => this.store.select(selectOrder).pipe(map(order => toSubmitOrderFunction(order)), tap(console.log))),
     exhaustMap(([action, order]) => from(this.loadingController.create({
       message: order.id ? 'Update...' : 'Submit...'
     })).pipe(
