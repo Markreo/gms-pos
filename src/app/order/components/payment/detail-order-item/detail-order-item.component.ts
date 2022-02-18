@@ -30,6 +30,8 @@ export class DetailOrderItemComponent implements OnInit {
   keyBagtag = '';
   loadingGuest = false;
 
+  loadingVoucher$ = this.detailItemStore.loadingVoucher$;
+
   constructor(
     private store: Store,
     private detailItemStore: DetailOrderItemStore,

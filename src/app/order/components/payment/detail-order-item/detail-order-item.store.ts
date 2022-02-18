@@ -2,37 +2,47 @@ import {Injectable} from '@angular/core';
 import {ComponentStore} from '@ngrx/component-store';
 import {OrderItem} from '../../../models/order-item';
 import {EMPTY, Observable} from 'rxjs';
-import {catchError, switchMap, tap} from 'rxjs/operators';
-import {ModalController} from '@ionic/angular';
+import {catchError, finalize, switchMap, tap} from 'rxjs/operators';
+import {ModalController, ToastController} from '@ionic/angular';
 import {updateOrderItemSuccess} from '../../../data-access/order.actions';
 import {Store} from '@ngrx/store';
 import {OrderService} from '../../../services/order.service';
 
 export interface DetailOrderItemState {
   item: OrderItem;
+  loadingVoucher: boolean;
 }
 
 const initialState: DetailOrderItemState = {
-  item: null
+  item: null,
+  loadingVoucher: false
 };
 
 @Injectable()
 export class DetailOrderItemStore extends ComponentStore<DetailOrderItemState> {
   readonly selectItem$ = this.select(state => state.item);
+  readonly loadingVoucher$ = this.select(state => state.loadingVoucher);
+
 
   callApiApplyVoucher = this.effect((item$: Observable<OrderItem>) => item$.pipe(
+    tap(_ => this.loadingVoucher(true)),
     switchMap(item => this.orderService.applyVoucherOrderItem(item.id).pipe(
       tap({
         next: order => this.store.dispatch(updateOrderItemSuccess({index: 1, item: {
             ...item, is_voucher: true
           } })),
         error: (e) => {
-          console.log('error');
+          this.toastController.create({message: 'Đã xảy ra lỗi khi apply voucher', color: 'danger'}).then(toast => toast.present());
         }
+      }),
+      finalize(() => {
+        this.loadingVoucher(true);
       })
     ))
   ));
 
+
+  private readonly loadingVoucher = this.updater((state, loading: boolean) => ({...state, loadingVoucher: loading}));
 
   private readonly setItem = this.updater((state, item: OrderItem) => ({...state, item}));
 
@@ -73,7 +83,10 @@ export class DetailOrderItemStore extends ComponentStore<DetailOrderItemState> {
   ));
 
 
-  constructor(private modalController: ModalController, private store: Store, private orderService: OrderService) {
+  constructor(private modalController: ModalController,
+              private store: Store,
+              private orderService: OrderService,
+              private toastController: ToastController) {
     super(initialState);
   }
 

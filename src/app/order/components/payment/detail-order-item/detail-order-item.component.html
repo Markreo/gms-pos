@@ -86,7 +86,7 @@
               <div style="flex: 1">
                 <i *ngIf="item.is_voucher">{{'voucher_applied' | translate}}</i>
                 <ion-button *ngIf="!item.is_voucher" class="voucher" (click)="markApplyVoucher()">
-                  {{'apply_voucher' | translate}}
+                  <ion-spinner *ngIf="loadingVoucher$ | async"></ion-spinner>  {{'apply_voucher' | translate}}
                 </ion-button>
               </div>
             </div>
