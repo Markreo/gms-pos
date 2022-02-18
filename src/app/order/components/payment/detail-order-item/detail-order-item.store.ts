@@ -1,50 +1,125 @@
 import {Injectable} from '@angular/core';
 import {ComponentStore} from '@ngrx/component-store';
 import {OrderItem} from '../../../models/order-item';
-import {EMPTY, Observable} from 'rxjs';
-import {catchError, finalize, switchMap, tap} from 'rxjs/operators';
+import {EMPTY, Observable, of} from 'rxjs';
+import {catchError, finalize, map, switchMap, tap} from 'rxjs/operators';
 import {ModalController, ToastController} from '@ionic/angular';
 import {updateOrderItemSuccess} from '../../../data-access/order.actions';
 import {Store} from '@ngrx/store';
 import {OrderService} from '../../../services/order.service';
+import {selectCurrentGolfClub} from '../../../../golf-club/data-access/selectors/golf-club.selectors';
+import {GuestService} from '../../../../guest/services/guest.service';
+import {concatLatestFrom} from '@ngrx/effects';
 
 export interface DetailOrderItemState {
+  index: number;
   item: OrderItem;
   loadingVoucher: boolean;
+  loadingBagtag: boolean;
 }
 
 const initialState: DetailOrderItemState = {
+  index: -1,
   item: null,
-  loadingVoucher: false
+  loadingVoucher: false,
+  loadingBagtag: false
 };
 
 @Injectable()
 export class DetailOrderItemStore extends ComponentStore<DetailOrderItemState> {
   readonly selectItem$ = this.select(state => state.item);
+  readonly selectIndex$ = this.select(state => state.index);
   readonly loadingVoucher$ = this.select(state => state.loadingVoucher);
+  readonly loadingBagtag$ = this.select(state => state.loadingBagtag);
+
+
+  updateIndex = this.updater((state, index: number) => ({...state, index}));
+  setItem = this.updater((state, item: OrderItem) => ({...state, item}));
 
 
   callApiApplyVoucher = this.effect((item$: Observable<OrderItem>) => item$.pipe(
-    tap(_ => this.loadingVoucher(true)),
+    tap(_ => this.setLoadingVoucher(true)),
     switchMap(item => this.orderService.applyVoucherOrderItem(item.id).pipe(
       tap({
-        next: order => this.store.dispatch(updateOrderItemSuccess({index: 1, item: {
+        next: order => this.store.dispatch(updateOrderItemSuccess({
+          index: 1, item: {
             ...item, is_voucher: true
-          } })),
+          }
+        })),
         error: (e) => {
-          this.toastController.create({message: 'Đã xảy ra lỗi khi apply voucher', color: 'danger'}).then(toast => toast.present());
+          this.toastController.create({
+            message: 'Đã xảy ra lỗi khi apply voucher',
+            color: 'danger'
+          }).then(toast => toast.present());
         }
       }),
       finalize(() => {
-        this.loadingVoucher(true);
+        this.setLoadingVoucher(true);
       })
     ))
   ));
 
+  applyBagtag = this.effect((bagtag$: Observable<string>) => bagtag$.pipe(
+    tap(console.log),
+    concatLatestFrom(() => [this.store.select(selectCurrentGolfClub), this.selectIndex$, this.selectItem$]),
+    switchMap(([bagtag, golfClub, index, orderItem]) => {
+      console.log('herer', orderItem);
+      this.setLoadingBagtag(true);
+      return this.guestService.getAllWithFilter(golfClub.id, {search: bagtag}).pipe(
+        map(({data}) => data[0]),
+        switchMap(guest => {
+          if (guest) {
+            if (orderItem.id) {
+              return this.orderService.applyGuestOrderItem(orderItem.id, guest.id).pipe(
+                tap(newOrderItem => {
+                  this.store.dispatch(updateOrderItemSuccess({index, item: newOrderItem}));
+                }),
+                finalize(() => {
+                  this.setLoadingBagtag(false);
+                })
+              );
+            } else {
+              this.setLoadingBagtag(false);
+              this.store.dispatch(updateOrderItemSuccess({index, item: {...orderItem, guest}}));
+              return of(EMPTY);
+            }
+          } else {
+            throw new Error('Guest not found');
+          }
+        }),
+      );
+    }),
+    catchError((error) => {
+      this.setLoadingBagtag(false);
+      this.toastController.create({message: 'Guest not found', color: 'danger'}).then(toast => toast.present());
+      console.error(error);
+      throw new Error('Guest not found');
+    })));
 
-  private readonly loadingVoucher = this.updater((state, loading: boolean) => ({...state, loadingVoucher: loading}));
+  removeBagtag = this.effect(trigger$ => trigger$.pipe(
+    concatLatestFrom(() => [this.selectIndex$, this.selectItem$]),
+    switchMap(([, index, item]) => {
+      if (item.id) {
+        this.setLoadingBagtag(true);
+        return this.orderService.applyGuestOrderItem(item.id, null).pipe(
+          tap(() => {
+            this.store.dispatch(updateOrderItemSuccess({index, item: {...item, guest: null}}));
+          }),
+          finalize(() => {
+            this.setLoadingBagtag(false);
+          })
+        );
+      } else {
+        this.store.dispatch(updateOrderItemSuccess({index, item: {...item, guest: null}}));
+        return of(EMPTY);
+      }
+    })
+  ));
 
-  private readonly setItem = this.updater((state, item: OrderItem) => ({...state, item}));
+
+  private readonly setLoadingVoucher = this.updater((state, loading: boolean) => ({...state, loadingVoucher: loading}));
+  private readonly setLoadingBagtag = this.updater((state, loading: boolean) => ({...state, loadingBagtag: loading}));
+
 
   private callApiApplyDiscount = this.effect((discount$: Observable<{ index; item; discount; discount_type }>) => discount$.pipe(
     switchMap(({index, item, discount, discount_type}) =>
@@ -86,6 +161,7 @@ export class DetailOrderItemStore extends ComponentStore<DetailOrderItemState> {
   constructor(private modalController: ModalController,
               private store: Store,
               private orderService: OrderService,
+              private guestService: GuestService,
               private toastController: ToastController) {
     super(initialState);
   }
@@ -107,7 +183,7 @@ export class DetailOrderItemStore extends ComponentStore<DetailOrderItemState> {
       this.callApiApplyDiscount({index, item, discount: item.discount, discount_type});
     } else {
       this.store.dispatch(updateOrderItemSuccess({
-        item: {...item,  discount: item.discount, discount_type},
+        item: {...item, discount: item.discount, discount_type},
         index
       }));
     }

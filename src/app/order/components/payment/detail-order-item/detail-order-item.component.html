@@ -51,29 +51,35 @@
 
           </div>
 
-          <div style="margin-top: 0; margin-bottom: 1rem; height: 2.5rem; display: flex; align-items: center">
+          <div style="margin-top: 0; margin-bottom: 1rem; height: 2.5rem; display: flex; align-items: center; position: relative">
             <div class="my-label">
               {{'guest' | translate}}:
             </div>
             <input *ngIf="!item.guest"
                    #inputBagtag
                    (focus)="markFocus('inputBagtag')"
-                   [value]="keyBagtag"
+                   [(ngModel)]="keyBagtag"
                    style="flex: 1;border:1px solid #cbcbcb; height: 2.5rem; text-align: left;  padding-left: 1rem ">
             <div *ngIf="item.guest"
-                 style="flex: 1;display: flex; align-items: center; padding-left: 1rem;
+                 style="flex: 1;display: flex; align-items: center; padding-left: 1rem;border-radius: 22.5px;
+                 position: relative;
                  ;border:1px solid #cbcbcb; height: 2.5rem; text-align: left;  width: 100%">
               <span
                 style="color: #ff858b; margin-right: 0.25rem">#{{item.guest.bagtag}}</span> {{item.guest.customer || item.guest.fullname}}
             </div>
-            <div *ngIf="!item.guest"
-                 style="border:1px solid #cbcbcb; border-left: 0;  display: flex; align-items: center; justify-content: center; width: 3rem; height: 2.5rem;"
-                 (click)="applyBagtag($event)">
-              <ion-icon *ngIf="!loadingGuest" name="search-outline"></ion-icon>
-              <ion-spinner *ngIf="loadingGuest"></ion-spinner>
+            <div style="display: flex; align-items: center; justify-content: center; position: absolute; right: 0">
+
+              <ng-container *ngIf="(loadingBagtag$ | async) === false">
+                <ng-container *ngIf="item.guest"></ng-container>
+                <ng-container *ngIf="!item.guest">
+                  <ion-icon *ngIf="platform.is('mobile') || platform.is('phablet') || platform.is('tablet')" class="ion-padding ion-margin-end" name="camera" (click)="scanBarcode"></ion-icon>
+                  <ion-icon *ngIf="platform.is('mobileweb') || platform.is('desktop')" class="ion-padding" (click)="applyBagtag($event)" name="search-outline"></ion-icon>
+                </ng-container>
+              </ng-container>
+              <ion-spinner *ngIf="(loadingBagtag$ | async) === true"></ion-spinner>
             </div>
-            <div *ngIf="item.guest"
-                 style="border:1px solid #cbcbcb; border-left: 0;  display: flex; align-items: center; justify-content: center; width: 3rem; height: 2.5rem;"
+            <div *ngIf="item.guest && (loadingBagtag$ | async) === false"
+                 style=" display: flex; align-items: center; justify-content: center; width: 3rem; height: 2.5rem; position: absolute; right: 0"
                  (click)="removeGuest()">
               <ion-icon name="close-outline"></ion-icon>
             </div>

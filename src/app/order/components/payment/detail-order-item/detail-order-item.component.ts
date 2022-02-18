@@ -8,6 +8,7 @@ import {deleteOrderItem, updateOrderItem, updateOrderItemSuccess} from '../../..
 import {Observable} from 'rxjs';
 import {selectOrderState} from '../../../data-access/order.selectors';
 import {PredefinedColors} from '@ionic/core';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-detail-order-item',
@@ -28,21 +29,27 @@ export class DetailOrderItemComponent implements OnInit {
 
   focusKey;
   keyBagtag = '';
-  loadingGuest = false;
 
   loadingVoucher$ = this.detailItemStore.loadingVoucher$;
+  loadingBagtag$ = this.detailItemStore.loadingBagtag$;
 
   constructor(
     private store: Store,
     private detailItemStore: DetailOrderItemStore,
     private modalController: ModalController,
     private toastController: ToastController,
-    private translate: TranslateService) {
+    private translate: TranslateService,
+    public platform: Platform) {
   }
 
   ngOnInit() {
     this.item$ = this.store.select(createSelector(selectOrderState, state => state.order?.items?.find((_, idx) => idx === this.index)));
-    this.item$.subscribe(item => this.item = item);
+    this.item$.subscribe(item => {
+      this.item = item;
+      this.detailItemStore.setItem(item);
+    });
+
+    this.detailItemStore.updateIndex(this.index);
   }
 
   increase(e) {
@@ -93,29 +100,15 @@ export class DetailOrderItemComponent implements OnInit {
     if (this.keyBagtag.trim() === '') {
       return;
     }
-    this.loadingGuest = true;
     if (this.inputBagtagRef) {
       this.inputBagtagRef.nativeElement.focus();
     }
-
-    /* const golfClubId = this.golfClubService.currentGolfClub ? this.golfClubService.currentGolfClub.id : '';
-     this.guestService.getAllWithFilter(golfClubId, {search: this.keyBagtag}).subscribe(({data}) => {
-       this.loadingGuest = false;
-       if (data && data.length && data[0].bagtag === this.keyBagtag) {
-         this.item.guest = data[0];
-         this.presentToast('Apply success!', 'success');
-       } else {
-         this.presentToast('Guest not found!', 'danger');
-       }
-     }, error => {
-       this.loadingGuest = false;
-       console.log('error', error);
-       this.presentToast('Guest not found!', 'danger');
-     });*/
+    this.detailItemStore.applyBagtag(this.keyBagtag);
   }
 
   removeGuest() {
-    this.item.guest = null;
+    this.keyBagtag = '';
+    this.detailItemStore.removeBagtag();
   }
 
   applyDiscount(discount) {

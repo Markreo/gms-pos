@@ -37,4 +37,8 @@ export class OrderService {
   applyVoucherOrderItem(orderItemId: string) {
     return this.http.put<Order>(buildInventoryUrl('order-products/') + orderItemId + '/voucher', {});
   }
+
+  applyGuestOrderItem(orderItemId: string, guestId: string) {
+    return this.http.patch<OrderItem>(buildInventoryUrl('order-products/') + orderItemId , {guest: guestId});
+  }
 }
