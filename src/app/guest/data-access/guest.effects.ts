@@ -31,7 +31,6 @@ export class GuestEffects {
 
   loadOrderSuccess = createEffect(() => this.actions$.pipe(
     ofType(loadOrderSuccess),
-    filter(action => !!action.order?.guest),
     map(action => GuestActions.initGuest({guest: action.order.guest}))
   ));
 

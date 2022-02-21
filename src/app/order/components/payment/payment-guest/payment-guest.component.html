@@ -1,17 +1,17 @@
-<div *ngIf="(currentGuest$ | async) !== null" class="bound bg-gray">
-  <div>{{(currentGuest$ | async).fullname}}<span class="ion-color-danger">#{{(currentGuest$ | async).bagtag}}</span></div>
-  <ion-icon class="scan" name="close-outline" (click)="onClickGuest(null)"></ion-icon>
-</div>
-<ng-container *ngIf="(currentGuest$ | async) === null">
-  <div class="bound">
-    <ion-icon *ngIf="(search$ | async).length " class="scan" name="close-circle-outline"
-              (click)="clearSearch()"></ion-icon>
-    <ion-icon *ngIf="(search$ | async).length === 0" class="scan" name="camera"
-              (click)="scanBarcode()"></ion-icon>
-    <ion-input [placeholder]="'bagtag' | translate"
-               (ionInput)="setInputSearch($event)"></ion-input>
+  <div *ngIf="currentGuest$ | async as currentUser; else notUser" class="bound bg-gray">
+    <div>{{currentUser.fullname}}<span class="ion-color-danger">#{{currentUser.bagtag}}</span></div>
+    <ion-icon class="scan" name="close-outline" (click)="onClickGuest(null)"></ion-icon>
   </div>
-</ng-container>
+  <ng-template #notUser>
+    <div class="bound">
+      <ion-icon *ngIf="(search$ | async).length " class="scan" name="close-circle-outline"
+                (click)="clearSearch()"></ion-icon>
+      <ion-icon *ngIf="(search$ | async).length === 0" class="scan" name="camera"
+                (click)="scanBarcode()"></ion-icon>
+      <ion-input [placeholder]="'bagtag' | translate"
+                 (ionInput)="setInputSearch($event)"></ion-input>
+    </div>
+  </ng-template>
 <div *ngIf="(focus$ | async) === true"
      style="position: absolute; width: 100%; height: calc(100% - 87px); background: white; z-index: 9; overflow: auto">
   <div *ngIf="(status$ | async) === 'loading'">
