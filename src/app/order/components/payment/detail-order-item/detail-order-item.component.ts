@@ -142,4 +142,8 @@ export class DetailOrderItemComponent implements OnInit {
     this.detailItemStore.updateDescription(this.index, this.item, newValue);
   }
 
+  closeModal() {
+    this.modalController.dismiss();
+  }
+
 }

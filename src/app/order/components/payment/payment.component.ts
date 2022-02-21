@@ -95,8 +95,6 @@ export class PaymentComponent implements OnInit {
       component: DetailOrderItemComponent,
       cssClass: 'my-custom-modal-css',
       componentProps: {index},
-      initialBreakpoint: 0.5,
-      breakpoints: [0, 0.5]
     }).then(modal => modal.present());
   }
 

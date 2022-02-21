@@ -111,6 +111,7 @@ ion-searchbar {
   overflow: hidden;
   cursor: pointer;
   transition: width 2s;
+  border:1px solid #d7d7d7;
 
   &:hover {
     opacity: 0.8;
