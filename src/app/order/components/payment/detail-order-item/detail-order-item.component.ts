@@ -1,14 +1,13 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {DetailOrderItemStore} from './detail-order-item.store';
 import {OrderItem} from '../../../models/order-item';
-import {IonInput, IonTextarea, ModalController, ToastController} from '@ionic/angular';
+import {IonInput, IonTextarea, ModalController, Platform, ToastController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {createSelector, Store} from '@ngrx/store';
-import {deleteOrderItem, updateOrderItem, updateOrderItemSuccess} from '../../../data-access/order.actions';
+import {deleteOrderItem, updateOrderItemSuccess} from '../../../data-access/order.actions';
 import {Observable} from 'rxjs';
 import {selectOrderState} from '../../../data-access/order.selectors';
 import {PredefinedColors} from '@ionic/core';
-import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-detail-order-item',

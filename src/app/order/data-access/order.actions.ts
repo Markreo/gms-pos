@@ -14,7 +14,6 @@ export const loadOrderFailure = createAction('[Order] Load Order Failure', props
 export const addVariant = createAction('[Order] add variant', props<{ variant: Variant }>());
 
 export const addNewOrderItem = createAction('[Order] add Item', props<{ item: OrderItem }>());
-export const updateOrderItem = createAction('[Order] update Item', props<{ index: number; item: OrderItem }>());
 export const deleteOrderItem = createAction('[Order] delete Item', props<{ index: number; item: OrderItem }>());
 export const applyVoucherOrderItem = createAction('[Order] applyVoucherOrderItem', props<{ item: OrderItem }>());
 export const updateOrderItemSuccess = createAction('[Order] update Item Success', props<{ index: number; item: OrderItem }>());

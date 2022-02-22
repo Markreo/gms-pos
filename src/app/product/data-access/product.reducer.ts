@@ -15,6 +15,7 @@ export interface ProductState {
     search: string;
     max: number;
   };
+  oldSlideIndex: number;
 }
 
 export const initialState: ProductState = {
@@ -22,8 +23,9 @@ export const initialState: ProductState = {
   status: 'loading',
   filter: {
     search: '',
-    max: 20
-  }
+    max: 12
+  },
+  oldSlideIndex: 0
 };
 
 export const productReducer = createReducer(
@@ -37,17 +39,21 @@ export const productReducer = createReducer(
     ...state,
     status: 'loaded',
     slides: buildNewSlide(state, action),
-    currentSlide: 0
+    oldSlideIndex: 0
   })),
   on(ProductActions.updateForSlide, (state, action) => ({
     ...state,
     status: 'loading-slide',
     slides: state.slides.map((slide, index) => {
+      if(index === state.oldSlideIndex) {
+        return {...slide, status: 'loading', products: []};
+      }
       if (index === action.slide) {
         return {...slide, status: 'loading'};
       }
       return slide;
-    })
+    }),
+    oldSlideIndex: action.slide
   })),
   on(ProductActions.updateForSlideSuccess, (state, action) => ({
     ...state,

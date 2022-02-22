@@ -15,7 +15,7 @@ export interface TableState {
 
 export const initialState: TableState = {
   tables: [],
-  status: 'idle',
+  status: 'loading',
   filterObject: {
     search: ''
   },

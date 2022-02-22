@@ -27,7 +27,7 @@ export class ProductItemComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  triggerAddItem(product) {
+  triggerAddItem() {
     if (this.variant) {
       this.store.dispatch(addVariant({variant: this.variant}));
     } else {
@@ -38,7 +38,7 @@ export class ProductItemComponent implements OnInit {
         this.store.dispatch(addVariant({variant: this.variant}));
       }, error => {
         this.loading = false;
-      })
+      });
     }
   }
 }

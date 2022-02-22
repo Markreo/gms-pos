@@ -49,7 +49,7 @@ export class OrderEffects {
     map(([action, order]) => {
       const [index, orderItem] = this.getExistingVariants(order, action.variant);
       if (orderItem) {
-        return OrderActions.updateOrderItem({index, item: {...orderItem, quantity: orderItem.quantity + 1}});
+        return OrderActions.updateOrderItemSuccess({index, item: {...orderItem, quantity: orderItem.quantity + 1}});
       } else {
         return OrderActions.addNewOrderItem({
           item: new OrderItem({
