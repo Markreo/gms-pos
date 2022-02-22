@@ -18,6 +18,8 @@ import {TokenInterceptor} from "./_interceptors/token.interceptor";
 import {authFeatureKey, authReducer} from "./auth/data-access/auth.reducer";
 import {AuthEffects} from "./auth/data-access/auth.effects";
 import {ScreenOrientation} from "@awesome-cordova-plugins/screen-orientation/ngx";
+import {GolfClubModule} from "./golf-club/golf-club.module";
+import {LocationModule} from "./location/location.module";
 
 
 const interceptors = [
@@ -40,6 +42,8 @@ export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoad
     AppRoutingModule,
     HttpClientModule,
     IonicStorageModule,
+    GolfClubModule,
+    LocationModule,
     StoreModule.forRoot({
       [authFeatureKey]: authReducer
     }),

@@ -11,7 +11,7 @@ export interface SubCategoryState {
 }
 
 export const initialState: SubCategoryState = {
-  status: 'idle',
+  status: 'loading',
   subCategories: [],
   activeSubCategory: null
 };

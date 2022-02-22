@@ -19,7 +19,7 @@ export interface ProductState {
 
 export const initialState: ProductState = {
   slides: [],
-  status: 'idle',
+  status: 'loading',
   filter: {
     search: '',
     max: 20

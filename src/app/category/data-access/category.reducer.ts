@@ -12,7 +12,7 @@ export interface CategoryReducer {
 }
 
 export const initialState: CategoryReducer = {
-  status: 'idle',
+  status: 'loading',
   categories: [],
   parentCategories: [],
   activeCategory: null
