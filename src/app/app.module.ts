@@ -14,12 +14,11 @@ import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/h
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {IonicStorageModule} from './ionic-storage/ionic-storage.module';
-import {TokenInterceptor} from "./_interceptors/token.interceptor";
-import {authFeatureKey, authReducer} from "./auth/data-access/auth.reducer";
-import {AuthEffects} from "./auth/data-access/auth.effects";
-import {ScreenOrientation} from "@awesome-cordova-plugins/screen-orientation/ngx";
-import {GolfClubModule} from "./golf-club/golf-club.module";
-import {LocationModule} from "./location/location.module";
+import {TokenInterceptor} from './_interceptors/token.interceptor';
+import {authFeatureKey, authReducer} from './auth/data-access/auth.reducer';
+import {AuthEffects} from './auth/data-access/auth.effects';
+import {GolfClubModule} from './golf-club/golf-club.module';
+import {LocationModule} from './location/location.module';
 
 
 const interceptors = [

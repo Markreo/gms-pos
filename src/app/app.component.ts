@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {Storage} from '@ionic/storage-angular';
-import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
 
 
 @Component({
@@ -10,12 +9,10 @@ import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/n
 })
 export class AppComponent implements OnInit {
 
-  constructor(private storage: Storage,
-              private screenOrientation: ScreenOrientation) {
+  constructor(private storage: Storage) {
   }
 
   async ngOnInit() {
-    await this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
     await this.storage.create();
   }
 
