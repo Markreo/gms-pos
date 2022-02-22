@@ -1,5 +1,5 @@
 <ion-app>
-  <ion-content [fullscreen]="true">
+  <ion-content [fullscreen]="true" style="position: fixed; top: 0; left: 0; height: 100vh; width: 100vw">
     <div style="height: 100%; width: 100%; background: white; display: flex; align-items: stretch; overflow: hidden">
       <div
         style="width: 100px;min-width: 100px; background: white; display: flex; flex-direction: column; overflow: hidden">
@@ -17,6 +17,12 @@
             </div>
           </ng-container>
           <ng-container>
+            <div [class.active]="(activeParentCategory$ | async) === null || (activeParentCategory$ | async) == undefined"
+                 class="menu-item"
+                 (click)="selectParentCategory(null)">
+              <img src="/assets/icon/drink.png"/>
+              <div>All</div>
+            </div>
             <div *ngFor="let cate of parentCategories$ | async"
                  [class.active]="(activeParentCategory$ | async)?.id === cate.id"
                  class="menu-item"
@@ -36,7 +42,8 @@
             </div>
             <div style="padding-left: 10px; flex: 1">
               <ion-searchbar [placeholder]="'search_item' | translate" [value]="(productFilter$ | async)?.search"
-                             (input)="updateSearch($event)"></ion-searchbar>
+                             (ionClear)="updateSearch('')"
+                             (ionInput)="updateSearch($event.target.value)"></ion-searchbar>
             </div>
           </div>
           <button style="margin-left: 1.5rem" (click)="toggleLang()">
@@ -87,12 +94,12 @@
               </ion-slides>
             </div>
           </div>
-          <div class="payment" style="width: 24rem; display: flex; flex-direction: column; padding: 0 1rem;">
+          <div class="payment" style="width: 352px; display: flex; flex-direction: column; padding: 0 1rem;">
             <div class="payment-header"
                  style="height: 3rem; color: #184c7c; display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem"
                  *ngIf="currentLocation$ | async">
               <div>
-                {{(currentLocation$ | async)?.name}} <ng-container *ngIf="currentTable$">| <strong>Table {{(currentTable$ | async)?.code}}</strong></ng-container>
+                {{(currentLocation$ | async)?.name}} <ng-container *ngIf="currentTable$">| <strong>Table {{(currentTable$ | async)?.name}}</strong></ng-container>
               </div>
               <button>
                 <img src="/assets/icon/bell.png" alt="" style="height: 2.5rem; width: 2.5rem">

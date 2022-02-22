@@ -56,14 +56,14 @@ export class DetailOrderItemComponent implements OnInit {
     e.preventDefault();
     e.stopPropagation();
     this.inputQtyRef.nativeElement.focus();
-    this.store.dispatch(updateOrderItem({index: this.index, item: {...this.item, quantity: this.item.quantity + 1}}));
+    this.store.dispatch(updateOrderItemSuccess({index: this.index, item: {...this.item, quantity: this.item.quantity + 1}}));
   }
 
   decrease(e) {
     e.preventDefault();
     e.stopPropagation();
     this.inputQtyRef.nativeElement.focus();
-    this.store.dispatch(updateOrderItem({
+    this.store.dispatch(updateOrderItemSuccess({
       index: this.index,
       item: {...this.item, quantity: this.item.quantity > 1 ? this.item.quantity - 1 : 0}
     }));

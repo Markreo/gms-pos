@@ -66,5 +66,9 @@ export const orderReducer = createReducer(
       guest: action.guest,
       payment_type: state.order.payment_type === 'CASH' ? 'WITH_GOLF' : state.order.payment_type
     }
+  })),
+  on(OrderActions.actionOrderSuccess, (state, action) => ({
+    ...state,
+    order: action.order
   }))
 );

@@ -4,15 +4,14 @@
 }
 
 
-input, textarea {
-  /* Remove First */
+ion-input, ion-textarea {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   box-shadow: none !important;
   border-radius: 22.5px;
-  padding-left: 17px;
-  padding-right: 17px;
+  --padding-start: 17px;
+  --padding-end: 17px;
 }
 
 .voucher {

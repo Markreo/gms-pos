@@ -99,8 +99,8 @@ export class OrderPage implements OnInit, OnDestroy {
 
   }
 
-  updateSearch(event) {
-    this.store.dispatch(ProductActions.triggerUpdateSearch({search: event.target.value}));
+  updateSearch(value: string) {
+    this.store.dispatch(ProductActions.triggerUpdateSearch({search: value}));
   }
 
   triggerSlideTo(e) {

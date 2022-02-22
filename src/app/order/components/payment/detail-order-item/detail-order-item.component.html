@@ -13,7 +13,7 @@
     <div>
       <img [src]="item.variant.image || '/assets/images/avatar-food.svg'" alt="" style="height: 268px; width: 268px">
     </div>
-    <div  style="flex: 1; margin-left: 2rem; display: flex; flex-direction: column">
+    <div style="flex: 1; margin-left: 2rem; display: flex; flex-direction: column">
       <div>
         <h2 style="margin-top: 0; margin-bottom: 1rem">{{'name' | translate}}:
           <strong>{{currentLang === 'vi' ? item.variant.other_name : item.variant.name}}</strong></h2>
@@ -23,79 +23,94 @@
           <div style="margin-bottom: 1rem; display: flex; align-items: center">
 
             <div class="my-label">{{'price' |  translate}}:</div>
-            <input placeholder="Price" #inputPrice
-                   (focus)="markFocus('inputPrice')"
-                   [disabled]="item.id"
-                   style="flex: 1;height: 2.5rem; border:1px solid #cbcbcb !important;"
-                   type="text" [value]="item.price | formatCurrency">
+            <ion-input placeholder="Price" #inputPrice
+                       (focus)="markFocus('inputPrice')"
+                       inputmode="decimal"
+                       [disabled]="item.id"
+                       style="flex: 1;height: 2.5rem; border:1px solid #cbcbcb !important;"
+                       type="text" [value]="item.price | formatCurrency"></ion-input>
           </div>
-          <div style="margin-bottom: 1rem;display: flex; align-items: center">
+          <div style="margin-bottom: 1rem;display: flex; align-items: center; ">
             <div class="my-label">{{'quantity' | translate}}:</div>
-            <ion-icon *ngIf="!item.id" class="ion-padding" name="remove-outline" (click)="decrease($event)"></ion-icon>
-            <input #inputQty [value]="item.quantity" (focus)="markFocus('inputQty')"
-                   [disabled]="item.id"
-                   style=";border:1px solid #cbcbcb; display: flex; width: 3rem; height: 2.5rem; text-align: center; ">
-            <ion-icon *ngIf="!item.id" class="ion-padding" name="add-outline" (click)="increase($event)"></ion-icon>
+           <div style="display: flex; justify-content: space-between; align-items: center">
+             <ion-icon *ngIf="!item.id" class="ion-padding" name="remove-outline" (click)="decrease($event)"></ion-icon>
+             <ion-input #inputQty [value]="item.quantity" (focus)="markFocus('inputQty')"
+                        [disabled]="item.id"
+                        inputmode="numeric"
+                        style=";border:1px solid #cbcbcb; display: flex; width: 3rem; height: 2.5rem; text-align: center; ">
+             </ion-input>
+             <ion-icon *ngIf="!item.id" class="ion-padding" name="add-outline" (click)="increase($event)"></ion-icon>
+           </div>
+
           </div>
           <div
             style="margin-bottom: 1rem;display: flex; min-height: 0; align-items: stretch; flex: 1;">
             <div class="my-label">
               {{'description' | translate}}:
             </div>
-            <textarea #inputDescription [value]="item.description || ''" placeholder="Description"
-                      (change)="updateDescription($event.target.value)"
-                      (focus)="markFocus('inputDescription')"
-                      style="flex: 1; height: 100%; border:1px solid #cbcbcb;padding-top: 10px  "></textarea>
+            <ion-textarea #inputDescription [value]="item.description || ''" placeholder="Description"
+                      (ionChange)="updateDescription($event.target.value)"
+                      (ionFocus)="markFocus('inputDescription')"
+                      style="flex: 1; height: 100%; border:1px solid #cbcbcb;padding-top: 10px  "></ion-textarea>
           </div>
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; margin-left: 1rem">
           <div>
-            <div style="margin-top: 0; margin-bottom: 1rem; height: 2.5rem; display: flex; align-items: center; position:relative;">
+            <div
+              style="margin-top: 0; margin-bottom: 1rem; height: 2.5rem; display: flex; align-items: center; position:relative;">
               <div class="my-label">{{'discount' | translate}}:</div>
-              <input #inputDiscountType [value]="item.discount" (focus)="markFocus('inputDiscountType')"
-                     (change)="applyDiscount($event.target.value)"
-                     style="flex:1; border:1px solid #cbcbcb; width: 6rem; height: 2.5rem; text-align: left; padding-left: 1rem;">
-              <div (click)="toggleDiscountType($event)"
-                   style="display: flex; align-items: center; justify-content: center; width: 3rem; height: 2.5rem; position: absolute; right: 0 ">
-                {{item.discount_type === 'FIXED' ? 'VNĐ' : '%'}}
-              </div>
+              <ion-input #inputDiscountType [value]="item.discount" (focus)="markFocus('inputDiscountType')"
+                         inputmode="numeric"
+                         (change)="applyDiscount($event.target.value)"
+                         style="flex:1; border:1px solid #cbcbcb; width: 6rem; height: 2.5rem; text-align: left; padding-left: 1rem;">
+                <div (click)="toggleDiscountType($event)"
+                     style="display: flex; align-items: center; justify-content: center; width: 3rem; height: 2.5rem; position: absolute; right: 0 ">
+                  {{item.discount_type === 'FIXED' ? 'VNĐ' : '%'}}
+                </div>
+              </ion-input>
 
             </div>
 
-            <div style="margin-top: 0; margin-bottom: 1rem; height: 2.5rem; display: flex; align-items: center; position: relative">
+            <div
+              style="margin-top: 0; margin-bottom: 1rem; height: 2.5rem; display: flex; align-items: center; position: relative">
               <div class="my-label">
                 {{'guest' | translate}}:
               </div>
-              <input *ngIf="!item.guest"
-                     #inputBagtag
-                     (focus)="markFocus('inputBagtag')"
-                     [(ngModel)]="keyBagtag"
-                     style="flex: 1;border:1px solid #cbcbcb; height: 2.5rem; text-align: left;  padding-left: 1rem ">
-              <div *ngIf="item.guest"
-                   style="flex: 1;display: flex; align-items: center; padding-left: 1rem;border-radius: 22.5px;
+              <ion-input *ngIf="!item.guest"
+                         inputmode="search"
+                         #inputBagtag
+                         (focus)="markFocus('inputBagtag')"
+                         [(ngModel)]="keyBagtag"
+                         style="flex: 1;border:1px solid #cbcbcb; height: 2.5rem; text-align: left;  padding-left: 1rem ">
+                <div *ngIf="item.guest"
+                     style="flex: 1;display: flex; align-items: center; padding-left: 1rem;border-radius: 22.5px;
                  position: relative;
                  ;border:1px solid #cbcbcb; height: 2.5rem; text-align: left;  width: 100%">
               <span
                 style="color: #ff858b; margin-right: 0.25rem">#{{item.guest.bagtag}}</span> {{item.guest.customer || item.guest.fullname}}
-              </div>
-              <div style="display: flex; align-items: center; justify-content: center; position: absolute; right: 0">
+                </div>
+                <div style="display: flex; align-items: center; justify-content: center; position: absolute; right: 0">
 
-                <ng-container *ngIf="(loadingBagtag$ | async) === false">
-                  <ng-container *ngIf="item.guest"></ng-container>
-                  <ng-container *ngIf="!item.guest">
-                    <ion-icon *ngIf="platform.is('mobile') || platform.is('phablet') || platform.is('tablet')" class="ion-padding ion-margin-end" name="camera" (click)="scanBarcode"></ion-icon>
-                    <ion-icon *ngIf="platform.is('mobileweb') || platform.is('desktop')" class="ion-padding" (click)="applyBagtag($event)" name="search-outline"></ion-icon>
+                  <ng-container *ngIf="(loadingBagtag$ | async) === false">
+                    <ng-container *ngIf="item.guest"></ng-container>
+                    <ng-container *ngIf="!item.guest">
+                      <ion-icon *ngIf="platform.is('mobile') || platform.is('phablet') || platform.is('tablet')"
+                                class="ion-padding ion-margin-end" name="camera" (click)="scanBarcode"></ion-icon>
+                      <ion-icon *ngIf="platform.is('mobileweb') || platform.is('desktop')" class="ion-padding"
+                                (click)="applyBagtag($event)" name="search-outline"></ion-icon>
+                    </ng-container>
                   </ng-container>
-                </ng-container>
-                <ion-spinner *ngIf="(loadingBagtag$ | async) === true"></ion-spinner>
-              </div>
-              <div *ngIf="item.guest && (loadingBagtag$ | async) === false"
-                   style=" display: flex; align-items: center; justify-content: center; width: 3rem; height: 2.5rem; position: absolute; right: 0"
-                   (click)="removeGuest()">
-                <ion-icon name="close-outline"></ion-icon>
-              </div>
+                  <ion-spinner *ngIf="(loadingBagtag$ | async) === true"></ion-spinner>
+                </div>
+                <div *ngIf="item.guest && (loadingBagtag$ | async) === false"
+                     style=" display: flex; align-items: center; justify-content: center; width: 3rem; height: 2.5rem; position: absolute; right: 0"
+                     (click)="removeGuest()">
+                  <ion-icon name="close-outline"></ion-icon>
+                </div>
+              </ion-input>
             </div>
-            <div style="margin-top: 0; margin-bottom: 1rem; height: 2.5rem; display: flex; justify-content: space-between; align-items: center">
+            <div
+              style="margin-top: 0; margin-bottom: 1rem; height: 2.5rem; display: flex; justify-content: space-between; align-items: center">
               <div style="display: flex; justify-content: space-between; align-items: center">
                 <div class="my-label">
                   {{'voucher'| translate}}:
@@ -103,7 +118,8 @@
                 <div style="flex: 1">
                   <i *ngIf="item.is_voucher">{{'voucher_applied' | translate}}</i>
                   <ion-button *ngIf="!item.is_voucher" class="voucher" (click)="markApplyVoucher()">
-                    <ion-spinner *ngIf="loadingVoucher$ | async"></ion-spinner>  {{'apply_voucher' | translate}}
+                    <ion-spinner *ngIf="loadingVoucher$ | async"></ion-spinner>
+                    {{'apply_voucher' | translate}}
                   </ion-button>
                 </div>
               </div>

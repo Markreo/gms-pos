@@ -17,6 +17,7 @@ import {IonicStorageModule} from './ionic-storage/ionic-storage.module';
 import {TokenInterceptor} from "./_interceptors/token.interceptor";
 import {authFeatureKey, authReducer} from "./auth/data-access/auth.reducer";
 import {AuthEffects} from "./auth/data-access/auth.effects";
+import {ScreenOrientation} from "@awesome-cordova-plugins/screen-orientation/ngx";
 
 
 const interceptors = [
@@ -56,7 +57,7 @@ export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoad
         deps: [HttpClient]
       }
     })],
-  providers: [interceptors, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}],
+  providers: [interceptors, {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}, ScreenOrientation],
   bootstrap: [AppComponent],
 })
 export class AppModule {

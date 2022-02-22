@@ -15,7 +15,7 @@ export class SubCategoryEffects {
     ofType(CategoryActions.selectParentCategory),
     concatLatestFrom(() => this.store.select(selectCategories)),
     map(([action, categories]) => SubCategoryActions.loadSubCategoriesSuccess({
-      subCategories: categories.filter(cate => cate.parent_id === action.category.id)
+      subCategories: action.category ? categories.filter(cate => cate.parent_id === action.category.id) : undefined
     }))
   ));
 
