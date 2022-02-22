@@ -57,7 +57,7 @@
              style=" flex: 1; display: flex; align-items: stretch; padding: 10px; overflow: hidden; min-width: 0">
           <div class="order" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0">
             <div class="categories">
-              <div class="category-item" [class.active]="(activeSubCategory$ | async) === null"
+              <div *ngIf="(statusCategory$ | async) === 'loaded'" class="category-item" [class.active]="(activeSubCategory$ | async) === null"
                    (click)="selectSubCategory(null)">All
               </div>
               <div class="category-item" *ngFor="let subCate of subCategories$ | async"

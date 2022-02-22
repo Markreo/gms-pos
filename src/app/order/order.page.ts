@@ -59,17 +59,6 @@ export class OrderPage implements OnInit, OnDestroy {
               private actions$: Actions,
               private activatedRoute: ActivatedRoute,
               private animationCtrl: AnimationController) {
-    /*this.actions$.pipe(
-      ofType(ProductActions.loadProductsSuccessAndReset),
-      delay(10),
-      takeUntil(this.destroy$)
-    ).subscribe(() => {
-      this.ionSlidesRef.update().then(() => {
-        this.ionSlidesRef.slideTo(0).then(() => {
-          console.log('update slide to 0');
-        });
-      });
-    });*/
     combineLatest(this.store.select(selectCurrentGolfClub), this.activatedRoute.params).pipe(
       takeUntil(this.destroy$),
       filter(([golfClub, params]) => !!golfClub),

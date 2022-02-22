@@ -34,7 +34,7 @@
             <div class="my-label">{{'quantity' | translate}}:</div>
            <div style="display: flex; justify-content: space-between; align-items: center">
              <ion-icon *ngIf="!item.id" class="ion-padding" name="remove-outline" (click)="decrease($event)"></ion-icon>
-             <ion-input #inputQty [value]="item.quantity" (focus)="markFocus('inputQty')"
+             <ion-input #inputQty [value]="item.quantity" (ionFocus)="markFocus('inputQty')"
                         [disabled]="item.id"
                         inputmode="numeric"
                         style=";border:1px solid #cbcbcb; display: flex; width: 3rem; height: 2.5rem; text-align: center; ">
@@ -57,17 +57,20 @@
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; margin-left: 1rem">
           <div>
             <div
-              style="margin-top: 0; margin-bottom: 1rem; height: 2.5rem; display: flex; align-items: center; position:relative;">
+              style="margin-top: 0; margin-bottom: 1rem; height: 2.5rem; display: flex; align-items: center; ;">
               <div class="my-label">{{'discount' | translate}}:</div>
-              <ion-input #inputDiscountType [value]="item.discount" (focus)="markFocus('inputDiscountType')"
-                         inputmode="numeric"
-                         (change)="applyDiscount($event.target.value)"
-                         style="flex:1; border:1px solid #cbcbcb; width: 6rem; height: 2.5rem; text-align: left; padding-left: 1rem;">
-                <div (click)="toggleDiscountType($event)"
-                     style="display: flex; align-items: center; justify-content: center; width: 3rem; height: 2.5rem; position: absolute; right: 0 ">
-                  {{item.discount_type === 'FIXED' ? 'VNĐ' : '%'}}
-                </div>
-              </ion-input>
+             <div style="position:relative">
+               <ion-input #inputDiscountType [value]="item.discount" (focus)="markFocus('inputDiscountType')"
+                          inputmode="numeric"
+                          (change)="applyDiscount($event.target.value)"
+                          style="flex:1; border:1px solid #cbcbcb; height: 2.5rem; text-align: left; padding-left: 1rem;">
+
+               </ion-input>
+               <div (click)="toggleDiscountType($event)"
+                    style="display: flex; align-items: center; justify-content: center; width: 3rem; height: 2.5rem; position: absolute; right: 0; top:0; z-index: 4 ">
+                 {{item.discount_type === 'FIXED' ? 'VNĐ' : '%'}}
+               </div>
+             </div>
 
             </div>
 
@@ -95,7 +98,7 @@
                     <ng-container *ngIf="item.guest"></ng-container>
                     <ng-container *ngIf="!item.guest">
                       <ion-icon *ngIf="platform.is('mobile') || platform.is('phablet') || platform.is('tablet')"
-                                class="ion-padding ion-margin-end" name="camera" (click)="scanBarcode"></ion-icon>
+                                class="ion-padding" name="camera" (click)="scanBarcode"></ion-icon>
                       <ion-icon *ngIf="platform.is('mobileweb') || platform.is('desktop')" class="ion-padding"
                                 (click)="applyBagtag($event)" name="search-outline"></ion-icon>
                     </ng-container>

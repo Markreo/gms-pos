@@ -1,7 +1,7 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {DetailOrderItemStore} from './detail-order-item.store';
 import {OrderItem} from '../../../models/order-item';
-import {ModalController, ToastController} from '@ionic/angular';
+import {IonInput, IonTextarea, ModalController, ToastController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {createSelector, Store} from '@ngrx/store';
 import {deleteOrderItem, updateOrderItem, updateOrderItemSuccess} from '../../../data-access/order.actions';
@@ -18,11 +18,11 @@ import { Platform } from '@ionic/angular';
 })
 export class DetailOrderItemComponent implements OnInit {
   @Input() index: number;
-  @ViewChild('inputQty') inputQtyRef: ElementRef;
-  @ViewChild('inputPrice') inputPriceRef: ElementRef;
-  @ViewChild('inputDescription') inputDescriptionRef: ElementRef;
-  @ViewChild('inputDiscountType') inputDiscountTypeRef: ElementRef;
-  @ViewChild('inputBagtag') inputBagtagRef: ElementRef;
+  @ViewChild('inputQty') inputQtyRef: IonInput;
+  @ViewChild('inputPrice') inputPriceRef: IonInput;
+  @ViewChild('inputDescription') inputDescriptionRef: IonTextarea;
+  @ViewChild('inputDiscountType') inputDiscountTypeRef: IonInput;
+  @ViewChild('inputBagtag') inputBagtagRef: IonInput;
 
   item$: Observable<OrderItem>;
   item;
@@ -55,14 +55,16 @@ export class DetailOrderItemComponent implements OnInit {
   increase(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.inputQtyRef.nativeElement.focus();
+    if (this.focusKey) {
+      this.inputQtyRef.setFocus();
+    }
     this.store.dispatch(updateOrderItemSuccess({index: this.index, item: {...this.item, quantity: this.item.quantity + 1}}));
   }
 
   decrease(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.inputQtyRef.nativeElement.focus();
+    this.inputQtyRef.setFocus();
     this.store.dispatch(updateOrderItemSuccess({
       index: this.index,
       item: {...this.item, quantity: this.item.quantity > 1 ? this.item.quantity - 1 : 0}
@@ -72,7 +74,7 @@ export class DetailOrderItemComponent implements OnInit {
   toggleDiscountType(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.inputDiscountTypeRef.nativeElement.focus();
+    this.inputDiscountTypeRef.setFocus();
     this.detailItemStore.applyDiscountType(this.index, this.item, this.item.discount_type === 'FIXED' ? 'PERCENTAGE' : 'FIXED');
   }
 
@@ -89,9 +91,9 @@ export class DetailOrderItemComponent implements OnInit {
       this.store.dispatch(updateOrderItemSuccess({index: this.index, item: {...this.item, is_voucher: true}}));
     }
 
-    if (this.focusKey && this[this.focusKey + 'Ref']) {
-      this[this.focusKey + 'Ref'].nativeElement.focus();
-    }
+    // if (this.focusKey && this[this.focusKey + 'Ref']) {
+    //   this[this.focusKey + 'Ref'].setFocus();
+    // }
   }
 
   applyBagtag(e) {
@@ -101,7 +103,7 @@ export class DetailOrderItemComponent implements OnInit {
       return;
     }
     if (this.inputBagtagRef) {
-      this.inputBagtagRef.nativeElement.focus();
+      this.inputBagtagRef.setFocus();
     }
     this.detailItemStore.applyBagtag(this.keyBagtag);
   }

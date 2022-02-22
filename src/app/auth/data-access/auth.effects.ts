@@ -22,6 +22,7 @@ export class AuthEffects implements OnInitEffects {
     exhaustMap(action => from(this.storageService.get(TOKEN)).pipe(
       map(token => {
         if (token) {
+          console.log('loginSuccess')
           return AuthActions.loginSuccess({data: {accessToken: token}});
         } else {
           return AuthActions.logout();
