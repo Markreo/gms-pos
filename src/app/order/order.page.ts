@@ -8,20 +8,18 @@ import {
   selectStatusCategory,
 } from '../category/data-access/category.selectors';
 import * as CategoryActions from '../category/data-access/category.actions';
-import {
-  selectActiveSubCategory,
-  selectSubCategories
-} from '../sub-category/data-access/sub-category.selectors';
+import {selectActiveSubCategory, selectSubCategories} from '../sub-category/data-access/sub-category.selectors';
 import * as SubCategoryActions from '../sub-category/data-access/sub-category.actions';
 import * as ProductActions from '../product/data-access/product.actions';
-import {Actions, ofType} from '@ngrx/effects';
+import {Actions} from '@ngrx/effects';
 import {combineLatest, Subject} from 'rxjs';
 import {AnimationController, IonSlides} from '@ionic/angular';
 import {selectProductFilter, selectProductStateStatus, selectSlide} from '../product/data-access/product.selectors';
-import {delay, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {filter, map, takeUntil} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {selectTable} from '../table/table.actions';
 import {selectCurrentTable} from '../table/table.selectors';
+import {isScanning} from '../scan-barcode/data-access/scan-barcode.selectors';
 
 @Component({
   selector: 'app-order',
@@ -54,6 +52,9 @@ export class OrderPage implements OnInit, OnDestroy {
   destroy$ = new Subject();
 
   readonly listFakeProduct = Array(20).fill(0).map((_, i) => i);
+
+
+  isCanning$ = this.store.select(isScanning);
 
   constructor(private store: Store,
               private actions$: Actions,

@@ -1,114 +1,123 @@
 <ion-app>
-  <ion-content [fullscreen]="true" style="position: fixed; top: 0; left: 0; height: 100vh; width: 100vw">
-    <div style="height: 100%; width: 100%; background: white; display: flex; align-items: stretch; overflow: hidden">
-      <div
-        style="width: 100px;min-width: 100px; background: white; display: flex; flex-direction: column; overflow: hidden">
-        <img class="logo" style="height: 100px; width: 100px; background:#184a7b" src="/assets/icon/menu.png" alt=""
-             [routerLink]="['/home']">
-        <div class="menu">
-          <ng-container *ngIf="(statusCategory$ | async) === 'loading'">
-            <div *ngFor="let i of [1, 2, 3, 4, 5, 6]" class="skeleton-menu-item">
-              <ion-thumbnail slot="start">
-                <ion-skeleton-text animated></ion-skeleton-text>
-              </ion-thumbnail>
-              <!--              <div class="ion-text-center" style="padding-top: 5px">-->
-              <!--                <ion-skeleton-text animated style="width: 80%; margin: auto"></ion-skeleton-text>-->
-              <!--              </div>-->
-            </div>
-          </ng-container>
-          <ng-container>
-            <div [class.active]="(activeParentCategory$ | async) === null || (activeParentCategory$ | async) == undefined"
-                 class="menu-item"
-                 (click)="selectParentCategory(null)">
-              <img src="/assets/icon/drink.png"/>
-              <div>All</div>
-            </div>
-            <div *ngFor="let cate of parentCategories$ | async"
-                 [class.active]="(activeParentCategory$ | async)?.id === cate.id"
-                 class="menu-item"
-                 (click)="selectParentCategory(cate)">
-              <img src="/assets/icon/drink.png"/>
-              <div> {{cate.name}}</div>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-      <div style="flex: 1; display: flex; flex-direction: column; min-width: 0; background: #eeedf3">
-        <div class="header" style="height: 6rem; display: flex; padding: 1.5rem; padding-bottom: 0">
-          <div class="search"
-               style="background: white; flex: 1; border-radius: 35px; display: flex; align-items: center; padding: 0.75rem 1.5rem">
-            <div style="border-right: 2px solid black; padding-right: 0.75rem; white-space: nowrap">
-              {{'food_beverages'| translate}}
-            </div>
-            <div style="padding-left: 10px; flex: 1">
-              <ion-searchbar [placeholder]="'search_item' | translate" [value]="(productFilter$ | async)?.search"
-                             (ionClear)="updateSearch('')"
-                             (ionInput)="updateSearch($event.target.value)"></ion-searchbar>
-            </div>
-          </div>
-          <button style="margin-left: 1.5rem" (click)="toggleLang()">
-            <!--            <img class="icon" [src]="'/assets/icon/' + currentLang.toUpperCase() + '.png'" alt="" style="height: 4rem; width: 4rem">-->
-          </button>
-          <button style="margin-left: 1.5rem">
-            <img class="icon" src="/assets/icon/lock.png" alt="" style="height: 4rem; width: 4rem">
-          </button>
-        </div>
-        <div class="main-content"
-             style=" flex: 1; display: flex; align-items: stretch; padding: 10px; overflow: hidden; min-width: 0">
-          <div class="order" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0">
-            <div class="categories">
-              <div *ngIf="(statusCategory$ | async) === 'loaded'" class="category-item" [class.active]="(activeSubCategory$ | async) === null"
-                   (click)="selectSubCategory(null)">All
-              </div>
-              <div class="category-item" *ngFor="let subCate of subCategories$ | async"
-                   [class.active]="(activeSubCategory$ | async)?.id === subCate.id"
-                   (click)="selectSubCategory(subCate)">
-                <img [src]="'/assets/icon/buger.png'" alt="" style="height: 1rem; width: 1rem; margin-right: 0.5rem">
-                {{subCate.name}}
-              </div>
-            </div>
-
-            <div style="flex: 1; width: 100%">
-              <div *ngIf="(productStatus$ | async) === 'loading'" style=" display: flex; flex-wrap: wrap">
-                <ion-thumbnail class="product-item" *ngFor="let product of listFakeProduct" slot="start">
+  <app-scan-barcode *ngIf="isCanning$ | async ; else showContent"></app-scan-barcode>
+  <ng-template #showContent>
+    <ion-content [fullscreen]="true" style="position: fixed; top: 0; left: 0; height: 100vh; width: 100vw">
+      <div style="height: 100%; width: 100%; background: white; display: flex; align-items: stretch; overflow: hidden">
+        <div
+          style="width: 100px;min-width: 100px; background: white; display: flex; flex-direction: column; overflow: hidden">
+          <img class="logo" style="height: 100px; width: 100px; background:#184a7b" src="/assets/icon/menu.png" alt=""
+               [routerLink]="['/home']">
+          <div class="menu">
+            <ng-container *ngIf="(statusCategory$ | async) === 'loading'">
+              <div *ngFor="let i of [1, 2, 3, 4, 5, 6]" class="skeleton-menu-item">
+                <ion-thumbnail slot="start">
                   <ion-skeleton-text animated></ion-skeleton-text>
                 </ion-thumbnail>
+                <!--              <div class="ion-text-center" style="padding-top: 5px">-->
+                <!--                <ion-skeleton-text animated style="width: 80%; margin: auto"></ion-skeleton-text>-->
+                <!--              </div>-->
               </div>
-              <ion-slides *ngIf="(productStatus$ | async) === 'loaded' || (productStatus$ | async) === 'loading-slide'" pager="false" (ionSlideWillChange)="triggerSlideTo($event)">
-                <ion-slide *ngFor="let slide of slides$ | async">
-                  <ng-container *ngIf="slide.status === 'loading'">
-                    <div style=" display: flex; flex-wrap: wrap">
-                      <ion-thumbnail class="product-item" *ngFor="let product of listFakeProduct" slot="start">
-                        <ion-skeleton-text animated></ion-skeleton-text>
-                      </ion-thumbnail>
-                    </div>
-                  </ng-container>
-                  <div style=" display: flex; flex-wrap: wrap" *ngIf="slide.status === 'loaded'">
-                    <app-product-item *ngFor="let product of slide.products" [product]="product"></app-product-item>
-
-                    <div *ngIf="slide.products.length === 0">
-                      No thing to show!
-                    </div>
-                  </div>
-                </ion-slide>
-              </ion-slides>
-            </div>
+            </ng-container>
+            <ng-container>
+              <div
+                [class.active]="(activeParentCategory$ | async) === null || (activeParentCategory$ | async) === undefined"
+                class="menu-item"
+                (click)="selectParentCategory(null)">
+                <img src="/assets/icon/drink.png"/>
+                <div>All</div>
+              </div>
+              <div *ngFor="let cate of parentCategories$ | async"
+                   [class.active]="(activeParentCategory$ | async)?.id === cate.id"
+                   class="menu-item"
+                   (click)="selectParentCategory(cate)">
+                <img src="/assets/icon/drink.png"/>
+                <div> {{cate.name}}</div>
+              </div>
+            </ng-container>
           </div>
-          <div class="payment" style="width: 352px; display: flex; flex-direction: column; padding: 0 1rem;">
-            <div class="payment-header"
-                 style="height: 3rem; color: #184c7c; display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem"
-                 *ngIf="currentLocation$ | async">
-              <div>
-                {{(currentLocation$ | async)?.name}} <ng-container *ngIf="currentTable$">| <strong>Table {{(currentTable$ | async)?.name}}</strong></ng-container>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; min-width: 0; background: #eeedf3">
+          <div class="header" style="height: 6rem; display: flex; padding: 1.5rem; padding-bottom: 0">
+            <div class="search"
+                 style="background: white; flex: 1; border-radius: 35px; display: flex; align-items: center; padding: 0.75rem 1.5rem">
+              <div style="border-right: 2px solid black; padding-right: 0.75rem; white-space: nowrap">
+                {{'food_beverages'| translate}}
               </div>
-              <button>
-                <img src="/assets/icon/bell.png" alt="" style="height: 2.5rem; width: 2.5rem">
-              </button>
+              <div style="padding-left: 10px; flex: 1">
+                <ion-searchbar [placeholder]="'search_item' | translate" [value]="(productFilter$ | async)?.search"
+                               (ionClear)="updateSearch('')"
+                               (ionInput)="updateSearch($event.target.value)"></ion-searchbar>
+              </div>
             </div>
-            <app-payment></app-payment>
+            <button style="margin-left: 1.5rem" (click)="toggleLang()">
+              <!--            <img class="icon" [src]="'/assets/icon/' + currentLang.toUpperCase() + '.png'" alt="" style="height: 4rem; width: 4rem">-->
+            </button>
+            <button style="margin-left: 1.5rem">
+              <img class="icon" src="/assets/icon/lock.png" alt="" style="height: 4rem; width: 4rem">
+            </button>
+          </div>
+          <div class="main-content"
+               style=" flex: 1; display: flex; align-items: stretch; padding: 10px; overflow: hidden; min-width: 0">
+            <div class="order" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0">
+              <div class="categories">
+                <div *ngIf="(statusCategory$ | async) === 'loaded'" class="category-item"
+                     [class.active]="(activeSubCategory$ | async) === null"
+                     (click)="selectSubCategory(null)">All
+                </div>
+                <div class="category-item" *ngFor="let subCate of subCategories$ | async"
+                     [class.active]="(activeSubCategory$ | async)?.id === subCate.id"
+                     (click)="selectSubCategory(subCate)">
+                  <img [src]="'/assets/icon/buger.png'" alt="" style="height: 1rem; width: 1rem; margin-right: 0.5rem">
+                  {{subCate.name}}
+                </div>
+              </div>
+
+              <div style="flex: 1; width: 100%">
+                <div *ngIf="(productStatus$ | async) === 'loading'" style=" display: flex; flex-wrap: wrap">
+                  <ion-thumbnail class="product-item" *ngFor="let product of listFakeProduct" slot="start">
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                  </ion-thumbnail>
+                </div>
+                <ion-slides
+                  *ngIf="(productStatus$ | async) === 'loaded' || (productStatus$ | async) === 'loading-slide'"
+                  pager="false" (ionSlideWillChange)="triggerSlideTo($event)">
+                  <ion-slide *ngFor="let slide of slides$ | async">
+                    <ng-container *ngIf="slide.status === 'loading'">
+                      <div style=" display: flex; flex-wrap: wrap">
+                        <ion-thumbnail class="product-item" *ngFor="let product of listFakeProduct" slot="start">
+                          <ion-skeleton-text animated></ion-skeleton-text>
+                        </ion-thumbnail>
+                      </div>
+                    </ng-container>
+                    <div style=" display: flex; flex-wrap: wrap" *ngIf="slide.status === 'loaded'">
+                      <app-product-item *ngFor="let product of slide.products" [product]="product"></app-product-item>
+
+                      <div *ngIf="slide.products.length === 0">
+                        No thing to show!
+                      </div>
+                    </div>
+                  </ion-slide>
+                </ion-slides>
+              </div>
+            </div>
+            <div class="payment" style="width: 352px; display: flex; flex-direction: column; padding: 0 1rem;">
+              <div class="payment-header"
+                   style="height: 3rem; color: #184c7c; display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem"
+                   *ngIf="currentLocation$ | async">
+                <div>
+                  {{(currentLocation$ | async)?.name}}
+                  <ng-container *ngIf="currentTable$">| <strong>Table {{(currentTable$ | async)?.name}}</strong>
+                  </ng-container>
+                </div>
+                <button>
+                  <img src="/assets/icon/bell.png" alt="" style="height: 2.5rem; width: 2.5rem">
+                </button>
+              </div>
+              <app-payment></app-payment>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </ion-content>
+    </ion-content>
+  </ng-template>
 </ion-app>

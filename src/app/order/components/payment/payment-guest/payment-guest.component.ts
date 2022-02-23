@@ -8,8 +8,9 @@ import {
   selectSearchGuestStr
 } from '../../../../guest/data-access/guest.selectors';
 import {clearSearch, inputSearch, setGuest} from '../../../../guest/data-access/guest.actions';
-import {ToastController} from '@ionic/angular';
+import {AlertController, ToastController} from '@ionic/angular';
 
+import {startScanBarcode} from '../../../../scan-barcode/data-access/scan-barcode.actions';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 
 @Component({
@@ -18,15 +19,16 @@ import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
   styleUrls: ['./payment-guest.component.scss'],
 })
 export class PaymentGuestComponent implements OnInit {
-selectGuest$ = this.store.select(selectGuest);
-search$ = this.store.select(selectSearchGuestStr);
-focus$ = this.store.select(selectGuestFocus);
-status$ = this.store.select(selectGuestStatus);
-guests$ = this.store.select(selectListGuests);
-currentGuest$ = this.store.select(selectCurrentGuest);
+  selectGuest$ = this.store.select(selectGuest);
+  search$ = this.store.select(selectSearchGuestStr);
+  focus$ = this.store.select(selectGuestFocus);
+  status$ = this.store.select(selectGuestStatus);
+  guests$ = this.store.select(selectListGuests);
+  currentGuest$ = this.store.select(selectCurrentGuest);
   disabled = false;
 
-  constructor( private store: Store, private toastController: ToastController) {
+  constructor(private store: Store, private toastController: ToastController,
+              private alertController: AlertController) {
   }
 
   ngOnInit(): void {
@@ -40,18 +42,22 @@ currentGuest$ = this.store.select(selectCurrentGuest);
 
   }
 
-   scanBarcode() {
-    BarcodeScanner.hideBackground(); // make background of WebView transparent
+  scanBarcode() {
+    BarcodeScanner.prepare();
+    this.alertController.create({message: 'Hướng camera về phía batag', buttons: [{
+        text: 'OK',
+        id: 'confirm-button',
+        handler: () => {
+          this.store.dispatch(startScanBarcode({}));
+        }
+      }]}).then(alert => {
+      alert.present().then(() => {});
+    });
 
-     // BarcodeScanner.startScan().then(result => {
-     //   console.log('result', result);
-     // }).catch(error => {
-     //   console.log('errior ', error);
-     // });
   }
 
   onClickGuest(guest) {
-this.store.dispatch(setGuest({guest}));
+    this.store.dispatch(setGuest({guest}));
   }
 
   clearSearch() {

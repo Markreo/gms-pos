@@ -25,8 +25,9 @@ import {TableModule} from '../table/table.module';
 import { ProductItemComponent } from './components/product-item/product-item.component';
 import { OrderItemComponent } from './components/payment/order-item/order-item.component';
 import { PaymentGuestComponent } from './components/payment/payment-guest/payment-guest.component';
-import {GuestModule} from "../guest/guest.module";
+import {GuestModule} from '../guest/guest.module';
 import { DetailOrderItemComponent } from './components/payment/detail-order-item/detail-order-item.component';
+import {ScanBarcodeModule} from '../scan-barcode/scan-barcode.module';
 
 @NgModule({
   imports: [
@@ -45,7 +46,8 @@ import { DetailOrderItemComponent } from './components/payment/detail-order-item
     EffectsModule.forFeature([OrderEffects]),
     SharedModule,
     TableModule,
-    GuestModule
+    GuestModule,
+    ScanBarcodeModule
   ],
   declarations: [OrderPage, PaymentComponent, ProductItemComponent, OrderItemComponent, PaymentGuestComponent, DetailOrderItemComponent],
   providers: [OrderService]
