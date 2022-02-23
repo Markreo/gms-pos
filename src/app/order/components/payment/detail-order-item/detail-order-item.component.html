@@ -8,7 +8,7 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content [scrollY]="false">
   <div style="display: flex; height: 100%; width: 100%; padding: 1rem; overflow: hidden" *ngIf="(item$ | async)">
     <div>
       <img [src]="item.variant.image || '/assets/images/avatar-food.svg'" alt="" style="height: 268px; width: 268px">

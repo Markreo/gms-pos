@@ -1,7 +1,7 @@
 <ion-app>
   <app-scan-barcode *ngIf="isCanning$ | async ; else showContent"></app-scan-barcode>
   <ng-template #showContent>
-    <ion-content [fullscreen]="true" style="position: fixed; top: 0; left: 0; height: 100vh; width: 100vw">
+    <ion-content [fullscreen]="true" slot="fixed" [forceOverscroll]="true" [scrollY]="false">
       <div style="height: 100%; width: 100%; background: white; display: flex; align-items: stretch; overflow: hidden">
         <div
           style="width: 100px;min-width: 100px; background: white; display: flex; flex-direction: column; overflow: hidden">
@@ -75,7 +75,6 @@
               <div style="flex: 1; width: 100%">
                 <div *ngIf="(productStatus$ | async) === 'loading'" style=" display: flex; flex-wrap: wrap">
                   <ion-thumbnail class="product-item" *ngFor="let product of listFakeProduct" slot="start">
-                    <ion-skeleton-text animated></ion-skeleton-text>
                   </ion-thumbnail>
                 </div>
                 <ion-slides
@@ -85,7 +84,6 @@
                     <ng-container *ngIf="slide.status === 'loading'">
                       <div style=" display: flex; flex-wrap: wrap">
                         <ion-thumbnail class="product-item" *ngFor="let product of listFakeProduct" slot="start">
-                          <ion-skeleton-text animated></ion-skeleton-text>
                         </ion-thumbnail>
                       </div>
                     </ng-container>

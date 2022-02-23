@@ -51,7 +51,7 @@ export class OrderPage implements OnInit, OnDestroy {
 
   destroy$ = new Subject();
 
-  readonly listFakeProduct = Array(20).fill(0).map((_, i) => i);
+  readonly listFakeProduct = Array(12).fill(0).map((_, i) => i);
 
 
   isCanning$ = this.store.select(isScanning);
