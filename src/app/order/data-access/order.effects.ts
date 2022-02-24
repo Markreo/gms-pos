@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Actions, concatLatestFrom, createEffect, ofType} from '@ngrx/effects';
-import {catchError, exhaustMap, finalize, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, finalize, map, switchMap, tap} from 'rxjs/operators';
 import {from, of} from 'rxjs';
 
 import * as OrderActions from './order.actions';
@@ -37,9 +37,9 @@ export class OrderEffects {
     switchMap(([action, golfClub]) => this.orderService.getOrder(golfClub.id, action.id).pipe(
       map(order => OrderActions.loadOrderSuccess({
         order: order.id ? order : initOrderFunction(action)
-      }))
+      })),
+      catchError(error => of(OrderActions.loadOrderFailure({error}))),
     )),
-    catchError(error => of(OrderActions.loadOrderFailure({error})))
   ));
 
 
@@ -83,11 +83,15 @@ export class OrderEffects {
             finalize(() => {
               ionLoading.dismiss().then(() => {
               });
+            }),
+            catchError(error => {
+              this.store.dispatch(OrderActions.actionOrderFailure({error}));
+              return of(null);
             })
           ))
         )),
+        filter(r => !!r),
         map(updatedOrder => OrderActions.loadOrderSuccess({order: initOrderFunction({id: order.table_map})})),
-        catchError(error => of(OrderActions.actionOrderFailure({error}))),
       ),
     ),
   ));
@@ -103,6 +107,10 @@ export class OrderEffects {
         exhaustMap(([, golfClub]) => {
           if (order.id) {
             return this.orderService.updateOrder(golfClub.id, order.id, order).pipe(
+              catchError(error => {
+                this.store.dispatch(OrderActions.actionOrderFailure({error}));
+                return of(null);
+              }),
               finalize(() => {
                 ionLoading.dismiss().then(r => {
                 });
@@ -110,6 +118,10 @@ export class OrderEffects {
             );
           } else {
             return this.orderService.createOrder(golfClub.id, order).pipe(
+              catchError(error => {
+                this.store.dispatch(OrderActions.actionOrderFailure({error}));
+                return of(null);
+              }),
               finalize(() => {
                 ionLoading.dismiss().then(r => {
                 });
@@ -117,6 +129,7 @@ export class OrderEffects {
             );
           }
         }),
+        filter(r => !!r),
         tap(() => {
           this.toastController.create({
             message: (order.id ? 'Update' : 'Submit') + ' success!',
@@ -127,7 +140,6 @@ export class OrderEffects {
         map(updatedOrder => OrderActions.actionOrderSuccess({order: updatedOrder}))
       )),
     )),
-    catchError(error => of(OrderActions.actionOrderFailure({error}))),
   ));
 
   actionError = createEffect(() => this.actions$.pipe(

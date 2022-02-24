@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Order} from '../models/order';
 import {buildInventoryUrl, convertDataToServer} from '../../_helpers/functions';
-import {OrderItem} from "../models/order-item";
+import {OrderItem} from '../models/order-item';
 
 @Injectable()
 export class OrderService {
