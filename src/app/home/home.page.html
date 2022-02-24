@@ -36,9 +36,9 @@
           <ion-searchbar [placeholder]="'search' | translate"></ion-searchbar>
         </div>
       </form>
-      <div style="display: flex; align-items: center">
+      <div style="display: flex; align-items: center; margin-right: 75px">
         <img class="icon" [src]="'/assets/icon/' + currentLang.toUpperCase() + '.png'" alt="" (click)="toggleLang()">
-        <img class="icon" [src]="'/assets/icon/logout.png'" [alt]="'logout' | translate" (click)="logout()">
+        <img class="icon" [src]="'/assets/icon/logout.svg'" [alt]="'logout' | translate" (click)="logout()">
       </div>
     </div>
     <div style="flex: 1; min-height: 0; padding: 22.5px">

@@ -66,8 +66,7 @@ export class OrderPage implements OnInit, OnDestroy {
       map(([golfClub, params]) => params.id)
     ).subscribe(id => {
         this.store.dispatch(selectTable({id}));
-      }, console.log
-      , () => console.log('complete'));
+      });
   }
 
   ngOnInit() {
