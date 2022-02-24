@@ -1,20 +1,19 @@
 import {Injectable} from '@angular/core';
 import {Actions, concatLatestFrom, createEffect, ofType} from '@ngrx/effects';
-import {catchError, debounceTime, delay, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, debounceTime, delay, map, switchMap} from 'rxjs/operators';
 
 import * as ProductActions from './product.actions';
+import {updateForSlideSuccess, updateListProductSuccess} from './product.actions';
 import * as LocationActions from '../../location/data-access/location.actions';
-import {Action, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {selectProductFilter} from './product.selectors';
 import {ProductService} from '../services/product.service';
 import {selectCurrentLocation} from '../../location/data-access/location.selectors';
 import {selectActiveCategory} from '../../category/data-access/category.selectors';
 import * as CategoryActions from '../../category/data-access/category.actions';
 import {of, pipe} from 'rxjs';
-import {TypedAction} from '@ngrx/store/src/models';
-import {updateForSlideSuccess, updateListProductSuccess} from './product.actions';
-import {selectActiveSubCategory} from "../../sub-category/data-access/sub-category.selectors";
-import {activeSubCategory} from "../../sub-category/data-access/sub-category.actions";
+import {selectActiveSubCategory} from '../../sub-category/data-access/sub-category.selectors';
+import {activeSubCategory} from '../../sub-category/data-access/sub-category.actions';
 
 
 @Injectable()
@@ -80,10 +79,12 @@ export class ProductEffects {
             ...filter,
             start,
             category: subCategory ? subCategory.id : category?.id
-          }).pipe(map(resp => returnAction({...resp, slide: (action as any)?.slide})));
+          }).pipe(
+            map(resp => returnAction({...resp, slide: (action as any)?.slide})),
+            catchError(error => of(ProductActions.loadProductsFailure({error}))),
+          );
         }
       ),
-      catchError(error => of(ProductActions.loadProductsFailure({error}))),
     );
   }
 }
