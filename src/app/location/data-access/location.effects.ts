@@ -51,7 +51,7 @@ export class LocationEffects  {
     concatLatestFrom(() => this.store.select(selectCurrentLocation)),
     filter(([, currentLocation]) => !currentLocation),
     map(() => LocationActions.findSavedLocation())
-  ))
+  ));
 
 
   constructor(private actions$: Actions,

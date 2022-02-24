@@ -10,8 +10,6 @@ import {CategoryService} from '../services/category.service';
 
 @Injectable()
 export class CategoryEffects {
-
-
   setCurrentLocation$ = createEffect(() => this.actions$.pipe(
     ofType(LocationActions.setCurrentLocation),
     map(action => CategoryActions.loadCategories({location: action.location}))
@@ -23,11 +21,10 @@ export class CategoryEffects {
       console.log('loadCategories$');
     }),
     debounceTime(500),
-    concatMap((action) =>
-      this.categoryService.getAll(action.location.id).pipe(
+    concatMap((action) => this.categoryService.getAll(action.location.id).pipe(
         map(categories => CategoryActions.loadCategoriesSuccess({categories})),
-        catchError(error => of(CategoryActions.loadCategoriesFailure({error}))))
-    )
+        catchError(error => of(CategoryActions.loadCategoriesFailure({error})))
+      ))
   ));
 
 

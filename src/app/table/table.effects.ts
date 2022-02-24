@@ -41,9 +41,9 @@ export class TableEffects {
     ofType(TableActions.selectTable),
     concatLatestFrom(() => this.store.select(selectCurrentGolfClub)),
     switchMap(([action, golfC]) => this.tableService.get(golfC.id, action.id).pipe(
-      map(table => TableActions.cloneTableSuccess({table}))
+      map(table => TableActions.cloneTableSuccess({table})),
+      catchError((error) => of(TableActions.loadTablesFailure({error})))
     )),
-    catchError((error) => of(TableActions.loadTablesFailure({error})))
   ));
 
 
