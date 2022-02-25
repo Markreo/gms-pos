@@ -59,7 +59,7 @@ export const orderReducer = createReducer(
     ...state,
     order: {...state.order, payment_type: action.paymentType}
   })),
-  on(OrderActions.setGuestOfOrder, (state, action) => ({
+  on(OrderActions.setGuestOfOrderSuccess, (state, action) => ({
     ...state,
     order: {
       ...state.order,

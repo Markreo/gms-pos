@@ -40,4 +40,8 @@ export class OrderService {
   applyGuestOrderItem(orderItemId: string, guestId: string) {
     return this.http.patch<OrderItem>(buildInventoryUrl('order-products/') + orderItemId , {guest: guestId});
   }
+
+  updateGuest(golfClubId, orderId, data) {
+    return this.http.patch<Order>(buildInventoryUrl('/golf/clubs/' + golfClubId) + '/orders/' + orderId, data);
+  }
 }
