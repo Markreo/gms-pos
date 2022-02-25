@@ -16,6 +16,8 @@ import {LoadingController, ToastController} from '@ionic/angular';
 import {initOrderFunction} from './init-order.function';
 import {toSubmitOrderFunction} from './to-submit-order.function';
 import {setGuest} from '../../guest/data-access/guest.actions';
+import {scanBagtag} from "./order.actions";
+import {GuestService} from "../../guest/services/guest.service";
 
 
 @Injectable()
@@ -162,12 +164,26 @@ export class OrderEffects {
     map(action => OrderActions.setGuestOfOrder({guest: action.guest}))
   ));
 
+
+  scanBagtag = createEffect(() => this.actions$.pipe(
+    ofType(scanBagtag),
+    concatLatestFrom(() => this.store.select(selectCurrentGolfClub)),
+    switchMap(([{bagtag},golfClub]) => this.guestService.getAllWithFilter(golfClub.id, {search: bagtag}).pipe(
+      filter(resp => !!resp.data.length),
+      map(({data}) => {
+        console.log('setGuestOfOrder');
+        return OrderActions.setGuestOfOrder({guest: data[0]});
+      })
+    ))
+  ));
+
   constructor(private actions$: Actions,
               private orderService: OrderService,
               private productService: ProductService,
               private tableService: TableService,
               private loadingController: LoadingController,
               private toastController: ToastController,
+              private guestService: GuestService,
               private store: Store) {
   }
 

@@ -26,3 +26,4 @@ export const actionOrderFailure = createAction('[Order] Action update failure', 
 export const setPaymentType = createAction('[Order] set Payment type', props<{ paymentType: 'WITH_GOLF' | 'CITY_LEDGER' | 'CASH' | 'VOUCHER' }>());
 export const setGuestOfOrder = createAction('[Order] set guest', props<{ guest: Guest }>());
 
+export const scanBagtag  = createAction('[Order] scan bagtag', props<{bagtag: string}>());

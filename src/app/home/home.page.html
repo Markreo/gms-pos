@@ -47,12 +47,15 @@
           <div style="color: #184c7c; font-size: 110%; margin-bottom: 15px" [innerHTML]="'choose_table' | translate">
           </div>
         </div>
-
-        <div *ngIf="tableStatus$ | async as tableStatus">
-          <small *ngIf="tableStatus === 'idle'">No location selected!</small>
-          <ion-spinner *ngIf="tableStatus === 'loading'"></ion-spinner>
-        </div>
-
+<ng-container *ngIf="currentLocation$ | async; else tem">
+  <div *ngIf="tableStatus$ | async as tableStatus">
+    <small *ngIf="tableStatus === 'idle'">No location selected!</small>
+    <ion-spinner *ngIf="tableStatus === 'loading'"></ion-spinner>
+  </div>
+</ng-container>
+<ng-template #tem>
+  <small>No location selected!</small>
+</ng-template>
         <div class="items">
           <ion-button *ngFor="let table of tables$ | async"
                       size="small"

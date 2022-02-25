@@ -3,6 +3,7 @@ import {Store} from '@ngrx/store';
 import {stopScanBarcode} from '../../data-access/scan-barcode.actions';
 import {BarcodeScanner} from '@capacitor-community/barcode-scanner';
 import {AlertController} from '@ionic/angular';
+import {scanBagtag} from "../../../order/data-access/order.actions";
 
 @Component({
   selector: 'app-scan-barcode',
@@ -19,10 +20,21 @@ export class ScanBarcodeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('ScanBarcodeComponent oniInit');
-    BarcodeScanner.hideBackground().then(() => console.log('hide background'));
-    BarcodeScanner.startScan().then(result => {
-      console.log('result', result);
+
+    this.checkPermission().then(result => {
+      if (result) {
+        BarcodeScanner.hideBackground().then(() => console.log('hide background'));
+        BarcodeScanner.startScan().then(({hasContent, content}) => {
+          if(hasContent) {
+            this.store.dispatch(scanBagtag({bagtag: content}));
+          }
+          this.closeModal();
+        });
+      } else {
+        this.closeModal();
+      }
     });
+
   }
 
   closeModal() {
@@ -35,7 +47,7 @@ export class ScanBarcodeComponent implements OnInit, OnDestroy {
   }
 
 
-  async checkPermission() {
+  async checkPermission(): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       const status = await BarcodeScanner.checkPermission({force: true});
       if (status.granted) {
@@ -44,16 +56,22 @@ export class ScanBarcodeComponent implements OnInit, OnDestroy {
         const alert = await this.alertController.create({
           header: 'No permission',
           message: 'Please allow camera access in your settings',
-          buttons: [{
-            text: 'No',
-            role: 'cancel'
-          }, {
-            text: 'Open settings',
-            handler: () => {
-              BarcodeScanner.openAppSettings();
-              resolve(false);
+          buttons: [
+            {
+              text: 'No',
+              role: 'cancel',
+              handler: () => {
+                resolve(false);
+              }
+            },
+            {
+              text: 'Open settings',
+              handler: () => {
+                BarcodeScanner.openAppSettings();
+                resolve(false);
+              }
             }
-          }]
+          ]
         });
         await alert.present();
       } else {
