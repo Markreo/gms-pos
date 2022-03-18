@@ -11,15 +11,23 @@ export class ProductService {
   constructor(private http: HttpClient) {
   }
 
-  getAllWithFilter(locationId, filter: any = {}) {
-    const {menu, ...otherFilter} = filter;
-    const query = Object.keys(otherFilter).reduce((qry, key) => {
+  getAllWithFilter(locationId, menu, filter: any = {}) {
+    console.log('getAllWithFilter', menu);
+    const query = Object.keys(filter).reduce((qry, key) => {
       if (filter[key]) {
         qry += '&' + key + '=' + filter[key];
       }
       return qry;
     }, '');
-    return this.http.get<{ total: number; data: Product[] }>(buildInventoryUrl('stores/' + locationId + '/products') + `?` + query);
+    if (menu) {
+      return this.http.get<Product[]>(buildInventoryUrl('store-locations/' + locationId + '/menus/' + menu.id + '/products') + `?` + query)
+        .pipe(
+          map(result => ({data: result, total: result.length}))
+        );
+    } else {
+      return this.http.get<{ total: number; data: Product[] }>(buildInventoryUrl('stores/' + locationId + '/products') + `?` + query);
+    }
+
   }
 
   getVariants(productId): Observable<Variant[]> {

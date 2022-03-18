@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {selectCurrentLocation} from '../location/data-access/location.selectors';
+import {enableMenu, selectCurrentLocation} from '../location/data-access/location.selectors';
 import {Store} from '@ngrx/store';
 import {selectCurrentGolfClub} from '../golf-club/data-access/selectors/golf-club.selectors';
 import {
-  selectActiveCategory,
+  selectActiveCategory, selectActiveMenu, selectMenus,
   selectParentCategories,
   selectStatusCategory,
 } from '../category/data-access/category.selectors';
@@ -33,8 +33,11 @@ export class OrderPage implements OnInit, OnDestroy {
   currentLocation$ = this.store.select(selectCurrentLocation);
   currentGolfClub$ = this.store.select(selectCurrentGolfClub);
 
+  enableMenu$ = this.store.select(enableMenu);
   parentCategories$ = this.store.select(selectParentCategories);
+  menus$ = this.store.select(selectMenus);
   activeParentCategory$ = this.store.select(selectActiveCategory);
+  activeMenu$ = this.store.select(selectActiveMenu);
   statusCategory$ = this.store.select(selectStatusCategory);
 
   subCategories$ = this.store.select(selectSubCategories);
@@ -80,8 +83,8 @@ export class OrderPage implements OnInit, OnDestroy {
     this.store.dispatch(SubCategoryActions.activeSubCategory({subCategory: category}));
   }
 
-  selectMenu(s) {
-
+  selectMenu(menu) {
+    this.store.dispatch(CategoryActions.selectMenu({menu}));
   }
 
   toggleLang() {

@@ -16,7 +16,6 @@ import {StoreModule} from '@ngrx/store';
 import {orderFeatureKey, orderReducer} from './data-access/order.reducer';
 import {OrderService} from './services/order.service';
 import {CategoryModule} from '../category/category.module';
-import {MenuModule} from '../menu/menu.module';
 import {SubCategoryModule} from '../sub-category/sub-category.module';
 import {SharedModule} from '../_helpers/shared/shared.module';
 import {ProductModule} from '../product/product.module';
@@ -40,7 +39,6 @@ import {ScanBarcodeModule} from '../scan-barcode/scan-barcode.module';
     LocationModule,
     CategoryModule,
     SubCategoryModule,
-    MenuModule,
     ProductModule,
     StoreModule.forFeature(orderFeatureKey, orderReducer),
     EffectsModule.forFeature([OrderEffects]),

@@ -9,11 +9,12 @@ import {Store} from '@ngrx/store';
 import {selectProductFilter} from './product.selectors';
 import {ProductService} from '../services/product.service';
 import {selectCurrentLocation} from '../../location/data-access/location.selectors';
-import {selectActiveCategory} from '../../category/data-access/category.selectors';
+import {selectActiveCategory, selectActiveMenu} from '../../category/data-access/category.selectors';
 import * as CategoryActions from '../../category/data-access/category.actions';
 import {of, pipe} from 'rxjs';
 import {selectActiveSubCategory} from '../../sub-category/data-access/sub-category.selectors';
 import {activeSubCategory} from '../../sub-category/data-access/sub-category.actions';
+import {selectMenu} from '../../category/data-access/category.actions';
 
 
 @Injectable()
@@ -25,6 +26,11 @@ export class ProductEffects {
 
   setParentCategory$ = createEffect(() => this.actions$.pipe(
     ofType(CategoryActions.selectParentCategory),
+    map(action => ProductActions.updateListProduct())
+  ));
+
+  setMenu$ = createEffect(() => this.actions$.pipe(
+    ofType(CategoryActions.selectMenu),
     map(action => ProductActions.updateListProduct())
   ));
 
@@ -63,10 +69,12 @@ export class ProductEffects {
         this.store.select(selectCurrentLocation),
         this.store.select(selectProductFilter),
         this.store.select(selectActiveCategory),
+        this.store.select(selectActiveMenu),
         this.store.select(selectActiveSubCategory)
       ]), //select menu, select sub-category
       debounceTime(300),
-      switchMap(([action, location, filter, category, subCategory]) => {
+      switchMap(([action, location, filter, category, menu, subCategory]) => {
+        console.log('hehehehe');
           // if  menu
           // if category -> menu by category
           // menu only
@@ -75,7 +83,7 @@ export class ProductEffects {
           // get all
           const slide = (action as any)?.slide;
           const start = slide ? slide * filter.max : 0;
-          return this.productService.getAllWithFilter(location.id, {
+          return this.productService.getAllWithFilter(location.id, menu, {
             ...filter,
             start,
             category: subCategory ? subCategory.id : category?.id

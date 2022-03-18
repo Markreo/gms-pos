@@ -9,3 +9,5 @@ export const selectCategories = createSelector(selectCategoryState, state => sta
 export const selectParentCategories = createSelector(selectCategoryState, state => state.parentCategories);
 export const selectActiveCategory = createSelector(selectCategoryState, state => state.activeCategory);
 export const selectStatusCategory = createSelector(selectCategoryState, state => state.status);
+export const selectMenus = createSelector(selectCategoryState, state => state.menus);
+export const selectActiveMenu = createSelector(selectCategoryState, state => state.activeMenu);

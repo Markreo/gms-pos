@@ -7,3 +7,4 @@ export const selectLocationState = createFeatureSelector<fromLocation.State>(
 
 export const selectCurrentLocation = createSelector(selectLocationState, state => state.currentLocation);
 export const selectLocations = createSelector(selectLocationState, state => state.locations);
+export const enableMenu = createSelector(selectLocationState, state => state.currentLocation?.enable_menu === true);

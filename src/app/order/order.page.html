@@ -18,7 +18,23 @@
                 <!--              </div>-->
               </div>
             </ng-container>
-            <ng-container>
+            <ng-container *ngIf="enableMenu$ | async; else useCategory">
+              <div
+                [class.active]="(activeMenu$ | async) === null || (activeMenu$ | async) === undefined"
+                class="menu-item"
+                (click)="selectMenu(null)">
+                <img src="/assets/icon/drink.png"/>
+                <div>All</div>
+              </div>
+              <div *ngFor="let menu of menus$ | async"
+                   [class.active]="(activeMenu$ | async)?.id === menu.id"
+                   class="menu-item"
+                   (click)="selectMenu(menu)">
+                <img src="/assets/icon/drink.png"/>
+                <div> {{menu.name}}</div>
+              </div>
+            </ng-container>
+            <ng-template #useCategory >
               <div
                 [class.active]="(activeParentCategory$ | async) === null || (activeParentCategory$ | async) === undefined"
                 class="menu-item"
@@ -33,7 +49,7 @@
                 <img src="/assets/icon/drink.png"/>
                 <div> {{cate.name}}</div>
               </div>
-            </ng-container>
+            </ng-template>
           </div>
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; min-width: 0; background: #eeedf3">
