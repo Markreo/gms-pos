@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {
   selectCurrentGuest,
@@ -26,6 +26,8 @@ export class PaymentGuestComponent implements OnInit {
   guests$ = this.store.select(selectListGuests);
   currentGuest$ = this.store.select(selectCurrentGuest);
   disabled = false;
+
+  @ViewChild('inputSearch', {static: false}) inputSearchRef;
 
   constructor(private store: Store, private toastController: ToastController,
               private alertController: AlertController) {
@@ -61,6 +63,7 @@ export class PaymentGuestComponent implements OnInit {
   }
 
   clearSearch() {
+    this.inputSearchRef.el.value = '';
     this.store.dispatch(clearSearch());
   }
 

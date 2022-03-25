@@ -8,7 +8,7 @@
                 (click)="clearSearch()"></ion-icon>
       <ion-icon *ngIf="(search$ | async).length === 0" class="scan" name="camera"
                 (click)="scanBarcode()"></ion-icon>
-      <ion-input [placeholder]="'bagtag' | translate"
+      <ion-input #inputSearch [placeholder]="'bagtag' | translate"
                  (ionInput)="setInputSearch($event)"></ion-input>
     </div>
   </ng-template>

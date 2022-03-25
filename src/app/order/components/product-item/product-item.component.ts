@@ -1,14 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Product} from '../../../product/models/product';
-import * as OrderActions from "../../data-access/order.actions";
-import {Store} from "@ngrx/store";
-import {OrderService} from "../../services/order.service";
-import {createEffect, ofType} from "@ngrx/effects";
-import {catchError, map, mergeMap} from "rxjs/operators";
-import {of} from "rxjs";
-import {Variant} from "../../../product/models/variant";
-import {addVariant} from "../../data-access/order.actions";
-import {ProductService} from "../../../product/services/product.service";
+import {addVariant} from '../../data-access/order.actions';
+import {Store} from '@ngrx/store';
+import {OrderService} from '../../services/order.service';
+import {Variant} from '../../../product/models/variant';
+import {ProductService} from '../../../product/services/product.service';
 
 @Component({
   selector: 'app-product-item',
