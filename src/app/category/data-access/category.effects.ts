@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, concatMap, debounceTime, map, tap} from 'rxjs/operators';
+import {catchError, concatMap, debounceTime, filter, map, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 
 import * as CategoryActions from './category.actions';
@@ -37,6 +37,12 @@ export class CategoryEffects {
       map(({data}) => CategoryActions.loadMenusSuccess({menus: data})),
       catchError(error => of(CategoryActions.loadCategoriesFailure({error})))
     ))
+  ));
+
+  setFirstMenu = createEffect(() => this.actions$.pipe(
+    ofType(CategoryActions.loadMenusSuccess),
+    filter(action => !!action.menus.length),
+    map(action => CategoryActions.selectMenu({menu: action.menus[0]}))
   ));
 
 

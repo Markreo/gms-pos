@@ -19,13 +19,6 @@
               </div>
             </ng-container>
             <ng-container *ngIf="enableMenu$ | async; else useCategory">
-              <div
-                [class.active]="(activeMenu$ | async) === null || (activeMenu$ | async) === undefined"
-                class="menu-item"
-                (click)="selectMenu(null)">
-                <img src="/assets/icon/drink.png"/>
-                <div>All</div>
-              </div>
               <div *ngFor="let menu of menus$ | async"
                    [class.active]="(activeMenu$ | async)?.id === menu.id"
                    class="menu-item"

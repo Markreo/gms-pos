@@ -20,10 +20,7 @@ export class ProductService {
       return qry;
     }, '');
     if (menu) {
-      return this.http.get<Product[]>(buildInventoryUrl('store-locations/' + locationId + '/menus/' + menu.id + '/products') + `?` + query)
-        .pipe(
-          map(result => ({data: result, total: result.length}))
-        );
+      return this.http.get<{ total: number; data: Product[] }>(buildInventoryUrl('store-locations/' + locationId + '/menus/' + menu.id + '/products') + `?` + query);
     } else {
       return this.http.get<{ total: number; data: Product[] }>(buildInventoryUrl('stores/' + locationId + '/products') + `?` + query);
     }

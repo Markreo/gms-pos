@@ -34,6 +34,7 @@ export class LocationEffects  {
     tap(action => console.log('loadLocations$', action)),
     debounceTime(500),
     concatMap(action => this.locationService.getAllByClub(action.golfClub.id).pipe(
+      map(locations => locations.filter(location => location.type === 'FB')),
       map(locations => LocationActions.loadLocationsSuccess({data: locations, total: locations.length})),
       catchError(error => of(LocationActions.loadLocationsFailure({error})))))
   ));
