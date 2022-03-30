@@ -4,6 +4,7 @@ import {catchError, exhaustMap, filter, finalize, map, switchMap, tap} from 'rxj
 import {from, of} from 'rxjs';
 
 import * as OrderActions from './order.actions';
+import {scanBagtag} from './order.actions';
 import {cloneTableSuccess, selectTable} from '../../table/table.actions';
 import {TableService} from '../../table/table.service';
 import {Store} from '@ngrx/store';
@@ -16,9 +17,7 @@ import {LoadingController, ToastController} from '@ionic/angular';
 import {initOrderFunction} from './init-order.function';
 import {toSubmitOrderFunction} from './to-submit-order.function';
 import {setGuest} from '../../guest/data-access/guest.actions';
-import {loadOrderSuccess, scanBagtag} from './order.actions';
 import {GuestService} from '../../guest/services/guest.service';
-import {error} from 'protractor';
 
 
 @Injectable()
@@ -168,36 +167,26 @@ export class OrderEffects {
   scanBagtag = createEffect(() => this.actions$.pipe(
     ofType(scanBagtag),
     concatLatestFrom(() => this.store.select(selectCurrentGolfClub)),
-    switchMap(([{bagtag},golfClub]) => this.guestService.getAllWithFilter(golfClub.id, {search: bagtag}).pipe(
+    switchMap(([{bagtag}, golfClub]) => this.guestService.getAllWithFilter(golfClub.id, {search: bagtag}).pipe(
       filter(resp => !!resp.data.length),
       map(({data}) => OrderActions.setGuestOfOrder({guest: data[0]}))
     ))
   ));
 
-  setGuestOfOrder = createEffect(()=> this.actions$.pipe(
+  setGuestOfOrder = createEffect(() => this.actions$.pipe(
     ofType(OrderActions.setGuestOfOrder),
     concatLatestFrom(() => [this.store.select(selectCurrentGolfClub), this.store.select(selectOrder)]),
     switchMap(([actionGuest, golfClub, order]) => {
-
-      /**
-       *  if (guest && guest.golf_class && guest.golf_class.restaurant_discount) {
-       *       this.order.discount_type = 'PERCENTAGE';
-       *       this.order.discount = guest.golf_class.restaurant_discount;
-       *     } else {
-       *       this.order.discount_type = 'PERCENTAGE';
-       *       this.order.discount = 0;
-       *     }
-       */
-      if (order.id) {
-        return of(OrderActions.setGuestOfOrderSuccess({guest: actionGuest.guest}));
-      } else {
-        return this.orderService.updateGuest(golfClub.id, order.id, {guest: actionGuest.guest.id}).pipe(
-          map(() => OrderActions.loadOrderSuccess({order})),
-          catchError(err => of(OrderActions.loadOrderFailure({error: err})))
-        );
+        if (order.id) {
+          return this.orderService.updateGuest(golfClub.id, order.id, {guest: actionGuest.guest.id}).pipe(
+            map(() => OrderActions.loadOrderSuccess({order})),
+            catchError(err => of(OrderActions.loadOrderFailure({error: err})))
+          );
+        } else {
+          return of(OrderActions.setGuestOfOrderSuccess({guest: actionGuest.guest}));
+        }
       }
-    }),
-  ));
+    )), {dispatch: false});
 
   constructor(private actions$: Actions,
               private orderService: OrderService,

@@ -193,7 +193,7 @@ export class DetailOrderItemStore extends ComponentStore<DetailOrderItemState> {
     if (item.id) {
       this.callApiUpdateDescription({index, item, description: value});
     } else {
-      this.store.dispatch(updateOrderItemSuccess({index: 0, item: {...item, description: item.description}}));
+      this.store.dispatch(updateOrderItemSuccess({index: 0, item: {...item, description: value}}));
     }
   }
 

@@ -29,12 +29,20 @@
       align-items: center;
       border-radius: 4px;
       overflow: hidden;
+      font-size: 85%;
       > div {
         background: transparent;
         transition: background 200ms ease-out;
       }
       &:active > div {
         background: rgba(255, 196, 9, 0.8);
+      }
+    }
+
+
+    app-order-item {
+      .item-name {
+        color: #184c7c;
       }
     }
 

@@ -23,7 +23,7 @@ export const initialState: ProductState = {
   status: 'loading',
   filter: {
     search: '',
-    max: 12
+    max: 16
   },
   oldSlideIndex: 0
 };

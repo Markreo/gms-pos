@@ -4,7 +4,7 @@
       <div>
         <app-payment-guest></app-payment-guest>
         <div
-          style="border-bottom: 1px; display: flex; padding-bottom: 5px ; border-bottom: 1px solid #518ac6; margin: 10px">
+          style="border-bottom: 1px; display: flex; padding-bottom: 5px ; border-bottom: 1px solid #518ac6; margin: 10px; color: grey; font-size: 80%">
           <div class="item-bagtag"></div>
           <div class="item-name">
             {{'items' | translate}}
@@ -17,42 +17,48 @@
       </div>
       <div style="flex: 1; padding: 10px; overflow: auto">
         <app-order-item *ngFor="let item of order.items; let i = index" [item]="item" (click)="showDetailOrderItem( i)"></app-order-item>
-
+       <div *ngIf="order.items.length === 0" style="display: flex; flex-direction: column; align-items: center;; height: 100%; padding-top: 5rem">
+         <img src="/assets/images/dish-empty.svg" alt="" style="width: 7rem">
+         <div style="font-weight: bold">Your cart is empty</div>
+         <small style="color: grey">Please add  some  items from the menu</small>
+       </div>
       </div>
-      <div style="padding: 1rem">
-        <div style="display: flex; justify-content: space-between">
-          <div>{{'total_payment' | translate}}:</div>
-          <div>
-            <strong>{{getTotal() - getOrderDiscount()| formatCurrency}}</strong>
+      <ng-container *ngIf="order.items.length">
+        <div style="padding: 1rem">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem">
+            <div>{{'total_payment' | translate}}:</div>
+            <div>
+              <strong>{{getTotal() - getOrderDiscount()| formatCurrency}}</strong>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center">
+            <div style="white-space: nowrap">
+              {{'payment_type' | translate}}:
+            </div>
+            <div style="display: flex; flex-wrap: wrap; justify-content: flex-end">
+              <!--            <button class="btn btn-sm btn-method" [class.active]="order.payment_type === 'CASH'"-->
+              <!--                    (click)="setPaymentType('CASH')" [disabled]="!!order.guest || someItemHasGuest">-->
+              <!--              {{'cash' | translate}}-->
+              <!--            </button>-->
+              <button class="btn btn-sm btn-method" [class.active]="order.payment_type === 'VOUCHER'"
+                      (click)="setPaymentType('VOUCHER')">
+                {{'voucher' | translate}}
+              </button>
+              <button class="btn btn-sm btn-method" [class.active]="order.payment_type === 'WITH_GOLF'"
+                      (click)="setPaymentType('WITH_GOLF')">
+                {{'pay_with_golf' | translate}}
+              </button>
+            </div>
           </div>
         </div>
-        <div style="display: flex; justify-content: space-between">
-          <div style="white-space: nowrap">
-            {{'payment_type' | translate}}:
-          </div>
-          <div style="display: flex; flex-wrap: wrap; justify-content: flex-end">
-            <button class="btn btn-sm btn-method" [class.active]="order.payment_type === 'CASH'"
-                    (click)="setPaymentType('CASH')" [disabled]="!!order.guest || someItemHasGuest">
-              {{'cash' | translate}}
-            </button>
-            <button class="btn btn-sm btn-method" [class.active]="order.payment_type === 'VOUCHER'"
-                    (click)="setPaymentType('VOUCHER')">
-              {{'voucher' | translate}}
-            </button>
-            <button class="btn btn-sm btn-method" [class.active]="order.payment_type === 'WITH_GOLF'"
-                    (click)="setPaymentType('WITH_GOLF')">
-              {{'pay_with_golf' | translate}}
-            </button>
-          </div>
+        <div style="padding: 1.5rem; padding-top: 0">
+          <ion-button (click)="presentActionSheet()"
+                      class="submit-btn"
+                      [disabled]="loading">
+            {{'submit_order' | translate }}
+          </ion-button>
         </div>
-      </div>
-      <div style="padding: 1.5rem; padding-top: 0">
-        <ion-button (click)="presentActionSheet()"
-                    class="submit-btn"
-                    [disabled]="loading">
-          {{'submit_order' | translate }}
-        </ion-button>
-      </div>
+      </ng-container>
     </ng-container>
   </ng-container>
   <ng-container *ngIf="(status$ | async) === 'loading'">
