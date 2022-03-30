@@ -1,4 +1,4 @@
-import {Variant} from "./variant";
+import {Variant} from './variant';
 
 export class Product {
   id: string;
@@ -7,4 +7,7 @@ export class Product {
   sale_price: number;
   price: number;
   variants: Variant[];
+  is_tracking_inventory: boolean;
+  qty_in_stock: number;
+  image: string;
 }

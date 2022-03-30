@@ -45,5 +45,6 @@
   "guest": "Guest",
   "save": "Save",
   "apply_voucher": "Apply voucher",
-  "voucher_applied": "Voucher Applied"
+  "voucher_applied": "Voucher Applied",
+  "out_of_stock": "Out of stock"
 }

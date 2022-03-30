@@ -18,6 +18,9 @@ import {initOrderFunction} from './init-order.function';
 import {toSubmitOrderFunction} from './to-submit-order.function';
 import {setGuest} from '../../guest/data-access/guest.actions';
 import {GuestService} from '../../guest/services/guest.service';
+import {
+  convertNodeSourceSpanToLoc
+} from '@angular-eslint/template-parser/dist/template-parser/src/convert-source-span-to-loc';
 
 
 @Injectable()
@@ -51,7 +54,15 @@ export class OrderEffects {
     map(([action, order]) => {
       const [index, orderItem] = this.getExistingVariants(order, action.variant);
       if (orderItem) {
-        return OrderActions.updateOrderItemSuccess({index, item: {...orderItem, quantity: orderItem.quantity + 1}});
+        if (action.variant.product.is_tracking_inventory) {
+          if (orderItem.quantity < action.variant.qty_in_stock) {
+            return OrderActions.updateOrderItemSuccess({index, item: {...orderItem, quantity: orderItem.quantity + 1}});
+          } else {
+            return OrderActions.updateOrderItemSuccess({index, item: orderItem});
+          }
+        } else {
+          return OrderActions.updateOrderItemSuccess({index, item: {...orderItem, quantity: orderItem.quantity + 1}});
+        }
       } else {
         return OrderActions.addNewOrderItem({
           item: new OrderItem({

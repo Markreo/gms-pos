@@ -45,5 +45,6 @@
   "guest": "Khách",
   "save": "Lưu",
   "apply_voucher": "Áp dụng phiếu giảm giá",
-  "voucher_applied": "Đã áp dụng"
+  "voucher_applied": "Đã áp dụng",
+  "out_of_stock": "Hết hàng"
 }

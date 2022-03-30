@@ -27,8 +27,8 @@ export class ProductService {
 
   }
 
-  getVariants(productId): Observable<Variant[]> {
-    return this.http.get(buildInventoryUrl('/products') + '/' + productId).pipe(
+  getVariants(storeId, productId): Observable<Variant[]> {
+    return this.http.get(buildInventoryUrl('stores/') + storeId + '/products/' + productId).pipe(
       map((product: Product) => product.variants || [])
     );
   }

@@ -5,4 +5,8 @@ export class Variant {
   image: string;
   name: string;
   other_name: string;
+  product: {
+    is_tracking_inventory: boolean;
+  };
+  qty_in_stock: number;
 }
