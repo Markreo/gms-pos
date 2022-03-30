@@ -3,7 +3,7 @@ import {Store} from '@ngrx/store';
 import {selectOrder, selectOrderAction, selectOrderStatus} from '../../data-access/order.selectors';
 import {Order} from '../../models/order';
 import {TranslateService} from '@ngx-translate/core';
-import {ActionSheetController, ModalController} from '@ionic/angular';
+import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
 import {checkoutOrder, setPaymentType, submitOrder} from '../../data-access/order.actions';
 
 import {DetailOrderItemComponent} from './detail-order-item/detail-order-item.component';
@@ -25,7 +25,7 @@ export class PaymentComponent implements OnInit {
   constructor(private store: Store,
               private translateService: TranslateService,
               private modalController: ModalController,
-              private actionSheetController: ActionSheetController) {
+              public alertController: AlertController) {
     this.order$.subscribe(order => {
       console.log('update order', order);
       this.order = order;
@@ -35,35 +35,54 @@ export class PaymentComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  async presentActionSheet() {
-    if (this.order.id) {
-      const actionSheet = await this.actionSheetController.create({
-        buttons: [
-          {
-            text: this.translateService.instant('update_order'),
-            handler: () => {
-              this.store.dispatch(submitOrder());
-            }
-          },
-          {
-            text: this.translateService.instant('checkout'),
-            handler: () => {
-              this.store.dispatch(checkoutOrder());
-            }
-          },
-          {
-            text: this.translateService.instant('cancel'),
-            role: 'cancel',
-            handler: () => {
-              console.log('Cancel clicked');
-            }
+   submitOrder() {
+     this.alertController.create({
+      subHeader: 'Submit Order',
+      message: 'Do you want to confirm this order?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          id: 'cancel-button',
+          handler: (blah) => {
+            console.log('Confirm Cancel');
           }
-        ]
-      });
-      await actionSheet.present();
-    } else {
-      this.store.dispatch(submitOrder());
-    }
+        }, {
+          text: 'OK',
+          id: 'confirm-button',
+          handler: () => {
+            this.store.dispatch(submitOrder());
+          }
+        }
+      ]
+    }).then(alert => alert.present());
+
+  }
+
+  checkoutOrder() {
+    this.alertController.create({
+      subHeader: 'Checkout Order',
+      message: 'Do you want to checkout?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          id: 'cancel-button',
+          handler: (blah) => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'OK',
+          id: 'confirm-button',
+          handler: () => {
+            this.store.dispatch(checkoutOrder());
+          }
+        }
+      ]
+    }).then(alert => alert.present());
+
   }
 
   getTotal() {

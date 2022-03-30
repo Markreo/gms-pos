@@ -51,11 +51,17 @@
             </div>
           </div>
         </div>
-        <div style="padding: 1.5rem; padding-top: 0">
-          <ion-button (click)="presentActionSheet()"
+        <div style="padding: 1.5rem; padding-top: 0; display: flex">
+          <ion-button (click)="submitOrder()"
                       class="submit-btn"
+                      [class.border-radius-right]="!order.id"
                       [disabled]="loading">
             {{'submit_order' | translate }}
+          </ion-button>
+          <ion-button *ngIf="order.id" (click)="checkoutOrder()"
+                      class="checkout-btn"
+                      [disabled]="loading">
+            {{'checkout' | translate }}
           </ion-button>
         </div>
       </ng-container>

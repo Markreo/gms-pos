@@ -1,5 +1,5 @@
   <div *ngIf="currentGuest$ | async as currentUser; else notUser" class="bound bg-gray">
-    <div>{{currentUser.fullname}}<span class="ion-color-danger">#{{currentUser.bagtag}}</span></div>
+    <div>{{currentUser.fullname}}<span [class]="currentUser?.status">#{{currentUser.bagtag}}</span></div>
     <ion-icon class="scan" name="close-outline" (click)="onClickGuest(null)"></ion-icon>
   </div>
   <ng-template #notUser>
