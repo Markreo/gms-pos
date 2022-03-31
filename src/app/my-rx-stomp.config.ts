@@ -27,12 +27,10 @@ export const myRxStompConfig = (store: Store): InjectableRxStompConfig => ({
     // },
     connectionTimeout: 10000,
     beforeConnect: client => new Promise<void>(resolve => {
-      console.log('==========select');
         store.select(selectAccessToken).pipe(
           filter(token => !!token),
           take(1)
         ).subscribe(token => {
-          console.log('===========config');
           client.configure({
             connectHeaders: {
               Authorization: `Bearer ${token}`

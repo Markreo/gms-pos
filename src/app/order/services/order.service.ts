@@ -42,6 +42,7 @@ export class OrderService {
   }
 
   updateGuest(golfClubId, orderId, data) {
+    console.log('actionGuest.guest', data);
     return this.http.patch<Order>(buildInventoryUrl('/golf/clubs/' + golfClubId) + '/orders/' + orderId, data);
   }
 }

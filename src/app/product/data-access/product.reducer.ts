@@ -1,7 +1,6 @@
 import {createReducer, on} from '@ngrx/store';
 import * as ProductActions from './product.actions';
 import {Product} from '../models/product';
-import {updateListProduct} from './product.actions';
 
 export const productFeatureKey = 'product';
 
@@ -45,7 +44,7 @@ export const productReducer = createReducer(
     ...state,
     status: 'loading-slide',
     slides: state.slides.map((slide, index) => {
-      if(index === state.oldSlideIndex) {
+      if (index === state.oldSlideIndex) {
         return {...slide, status: 'loading', products: []};
       }
       if (index === action.slide) {
@@ -59,7 +58,7 @@ export const productReducer = createReducer(
     ...state,
     status: 'loading-slide',
     slides: state.slides.map((slide, index) => {
-      if (index === action.slide -1 || index === action.slide + 1) {
+      if (index === action.slide - 1 || index === action.slide + 1) {
         return {...slide, status: 'loading', products: []};
       }
       if (index === action.slide) {
@@ -69,7 +68,28 @@ export const productReducer = createReducer(
     })
   })),
   on(ProductActions.loadProductsFailure, (state) => ({...state, status: 'error'})),
-  on(ProductActions.triggerUpdateSearch, (state, action) => ({...state, filter: {...state.filter, search: action.search}}))
+  on(ProductActions.triggerUpdateSearch, (state, action) => ({
+    ...state,
+    filter: {...state.filter, search: action.search}
+  })),
+  on(ProductActions.updateAProductItem, (state, action) => ({
+    ...state,
+    slides: state.slides.map(slide => {
+      if (slide.status === 'loaded') {
+        return {
+          ...slide, products: slide.products.map(product => {
+            if (product.id === action.product.id) {
+              return action.product;
+            } else {
+              return product;
+            }
+          })
+        };
+      } else {
+        return slide;
+      }
+    })
+  }))
 );
 
 

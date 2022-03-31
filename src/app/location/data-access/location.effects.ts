@@ -58,7 +58,6 @@ export class LocationEffects {
   onCurrentLocationChange$ = createEffect(() => this.actions$.pipe(
     ofType(LocationActions.setCurrentLocation),
     concatLatestFrom(() => this.store.select(selectAccessToken)),
-    tap(() => console.log('======= connect')),
     switchMap(([action, accessToken]) => this.rxStompService.watch(`/queue/events/stores/${action.location.id}/products`, {
         Authorization: `Bearer ${accessToken}`
       }).pipe(

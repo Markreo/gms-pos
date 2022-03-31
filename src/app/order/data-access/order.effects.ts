@@ -189,7 +189,7 @@ export class OrderEffects {
     concatLatestFrom(() => [this.store.select(selectCurrentGolfClub), this.store.select(selectOrder)]),
     switchMap(([actionGuest, golfClub, order]) => {
         if (order.id) {
-          return this.orderService.updateGuest(golfClub.id, order.id, {guest: actionGuest.guest.id}).pipe(
+          return this.orderService.updateGuest(golfClub.id, order.id, {guest: actionGuest.guest?.id || null}).pipe(
             map(() => OrderActions.loadOrderSuccess({order})),
             catchError(err => of(OrderActions.loadOrderFailure({error: err})))
           );
