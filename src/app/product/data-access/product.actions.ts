@@ -13,3 +13,5 @@ export const triggerUpdateSearch = createAction(
   '[Product] update search',
   props<{ search: string }>()
 );
+
+export const updateAProductItem = createAction('[Product] update a product item', props<{product: Product}>());

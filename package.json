@@ -35,6 +35,7 @@
     "@ngrx/store-devtools": "^13.0.2",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
+    "@stomp/ng2-stompjs": "^8.0.0",
     "cordova-plugin-network-information": "^3.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",

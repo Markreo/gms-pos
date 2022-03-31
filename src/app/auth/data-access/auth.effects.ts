@@ -8,7 +8,7 @@ import {from, of} from 'rxjs';
 import {AlertController, LoadingController} from '@ionic/angular';
 import {StorageService} from '../../ionic-storage/storage.service';
 import {Action, Store} from '@ngrx/store';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 export const TOKEN = 'token';
 

@@ -14,7 +14,6 @@ import * as CategoryActions from '../../category/data-access/category.actions';
 import {of, pipe} from 'rxjs';
 import {selectActiveSubCategory} from '../../sub-category/data-access/sub-category.selectors';
 import {activeSubCategory} from '../../sub-category/data-access/sub-category.actions';
-import {selectMenu} from '../../category/data-access/category.actions';
 
 
 @Injectable()

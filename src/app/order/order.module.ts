@@ -8,8 +8,6 @@ import {OrderPageRoutingModule} from './order-routing.module';
 
 import {OrderPage} from './order.page';
 import {TranslateModule} from '@ngx-translate/core';
-import {GolfClubModule} from '../golf-club/golf-club.module';
-import {LocationModule} from '../location/location.module';
 import {EffectsModule} from '@ngrx/effects';
 import {OrderEffects} from './data-access/order.effects';
 import {StoreModule} from '@ngrx/store';
@@ -35,8 +33,6 @@ import {ScanBarcodeModule} from '../scan-barcode/scan-barcode.module';
     IonicModule,
     OrderPageRoutingModule,
     TranslateModule,
-    GolfClubModule,
-    LocationModule,
     CategoryModule,
     SubCategoryModule,
     ProductModule,

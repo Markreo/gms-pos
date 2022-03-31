@@ -33,4 +33,9 @@ export class StorageService {
     // eslint-disable-next-line no-underscore-dangle
     return this._storage.clear();
   }
+
+  async get2(key) {
+    // eslint-disable-next-line no-underscore-dangle
+    return await this._storage.get(key);
+  }
 }
