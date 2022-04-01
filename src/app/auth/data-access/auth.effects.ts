@@ -22,7 +22,6 @@ export class AuthEffects implements OnInitEffects {
     exhaustMap(action => from(this.storageService.get(TOKEN)).pipe(
       map(token => {
         if (token) {
-          console.log('loginSuccess');
           return AuthActions.loginSuccess({data: {accessToken: token}});
         } else {
           return AuthActions.logout();
@@ -83,7 +82,6 @@ export class AuthEffects implements OnInitEffects {
               private alertController: AlertController,
               private storageService: StorageService,
               private authService: AuthService) {
-    console.log('constructor AuthEffects');
   }
 
   ngrxOnInitEffects(): Action {

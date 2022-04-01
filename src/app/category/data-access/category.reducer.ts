@@ -48,6 +48,7 @@ export const categoryReducer = createReducer(
     ...state,
     activeMenu: action.menu,
   })),
+  on(CategoryActions.resetMenu, state => initialState)
 
 );
 

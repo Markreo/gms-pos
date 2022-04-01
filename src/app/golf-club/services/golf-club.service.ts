@@ -10,7 +10,6 @@ export class GolfClubService {
   }
 
   getAllByUser() {
-    console.log('getAllByUser');
     return this.http.get<GolfClub[]>(buildUrl('golf/clubs'));
   }
 

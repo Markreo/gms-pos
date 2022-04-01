@@ -1,8 +1,6 @@
 import {Order} from '../models/order';
 
-export const toSubmitOrderFunction = (order: Order) => {
-  console.log('order', order);
-  return {
+export const toSubmitOrderFunction = (order: Order) => ({
     id: order.id,
     type: 'FB',
     guest: order.guest ? order.guest.id : undefined,
@@ -24,5 +22,4 @@ export const toSubmitOrderFunction = (order: Order) => {
     discount_type: order.discount_type,
     num_of_guests: order.num_of_guests,
     voucher: order.voucher
-  };
-};
+  });

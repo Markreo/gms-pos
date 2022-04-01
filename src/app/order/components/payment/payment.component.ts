@@ -28,7 +28,6 @@ export class PaymentComponent implements OnInit {
               private modalController: ModalController,
               public alertController: AlertController) {
     this.order$.subscribe(order => {
-      console.log('update order', order);
       this.order = order;
     });
   }

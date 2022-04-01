@@ -21,13 +21,18 @@ export class CategoryEffects {
     })
   ));
 
+  setCurrentLocation$reset = createEffect(() => this.actions$.pipe(
+    ofType(LocationActions.setCurrentLocation),
+    map(action => CategoryActions.resetMenu())
+  ));
+
   loadCategories$ = createEffect(() => this.actions$.pipe(
     ofType(CategoryActions.loadCategories),
     debounceTime(500),
     concatMap((action) => this.categoryService.getAll(action.location.id).pipe(
-        map(categories => CategoryActions.loadCategoriesSuccess({categories})),
-        catchError(error => of(CategoryActions.loadCategoriesFailure({error})))
-      ))
+      map(categories => CategoryActions.loadCategoriesSuccess({categories})),
+      catchError(error => of(CategoryActions.loadCategoriesFailure({error})))
+    ))
   ));
 
   loadMenus$ = createEffect(() => this.actions$.pipe(
@@ -48,7 +53,6 @@ export class CategoryEffects {
 
   constructor(private actions$: Actions,
               private categoryService: CategoryService) {
-    console.log('CategoryEffects');
   }
 
 }

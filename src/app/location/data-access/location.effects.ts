@@ -21,7 +21,7 @@ export class LocationEffects {
   findSavedGolfClub$ = createEffect(() => this.actions$.pipe(
     ofType(LocationActions.findSavedLocation),
     delay(10),
-    exhaustMap(() => from(this.storageService.get('LOCATION')).pipe(tap(console.log))),
+    exhaustMap(() => from(this.storageService.get('LOCATION'))),
     concatLatestFrom(() => this.store.select(selectCurrentLocation)),
     filter(([location]) => !!location),
     map(([location,]) => LocationActions.setCurrentLocation({location}))
@@ -35,7 +35,6 @@ export class LocationEffects {
 
   loadLocations$ = createEffect(() => this.actions$.pipe(
     ofType(LocationActions.loadLocations),
-    tap(action => console.log('loadLocations$', action)),
     debounceTime(500),
     concatMap(action => this.locationService.getAllByClub(action.golfClub.id).pipe(
       map(locations => locations.filter(location => location.type === 'FB')),

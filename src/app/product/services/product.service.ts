@@ -12,7 +12,6 @@ export class ProductService {
   }
 
   getAllWithFilter(locationId, menu, filter: any = {}) {
-    console.log('getAllWithFilter', menu);
     const query = Object.keys(filter).reduce((qry, key) => {
       if (filter[key]) {
         qry += '&' + key + '=' + filter[key];

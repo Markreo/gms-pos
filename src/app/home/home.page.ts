@@ -5,7 +5,7 @@ import {selectCurrentLocation, selectLocations} from '../location/data-access/lo
 import {selectCurrentGolfClub, selectGolfClubs} from '../golf-club/data-access/selectors/golf-club.selectors';
 import * as GolfClubActions from '../golf-club/data-access/actions/golf-club.actions';
 import * as LocationActions from '../location/data-access/location.actions';
-import {logout} from "../auth/data-access/auth.actions";
+import {logout} from '../auth/data-access/auth.actions';
 
 @Component({
   selector: 'app-home',
@@ -29,11 +29,9 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('home page');
   }
 
   setCurrentGolfClub(event) {
-    console.log('dispatch setCurrentGolfClub')
     this.store.dispatch(GolfClubActions.setCurrentGolfClub({golfClub: event.detail.value}));
   }
 

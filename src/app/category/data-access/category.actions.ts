@@ -16,3 +16,5 @@ export const selectMenu = createAction(
   '[Menu] selectMenu',
   props<{ menu: Menu }>()
 );
+
+export const resetMenu = createAction('[Menu] reset menu');

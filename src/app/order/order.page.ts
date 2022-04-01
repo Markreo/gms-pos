@@ -96,20 +96,17 @@ export class OrderPage implements OnInit, OnDestroy {
   }
 
   triggerSlideTo(e) {
-    console.log(e);
     this.ionSlidesRef.getActiveIndex().then(index => {
-      console.log('triggerSlideTo', index);
       this.store.dispatch(ProductActions.updateForSlide({slide: index}));
     });
   }
 
   present() {
-    console.log('document.querySelector(\'.product-item\')', document.querySelector('.product-item'));
     const animation = this.animationCtrl.create()
       .addElement(document.querySelectorAll('.product-item'))
       .duration(300)
       .fromTo('opacity', '0.5', '1');
-    animation.play().then(() => console.log('play done'));
+    animation.play();
   }
 
   ngOnDestroy() {

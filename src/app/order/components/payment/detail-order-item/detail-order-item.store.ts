@@ -60,10 +60,8 @@ export class DetailOrderItemStore extends ComponentStore<DetailOrderItemState> {
   ));
 
   applyBagtag = this.effect((bagtag$: Observable<string>) => bagtag$.pipe(
-    tap(console.log),
     concatLatestFrom(() => [this.store.select(selectCurrentGolfClub), this.selectIndex$, this.selectItem$]),
     switchMap(([bagtag, golfClub, index, orderItem]) => {
-      console.log('herer', orderItem);
       this.setLoadingBagtag(true);
       return this.guestService.getAllWithFilter(golfClub.id, {search: bagtag}).pipe(
         map(({data}) => data[0]),
