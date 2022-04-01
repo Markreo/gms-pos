@@ -14,10 +14,16 @@ import * as CategoryActions from '../../category/data-access/category.actions';
 import {of, pipe} from 'rxjs';
 import {selectActiveSubCategory} from '../../sub-category/data-access/sub-category.selectors';
 import {activeSubCategory} from '../../sub-category/data-access/sub-category.actions';
+import {logout} from '../../auth/data-access/auth.actions';
 
 
 @Injectable()
 export class ProductEffects {
+  logout$ = createEffect(() => this.actions$.pipe(
+    ofType(logout),
+    map(() => ProductActions.initProduct())
+  ));
+
   setCurrentLocation$ = createEffect(() => this.actions$.pipe(
     ofType(LocationActions.setCurrentLocation),
     map(action => ProductActions.updateListProduct())

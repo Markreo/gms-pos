@@ -29,6 +29,7 @@ export const initialState: ProductState = {
 
 export const productReducer = createReducer(
   initialState,
+  on(ProductActions.initProduct, state => initialState),
   on(ProductActions.updateListProduct, (state) => ({
     ...state,
     status: 'loading',

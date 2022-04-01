@@ -7,16 +7,22 @@ import * as LocationActions from './location.actions';
 import {LocationService} from '../services/location.service';
 
 import * as GolfClubActions from '../../golf-club/data-access/actions/golf-club.actions';
-import { Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {StorageService} from '../../ionic-storage/storage.service';
 import {selectCurrentLocation} from './location.selectors';
 import {selectAccessToken} from '../../auth/data-access/auth.selectors';
 import {RxStompService} from '@stomp/ng2-stompjs';
 import {Message} from '@stomp/stompjs';
 import {updateAProductItem} from '../../product/data-access/product.actions';
+import {logout} from '../../auth/data-access/auth.actions';
 
 @Injectable()
 export class LocationEffects {
+
+  logout$ = createEffect(() => this.actions$.pipe(
+    ofType(logout),
+    map(() => LocationActions.initLocations())
+  ));
 
   findSavedGolfClub$ = createEffect(() => this.actions$.pipe(
     ofType(LocationActions.findSavedLocation),
@@ -58,8 +64,8 @@ export class LocationEffects {
     ofType(LocationActions.setCurrentLocation),
     concatLatestFrom(() => this.store.select(selectAccessToken)),
     switchMap(([action, accessToken]) => this.rxStompService.watch(`/queue/events/stores/${action.location.id}/products`, {
-        Authorization: `Bearer ${accessToken}`
-      }).pipe(
+      Authorization: `Bearer ${accessToken}`
+    }).pipe(
       map((message: Message) => JSON.parse(message.body))
     )),
     map(body => updateAProductItem({product: body.object}))

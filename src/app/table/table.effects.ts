@@ -9,10 +9,16 @@ import {Store} from '@ngrx/store';
 import {selectCurrentGolfClub} from '../golf-club/data-access/selectors/golf-club.selectors';
 import {selectCurrentLocation} from '../location/data-access/location.selectors';
 import {TableService} from './table.service';
+import {logout} from '../auth/data-access/auth.actions';
 
 
 @Injectable()
 export class TableEffects {
+
+  logout$ = createEffect(() => this.actions$.pipe(
+    ofType(logout),
+    map(() => TableActions.initTables())
+  ));
 
   setCurrentLocation = createEffect(() => this.actions$.pipe(
     ofType(LocationActions.setCurrentLocation),

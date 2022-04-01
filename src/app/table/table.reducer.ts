@@ -25,6 +25,7 @@ export const initialState: TableState = {
 export const tableReducer = createReducer(
   initialState,
 
+  on(TableActions.initTables, state => initialState),
   on(TableActions.loadTables, state => ({...state, status: 'loading'})),
   on(TableActions.loadTablesSuccess, (state, action) => ({...state, status: 'loaded', tables: action.data})),
   on(TableActions.loadTablesFailure, (state, action) => ({...state, status: 'error'})),

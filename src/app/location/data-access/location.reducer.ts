@@ -20,7 +20,7 @@ export const initialState: State = {
 
 export const locationReducer = createReducer(
   initialState,
-
+  on(LocationActions.initLocations, state => initialState),
   on(LocationActions.loadLocations, state => ({...state, status: 'loading'})),
   on(LocationActions.loadLocationsSuccess, (state, action) => ({
     ...state,

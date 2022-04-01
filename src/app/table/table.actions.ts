@@ -1,6 +1,8 @@
 import {createAction, props} from '@ngrx/store';
 import {Table} from './table';
 
+export const initTables = createAction('[Table] init table');
+
 export const loadTables = createAction(
   '[Table] Load Tables'
 );

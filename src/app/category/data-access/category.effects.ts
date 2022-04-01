@@ -6,10 +6,18 @@ import {of} from 'rxjs';
 import * as CategoryActions from './category.actions';
 import * as LocationActions from '../../location/data-access/location.actions';
 import {CategoryService} from '../services/category.service';
+import { logout } from 'src/app/auth/data-access/auth.actions';
 
 
 @Injectable()
 export class CategoryEffects {
+
+  logout = createEffect(() => this.actions$.pipe(
+    ofType(logout),
+    map(action => CategoryActions.resetMenu())
+  ));
+
+
   setCurrentLocation$ = createEffect(() => this.actions$.pipe(
     ofType(LocationActions.setCurrentLocation),
     map(action => {

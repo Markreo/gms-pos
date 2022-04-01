@@ -1,6 +1,7 @@
 import {createAction, props} from '@ngrx/store';
 import {Product} from '../models/product';
 
+export const initProduct = createAction('[Product] init product');
 export const updateListProduct = createAction('[Product] update product');
 export const updateForSlide = createAction('[Product] update slide', props<{ slide: number }>());
 
