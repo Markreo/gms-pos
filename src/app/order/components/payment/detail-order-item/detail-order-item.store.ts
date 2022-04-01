@@ -54,7 +54,7 @@ export class DetailOrderItemStore extends ComponentStore<DetailOrderItemState> {
         }
       }),
       finalize(() => {
-        this.setLoadingVoucher(true);
+        this.setLoadingVoucher(false);
       })
     ))
   ));
