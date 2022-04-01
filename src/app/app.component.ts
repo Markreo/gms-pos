@@ -1,10 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Storage} from '@ionic/storage-angular';
 import {Network} from '@awesome-cordova-plugins/network/ngx';
-import {Store} from '@ngrx/store';
-import {loadAuth} from './auth/data-access/auth.actions';
-import {AlertController, ToastController} from '@ionic/angular';
-import {selectAccessToken} from './auth/data-access/auth.selectors';
 
 
 @Component({
@@ -15,11 +11,7 @@ import {selectAccessToken} from './auth/data-access/auth.selectors';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private storage: Storage,
-              private store: Store,
-              private alertController: AlertController,
-              private toastController: ToastController,
-              private network: Network) {
+  constructor(private storage: Storage            ) {
   }
 
   async ngOnInit() {

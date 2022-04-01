@@ -29,6 +29,10 @@ export class StorageService {
     return this._storage.get(key);
   }
 
+  public remove(key) {
+    return this._storage.remove(key);
+  }
+
   public clear() {
     // eslint-disable-next-line no-underscore-dangle
     return this._storage.clear();

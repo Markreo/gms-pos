@@ -10,6 +10,8 @@ import {selectCurrentGolfClub} from '../golf-club/data-access/selectors/golf-clu
 import {selectCurrentLocation} from '../location/data-access/location.selectors';
 import {TableService} from './table.service';
 import {logout} from '../auth/data-access/auth.actions';
+import {setLastTable} from './table.actions';
+import {StorageService} from '../ionic-storage/storage.service';
 
 
 @Injectable()
@@ -53,7 +55,27 @@ export class TableEffects {
   ));
 
 
-  constructor(private actions$: Actions, private store: Store, private tableService: TableService) {
+  setLastTable = createEffect(() => this.actions$.pipe(
+    ofType(TableActions.selectTable),
+    map((action) => TableActions.setLastTable({table: {id: action.id}}))
+  ));
+
+  saveLastTable = createEffect(() => this.actions$.pipe(
+    ofType(TableActions.setLastTable),
+    tap((action) => {
+      this.storageService.set('LAST_TABLE', action.table);
+    })
+  ), {dispatch: false});
+
+  removeLastTable = createEffect(() => this.actions$.pipe(
+    ofType(TableActions.removeLastTable),
+    tap((action) => {
+      this.storageService.remove('LAST_TABLE');
+    })
+  ), {dispatch: false});
+
+
+  constructor(private actions$: Actions, private store: Store, private tableService: TableService, private storageService: StorageService) {
   }
 
 }

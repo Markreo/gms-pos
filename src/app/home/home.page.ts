@@ -6,6 +6,8 @@ import {selectCurrentGolfClub, selectGolfClubs} from '../golf-club/data-access/s
 import * as GolfClubActions from '../golf-club/data-access/actions/golf-club.actions';
 import * as LocationActions from '../location/data-access/location.actions';
 import {logout} from '../auth/data-access/auth.actions';
+import {StorageService} from '../ionic-storage/storage.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -25,10 +27,16 @@ export class HomePage implements OnInit {
 
   currentLang = 'en';
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private storageService: StorageService, private router: Router) {
   }
 
   ngOnInit() {
+    this.storageService.get('LAST_TABLE').then(lastTable => {
+      console.log('last table', lastTable);
+      if (lastTable) {
+        this.router.navigate(['/order', lastTable.id]);
+      }
+    });
   }
 
   setCurrentGolfClub(event) {

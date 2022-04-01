@@ -17,7 +17,7 @@ import {AnimationController, IonSlides} from '@ionic/angular';
 import {selectProductFilter, selectProductStateStatus, selectSlide} from '../product/data-access/product.selectors';
 import {filter, map, takeUntil} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
-import {selectTable} from '../table/table.actions';
+import {removeLastTable, selectTable} from '../table/table.actions';
 import {selectCurrentTable} from '../table/table.selectors';
 import {isScanning} from '../scan-barcode/data-access/scan-barcode.selectors';
 
@@ -107,6 +107,10 @@ export class OrderPage implements OnInit, OnDestroy {
       .duration(300)
       .fromTo('opacity', '0.5', '1');
     animation.play();
+  }
+
+  removeLastTable() {
+    this.store.dispatch(removeLastTable());
   }
 
   ngOnDestroy() {

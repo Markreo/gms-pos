@@ -6,6 +6,7 @@
         <div
           style="width: 100px;min-width: 100px; background: white; display: flex; flex-direction: column; overflow: hidden">
           <img class="logo" style="height: 100px; width: 100px; background:#184a7b" src="/assets/icon/menu.png" alt=""
+               (click)="removeLastTable()"
                [routerLink]="['/home']">
           <div class="menu">
             <ng-container *ngIf="(statusCategory$ | async) === 'loading'">
@@ -29,6 +30,7 @@
             </ng-container>
             <ng-template #useCategory >
               <div
+                *ngIf="(statusCategory$ | async) === 'loaded'"
                 [class.active]="(activeParentCategory$ | async) === null || (activeParentCategory$ | async) === undefined"
                 class="menu-item"
                 (click)="selectParentCategory(null)">
