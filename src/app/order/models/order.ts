@@ -15,6 +15,7 @@ export class Order {
   description: string;
   num_of_guests: number;
   voucher: { code: string };
+  invoice: string;
 
   constructor(entity: Partial<Order> = {}) {
     this.id = entity.id;
@@ -28,5 +29,6 @@ export class Order {
     this.discount_type = entity.discount_type;
     this.num_of_guests = entity.num_of_guests;
     this.voucher = entity.voucher;
+    this.invoice = entity.invoice;
   }
 }

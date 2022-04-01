@@ -28,3 +28,7 @@ export const setGuestOfOrder = createAction('[Order] set guest', props<{ guest: 
 export const setGuestOfOrderSuccess = createAction('[Order] set guest', props<{ guest: Guest }>());
 
 export const scanBagtag  = createAction('[Order] scan bagtag', props<{bagtag: string}>());
+
+export const wsAddOrder = createAction('[Order] Websocket add order', props<{order: Order}>());
+export const wsUpdateOrder = createAction('[Order] Websocket update order', props<{order: Order}>());
+export const wsDoneOrder = createAction('[Order] Websocket done order', props<{order: Order}>());

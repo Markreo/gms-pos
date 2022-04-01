@@ -7,7 +7,6 @@ import {Variant} from '../../../product/models/variant';
 import {ProductService} from '../../../product/services/product.service';
 import {selectCurrentLocation} from '../../../location/data-access/location.selectors';
 import {Location} from '../../../location/data-access/location';
-import {updateAProductItem} from '../../../product/data-access/product.actions';
 
 @Component({
   selector: 'app-product-item',

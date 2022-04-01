@@ -73,13 +73,6 @@ export class ProductEffects {
       ]), //select menu, select sub-category
       debounceTime(300),
       switchMap(([action, location, filter, category, menu, subCategory]) => {
-        console.log('hehehehe');
-          // if  menu
-          // if category -> menu by category
-          // menu only
-          // if sub-category -> filter sub-category
-          // if category -> filter category
-          // get all
           const slide = (action as any)?.slide;
           const start = slide ? slide * filter.max : 0;
           return this.productService.getAllWithFilter(location.id, menu, {

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, concatLatestFrom, createEffect, ofType} from '@ngrx/effects';
 import {catchError, delay, exhaustMap, filter, map, switchMap, tap} from 'rxjs/operators';
-import {Action, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {GolfClubService} from '../../services/golf-club.service';
 import {from, of} from 'rxjs';
 
@@ -9,6 +9,10 @@ import * as GolfClubActions from '../actions/golf-club.actions';
 import * as AuthActions from '../../../auth/data-access/auth.actions';
 import {StorageService} from '../../../ionic-storage/storage.service';
 import {selectCurrentGolfClub} from '../selectors/golf-club.selectors';
+import {selectAccessToken} from '../../../auth/data-access/auth.selectors';
+import {Message} from '@stomp/stompjs';
+import {RxStompService} from '@stomp/ng2-stompjs';
+import {wsAddOrder, wsDoneOrder, wsUpdateOrder} from '../../../order/data-access/order.actions';
 
 
 @Injectable()
@@ -58,11 +62,32 @@ export class GolfClubEffects {
     map(action => GolfClubActions.initGolfClubState())
   ));
 
+  onCurrentGolfClubChange$ = createEffect(() => this.actions$.pipe(
+    ofType(GolfClubActions.setCurrentGolfClub),
+    concatLatestFrom(() => this.store.select(selectAccessToken)),
+    switchMap(([action, accessToken]) =>
+      this.rxStompService.watch(`/queue/events/golf/clubs/${action.golfClub.id}/orders`, {
+        Authorization: `Bearer ${accessToken}`
+      }).pipe(map((message: Message) => JSON.parse(message.body)))
+    ),
+    map(entry => {
+      switch (entry.event) {
+        case 'create.fb.order':
+          return wsAddOrder({order: entry.object});
+        case 'update.fb.order':
+          return wsUpdateOrder({order: entry.object});
+        case 'paid.fb.order':
+          return wsDoneOrder({order: entry.object});
+        default:
+          return {type: 'noop'};
+      }
+    })
+  ));
 
   constructor(private actions$: Actions,
               private golfClubService: GolfClubService,
               private store: Store,
+              private rxStompService: RxStompService,
               private storageService: StorageService) {
-    console.log('GolfClubEffects');
   }
 }

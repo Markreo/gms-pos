@@ -18,10 +18,7 @@ import {initOrderFunction} from './init-order.function';
 import {toSubmitOrderFunction} from './to-submit-order.function';
 import {setGuest} from '../../guest/data-access/guest.actions';
 import {GuestService} from '../../guest/services/guest.service';
-import {
-  convertNodeSourceSpanToLoc
-} from '@angular-eslint/template-parser/dist/template-parser/src/convert-source-span-to-loc';
-
+import {selectCurrentTable} from '../../table/table.selectors';
 
 @Injectable()
 export class OrderEffects {
@@ -198,6 +195,41 @@ export class OrderEffects {
         }
       }
     )), {dispatch: false});
+
+
+  wsAddTable = createEffect(() => this.actions$.pipe(
+    ofType(OrderActions.wsAddOrder),
+    concatLatestFrom(() => [this.store.select(selectCurrentTable)]),
+    filter(([action, table]) => action.order.table_map.id === table.id),
+    map(([action,]) => OrderActions.loadOrderSuccess({order: action.order}))
+  ));
+
+  wsUpdateOrder = createEffect(() => this.actions$.pipe(
+    ofType(OrderActions.wsUpdateOrder),
+    filter(action => action.order.items.length !== 0),
+    concatLatestFrom(() => [this.store.select(selectOrder)]),
+    filter(([action, order]) => action.order.id === order.id && !action.order.invoice),
+    map(([action,order]) => {
+      const newItems = order.items.filter(item => !item.id);
+      return OrderActions.loadOrderSuccess({order: {...action.order, items: [...action.order.items, ...newItems]}});
+    })
+  ));
+
+  wsUpdateOrder$resetOrder = createEffect(() => this.actions$.pipe(
+    ofType(OrderActions.wsUpdateOrder),
+    filter(action => action.order.items.length === 0),
+    concatLatestFrom(() => [this.store.select(selectOrder)]),
+    filter(([action, order]) => action.order.id === order.id),
+    map(([action, ]) => OrderActions.loadOrderSuccess({order: initOrderFunction({id: action.order.table_map.id})}))
+  ));
+
+  wsDoneOrder$resetOrder = createEffect(() => this.actions$.pipe(
+    ofType(OrderActions.wsDoneOrder),
+    concatLatestFrom(() => [this.store.select(selectOrder)]),
+    filter(([action, order]) => action.order.id === order.id),
+    map(([action]) => OrderActions.loadOrderSuccess({order: initOrderFunction({id: action.order.table_map.id})}))
+  ));
+
 
   constructor(private actions$: Actions,
               private orderService: OrderService,
