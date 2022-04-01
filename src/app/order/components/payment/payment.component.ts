@@ -7,6 +7,7 @@ import {ActionSheetController, AlertController, ModalController} from '@ionic/an
 import {checkoutOrder, setPaymentType, submitOrder} from '../../data-access/order.actions';
 
 import {DetailOrderItemComponent} from './detail-order-item/detail-order-item.component';
+import {caculatorDiscount} from '../../../_helpers/functions';
 
 @Component({
   selector: 'app-payment',
@@ -86,24 +87,21 @@ export class PaymentComponent implements OnInit {
   }
 
   getTotal() {
-    return 0;
+    return this.order.items.reduce((total, item) => total += this.getItemTotal(item), 0);
+  }
+
+  getItemTotal(item) {
+    if (item.is_voucher) {
+      return 0;
+    } else {
+      return item.price * item.quantity - caculatorDiscount(item, item.price, item.quantity);
+    }
   }
 
   getOrderDiscount() {
-    return 0;
+    return caculatorDiscount(this.order, this.getTotal());
   }
 
-  remove(i) {
-
-  }
-
-  setGuest(e) {
-
-  }
-
-  updateItem(i) {
-
-  }
 
   setPaymentType(type: 'WITH_GOLF' | 'CITY_LEDGER' | 'CASH' | 'VOUCHER') {
     this.store.dispatch(setPaymentType({paymentType: type}));

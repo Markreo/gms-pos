@@ -42,6 +42,7 @@ export class DetailOrderItemComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('index', this.index);
     this.item$ = this.store.select(createSelector(selectOrderState, state => state.order?.items?.find((_, idx) => idx === this.index)));
     this.item$.subscribe(item => {
       this.item = item;
@@ -140,6 +141,7 @@ export class DetailOrderItemComponent implements OnInit {
   }
 
   updateDescription(newValue) {
+    console.log('updateDescription index', this.index);
     this.detailItemStore.updateDescription(this.index, this.item, newValue);
   }
 

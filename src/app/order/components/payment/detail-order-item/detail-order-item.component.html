@@ -98,7 +98,7 @@
                     <ng-container *ngIf="item.guest"></ng-container>
                     <ng-container *ngIf="!item.guest">
                       <ion-icon *ngIf="platform.is('mobile') || platform.is('phablet') || platform.is('tablet')"
-                                class="ion-padding" name="camera" (click)="scanBarcode"></ion-icon>
+                                class="ion-padding" name="camera" (click)="scanBarcode()"></ion-icon>
                       <ion-icon *ngIf="platform.is('mobileweb') || platform.is('desktop')" class="ion-padding"
                                 (click)="applyBagtag($event)" name="search-outline"></ion-icon>
                     </ng-container>
