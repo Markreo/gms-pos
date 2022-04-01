@@ -6,8 +6,14 @@
     <div class="bound">
       <ion-icon *ngIf="(search$ | async).length " class="scan" name="close-circle-outline"
                 (click)="clearSearch()"></ion-icon>
-      <ion-icon *ngIf="(search$ | async).length === 0" class="scan" name="camera"
-                (click)="scanBarcode()"></ion-icon>
+      <ng-container *ngIf="(search$ | async).length === 0">
+        <ion-spinner *ngIf="isScanning$ | async; else camera" class="scan"></ion-spinner>
+        <ng-template #camera>
+          <ion-icon  class="scan" name="camera"
+                     (click)="scanBarcode()"></ion-icon>
+        </ng-template>
+      </ng-container>
+
       <ion-input #inputSearch [placeholder]="'bagtag' | translate"
                  (ionInput)="setInputSearch($event)"></ion-input>
     </div>

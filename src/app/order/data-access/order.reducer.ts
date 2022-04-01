@@ -6,7 +6,7 @@ export const orderFeatureKey = 'order';
 
 export interface OrderState {
   status: 'idle' | 'loading' | 'loaded' | 'error';
-  action: 'idle' | 'add-product' | 'submit' | 'checkout' | 'error';
+  action: 'idle' | 'add-product' | 'submit' | 'checkout' | 'error' | 'scan-bagtag';
   order: Order;
 }
 
@@ -61,6 +61,7 @@ export const orderReducer = createReducer(
   })),
   on(OrderActions.setGuestOfOrderSuccess, (state, action) => ({
     ...state,
+    action: 'idle',
     order: {
       ...state.order,
       guest: action.guest,
@@ -70,5 +71,6 @@ export const orderReducer = createReducer(
   on(OrderActions.actionOrderSuccess, (state, action) => ({
     ...state,
     order: action.order
-  }))
+  })),
+  on(OrderActions.scanBagtag, (state) => ({...state, action: 'scan-bagtag'})),
 );

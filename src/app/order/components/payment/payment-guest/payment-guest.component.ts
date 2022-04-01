@@ -12,6 +12,7 @@ import {AlertController, ToastController} from '@ionic/angular';
 
 import {startScanBarcode} from '../../../../scan-barcode/data-access/scan-barcode.actions';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import {isScanBagtag} from '../../../data-access/order.selectors';
 
 @Component({
   selector: 'app-payment-guest',
@@ -26,6 +27,8 @@ export class PaymentGuestComponent implements OnInit {
   guests$ = this.store.select(selectListGuests);
   currentGuest$ = this.store.select(selectCurrentGuest);
   disabled = false;
+
+  isScanning$ = this.store.select(isScanBagtag);
 
   @ViewChild('inputSearch', {static: false}) inputSearchRef;
 

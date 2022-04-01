@@ -8,3 +8,4 @@ export const selectOrderState = createFeatureSelector<fromOrder.OrderState>(
 export const selectOrder = createSelector(selectOrderState, state => state.order);
 export const selectOrderStatus = createSelector(selectOrderState, state => state.status);
 export const selectOrderAction = createSelector(selectOrderState, state => state.action);
+export const isScanBagtag = createSelector(selectOrderState, state => state.action === 'scan-bagtag');

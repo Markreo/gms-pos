@@ -3,7 +3,7 @@ import {Store} from '@ngrx/store';
 import {stopScanBarcode} from '../../data-access/scan-barcode.actions';
 import {BarcodeScanner} from '@capacitor-community/barcode-scanner';
 import {AlertController} from '@ionic/angular';
-import {scanBagtag} from "../../../order/data-access/order.actions";
+import {scanBagtag} from '../../../order/data-access/order.actions';
 
 @Component({
   selector: 'app-scan-barcode',
