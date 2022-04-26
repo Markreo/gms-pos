@@ -25,3 +25,17 @@ ion-input, ion-textarea {
   --color: #262626;
   overflow: hidden
 }
+
+
+.has-guest {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+  border-radius: 22.5px;
+  position: relative;;
+  border: 1px solid #cbcbcb;
+  height: 2.5rem;
+  text-align: left;
+  width: 100%
+}

@@ -6,3 +6,4 @@ export const selectScanBarcodeState = createFeatureSelector<fromScanBarcode.Scan
 );
 
 export const isScanning = createSelector(selectScanBarcodeState, state => state?.status === 'scanning');
+export const selectScanItem = createSelector(selectScanBarcodeState, state => ({index: state.index, item: state.item}));

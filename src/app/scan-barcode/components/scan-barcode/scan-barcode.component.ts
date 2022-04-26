@@ -4,6 +4,8 @@ import {stopScanBarcode} from '../../data-access/scan-barcode.actions';
 import {BarcodeScanner} from '@capacitor-community/barcode-scanner';
 import {AlertController} from '@ionic/angular';
 import {scanBagtag} from '../../../order/data-access/order.actions';
+import {selectScanItem} from '../../data-access/scan-barcode.selectors';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-scan-barcode',
@@ -12,21 +14,27 @@ import {scanBagtag} from '../../../order/data-access/order.actions';
 })
 export class ScanBarcodeComponent implements OnInit, OnDestroy {
 
-  constructor(
-    private store: Store,
-    private alertController: AlertController
-  ) {
+  selectScanItem$ = this.store.select(selectScanItem);
+  destroys$ = new Subject();
+  value;
+
+  constructor(private store: Store, private alertController: AlertController) {
+    this.selectScanItem$.subscribe(value => {
+      this.value = value;
+    });
   }
 
   ngOnInit() {
-    console.log('ScanBarcodeComponent oniInit');
-
     this.checkPermission().then(result => {
       if (result) {
         BarcodeScanner.hideBackground().then(() => console.log('hide background'));
         BarcodeScanner.startScan().then(({hasContent, content}) => {
-          if(hasContent) {
-            this.store.dispatch(scanBagtag({bagtag: content}));
+          if (hasContent) {
+            if (this.value && this.value.item) {
+
+            } else {
+              this.store.dispatch(scanBagtag({bagtag: content}));
+            }
           }
           this.closeModal();
         });
@@ -44,6 +52,10 @@ export class ScanBarcodeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     BarcodeScanner.showBackground().then(() => console.log('show background'));
     BarcodeScanner.stopScan().then(() => console.log('stopScan'));
+    if (this.destroys$) {
+      this.destroys$.next();
+      this.destroys$.complete();
+    }
   }
 
 

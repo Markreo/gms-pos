@@ -1,13 +1,15 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {DetailOrderItemStore} from './detail-order-item.store';
 import {OrderItem} from '../../../models/order-item';
-import {IonInput, IonTextarea, ModalController, Platform, ToastController} from '@ionic/angular';
+import {AlertController, IonInput, IonTextarea, ModalController, Platform, ToastController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {createSelector, Store} from '@ngrx/store';
 import {deleteOrderItem, updateOrderItemSuccess} from '../../../data-access/order.actions';
 import {Observable} from 'rxjs';
 import {selectOrderState} from '../../../data-access/order.selectors';
 import {PredefinedColors} from '@ionic/core';
+import {BarcodeScanner} from '@capacitor-community/barcode-scanner';
+import {startScanBarcode} from '../../../../scan-barcode/data-access/scan-barcode.actions';
 
 @Component({
   selector: 'app-detail-order-item',
@@ -38,6 +40,7 @@ export class DetailOrderItemComponent implements OnInit {
     private modalController: ModalController,
     private toastController: ToastController,
     private translate: TranslateService,
+    private alertController: AlertController,
     public platform: Platform) {
   }
 
@@ -144,6 +147,20 @@ export class DetailOrderItemComponent implements OnInit {
 
   closeModal() {
     this.modalController.dismiss();
+  }
+
+  scanBarcode() {
+    BarcodeScanner.prepare();
+    this.alertController.create({message: 'Hướng camera về phía batag', buttons: [{
+        text: 'OK',
+        id: 'confirm-button',
+        handler: () => {
+          this.store.dispatch(startScanBarcode({item: this.item, index: this.index}));
+        }
+      }]}).then(alert => {
+      alert.present().then(() => {});
+    });
+
   }
 
 }
